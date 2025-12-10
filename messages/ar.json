@@ -1,0 +1,138 @@
+{
+  "home": "الصفحة الرئيسية",
+  "about": "عن",
+  "contact": "اتصل بنا",
+  "Complaints": {
+    "title": "الشكاوى",
+    "complaint_form": "نموذج الشكاوى",
+    "complaint_type": "نوع الشكوى",
+    "select_type": "اختر النوع",
+    "phone_number": "رقم الهاتف",
+    "enter_phone": "أدخل رقم الهاتف",
+    "email": "البريد الإلكتروني",
+    "enter_email": "أدخل البريد الإلكتروني",
+    "message_label": "نص الشكوى",
+    "message_placeholder": "أدخل نص الشكوى",
+    "submit_complaint": "إرسال الشكوى",
+    "submitting": "جاري الإرسال...",
+    "technical_issue": "مشكلة فنية",
+    "billing_issue": "مشكلة في الفاتورة",
+    "general_inquiry": "استفسار عام",
+    "other": "أخرى",
+    "validation": {
+      "complaint_type_required": "يجب اختيار نوع الشكوى",
+      "phone_min": "يجب أن يتكون رقم الهاتف من 10 أرقام على الأقل",
+      "email_invalid": "البريد الإلكتروني غير صالح",
+      "message_min": "يجب أن يتكون الرسالة من 10 أحرف على الأقل",
+      "unauthorized": "يجب تسجيل الدخول أولا"
+    }
+  },
+  "Newsletter": {
+    "title": "النشرة البريدية",
+    "email_placeholder": "البريد الإلكتروني...",
+    "subscribe": "إشتراك",
+    "error": "البريد الإلكتروني غير صحيح"
+  },
+  "Footer": {
+    "company_name": "حلول العقارية",
+    "company_description": "شركة الحلول العقارية هي شريكك الأول لتحقيق أحلامك العقارية بكل ثقة واطمئنان. نقدم لك مجموعة متكاملة من الخدمات تشمل البيع والشراء والتأجير وإدارة الأملاك،",
+    "important_links": "روابط هامة",
+    "about_us": "من نحن",
+    "complaints": "الشكاوي",
+    "blogs": "المدونه",
+    "our_services": "خدماتنا",
+    "estates": "العقارات",
+    "partners": "الوكلاء",
+    "user_manual": "دليل المستخدم",
+    "privacy_policy": "سياسة الخصوصية",
+    "all_rights_reserved": "جميع الحقوق محفوظة@",
+    "company_short_name": "حلول"
+  },
+  "partner": {
+    "title": "شركاء النجاح"
+  },
+  "blog": {
+    "title": "المدونة",
+    "subtitle": "مقالات مختارة",
+    "description": "عض المقالات الأكثر قراءة من مدونتنا"
+  },
+  "client_reviews": {
+    "title": "آراء العملاء",
+    "subtitle": "ماذا يقول عملائنا",
+    "description": "بعض الآراء من تجارب عملائنا"
+  },
+  "sign_up": {
+    "title": "تسجيل حساب",
+    "seeker": "باحث",
+    "owner": "مالك",
+    "full_name": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "phone_number": "رقم الهاتف",
+    "password": "كلمة المرور",
+    "confirm_password": "تأكيد كلمة المرور",
+    "placeholder": "كتابه هنا",
+    "password_placeholder": "••••••••",
+    "submit_button": "إنشاء حساب",
+    "already_have_account": "لدي حساب بالفعل",
+    "login": "تسجيل الدخول",
+    "password_requirements": {
+      "min_length": "8 أحرف على الأقل",
+      "has_number": "تحتوي على رقم واحد على الأقل",
+      "has_special": "تحتوي على حرف خاص",
+      "has_uppercase": "تحتوي على حرف كبير"
+    },
+    "validation": {
+      "name_min": "يجب أن يكون الاسم مكون من حرفين على الأقل",
+      "email_invalid": "الرجاء إدخال بريد إلكتروني صالح",
+      "phone_min": "يجب أن يتكون رقم الهاتف من 10 أرقام على الأقل",
+      "password_min": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
+      "confirm_password": "الرجاء تأكيد كلمة المرور",
+      "passwords_not_match": "كلمتا المرور غير متطابقتين",
+      "role_required": "الرجاء اختيار نوع الحساب"
+    }
+  },
+  "otp": {
+    "title": "تحقق من رقمك",
+    "code_sent_to": "لقد تم إرسال الكود علي رقم الهاتف",
+    "enter_code": "إدخال الكـــود",
+    "not_received": "لم يصلك الكود بعد ؟",
+    "resend": "إعادة إرسال",
+    "verify_button": "تأكيد الكود",
+    "validation": {
+      "code_length": "يجب أن يتكون الكود من 4 أرقام"
+    }
+  },
+  "login":{
+    "title":"تسجيل الدخول",
+    "phone_number": "رقم الهاتف",
+    "password": "كلمة المرور",
+    "password_placeholder": "أدخل كلمة المرور",
+    "forgot_password": "نسيت كلمة المرور؟",
+    "submit_button": "تسجيل الدخول",
+    "no_account": "ليس لديك حساب؟",
+    "create_account": "إنشاء حساب",
+    "validation": {
+      "phone_min": "يجب أن يتكون رقم الهاتف من 10 أرقام على الأقل",
+      "password_required": "الرجاء إدخال كلمة المرور"
+    }
+  },
+  "forget-password": {
+    "title": "نسيت كلمة المرور",
+    "phone_number": "رقم الهاتف",
+    "submit_button": "إرسال",
+    "validation": {
+      "phone_min": "يجب أن يتكون رقم الهاتف من 10 أرقام على الأقل"
+    }
+  },
+  "new-password": {
+    "title": "تغيير كلمة المرور",
+    "password": "كلمة المرور",
+    "confirm_password": "تأكيد كلمة المرور",
+    "submit_button": "تغيير كلمة المرور",
+    "validation": {
+      "password_min": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
+      "confirm_password": "الرجاء تأكيد كلمة المرور",
+      "passwords_not_match": "كلمتا المرور غير متطابقتين"
+    }
+  }
+}

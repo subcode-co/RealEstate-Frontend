@@ -1,0 +1,138 @@
+{
+  "home": "home page",
+  "about": "about",
+  "contact": "contact",
+  "Complaints": {
+    "title": "Complaints",
+    "complaint_form": "Complaint Form",
+    "complaint_type": "Complaint Type",
+    "select_type": "Select Type",
+    "phone_number": "Phone Number",
+    "enter_phone": "Enter phone number",
+    "email": "Email",
+    "enter_email": "Enter email address",
+    "message_label": "Complaint Message",
+    "message_placeholder": "Enter your complaint message",
+    "submit_complaint": "Submit Complaint",
+    "submitting": "Submitting...",
+    "technical_issue": "Technical Issue",
+    "billing_issue": "Billing Issue",
+    "general_inquiry": "General Inquiry",
+    "other": "Other",
+    "validation": {
+      "complaint_type_required": "Please select a complaint type",
+      "phone_min": "Phone number must be at least 10 digits",
+      "email_invalid": "Invalid email address",
+      "message_min": "Message must be at least 10 characters",
+      "unauthorized": "You must be logged in first"
+    }
+  },
+  "Newsletter": {
+    "title": "Newsletter",
+    "email_placeholder": "Email address...",
+    "subscribe": "Subscribe",
+    "error": "Invalid email address"
+  },
+  "Footer": {
+    "company_name": "Real Estate Solutions",
+    "company_description": "Real Estate Solutions is your first partner to achieve your real estate dreams with confidence and peace of mind. We offer you a comprehensive range of services including buying, selling, renting and property management,",
+    "important_links": "Important Links",
+    "about_us": "About Us",
+    "complaints": "Complaints",
+    "blogs": "Blogs",
+    "our_services": "Our Services",
+    "estates": "Real Estates",
+    "partners": "Partners",
+    "user_manual": "User Manual",
+    "privacy_policy": "Privacy Policy",
+    "all_rights_reserved": "All rights reserved@",
+    "company_short_name": "Halool"
+  },
+  "partner": {
+    "title": "Success Partners"
+  },
+    "blog": {
+    "title": "Blogs",
+    "subtitle": "Selected Articles",
+    "description": "Some of the most read articles from our blog"
+  },
+  "client_reviews": {
+    "title": "Client Reviews",
+    "subtitle": "What our clients say",
+    "description": "Some of the most read articles from our blog"
+  },
+  "sign_up": {
+    "title": "Sign Up",
+    "seeker": "Seeker",
+    "owner": "Owner",
+    "full_name": "Full Name",
+    "email": "Email Address",
+    "phone_number": "Phone Number",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "placeholder": "Write here",
+    "password_placeholder": "••••••••",
+    "submit_button": "Create Account",
+    "already_have_account": "Already have an account",
+    "login": "Login",
+    "password_requirements": {
+      "min_length": "At least 8 characters",
+      "has_number": "Contains at least one number",
+      "has_special": "Contains a special character",
+      "has_uppercase": "Contains an uppercase letter"
+    },
+    "validation": {
+      "name_min": "Name must be at least 2 characters",
+      "email_invalid": "Please enter a valid email address",
+      "phone_min": "Phone number must be at least 10 digits",
+      "password_min": "Password must be at least 8 characters",
+      "confirm_password": "Please confirm your password",
+      "passwords_not_match": "Passwords do not match",
+      "role_required": "Please select account type"
+    }
+  },
+  "otp": {
+    "title": "Verify Your Number",
+    "code_sent_to": "A verification code has been sent to",
+    "enter_code": "Enter Code",
+    "not_received": "Didn't receive the code?",
+    "resend": "Resend",
+    "verify_button": "Verify Code",
+    "validation": {
+      "code_length": "Code must be 4 digits"
+    }
+  },
+  "login":{
+    "title":"Login",
+    "phone_number": "Phone Number",
+    "password": "Password",
+    "password_placeholder": "Enter your password",
+    "forgot_password": "Forgot your password?",
+    "submit_button": "Login",
+    "no_account": "Don't have an account?",
+    "create_account": "Create Account",
+    "validation": {
+      "phone_min": "Phone number must be at least 10 digits",
+      "password_required": "Please enter your password"
+    }
+  },
+  "forget-password": {
+    "title": "Forgot Password",
+    "phone_number": "Phone Number",
+    "submit_button": "Send",
+    "validation": {
+      "phone_min": "Phone number must be at least 10 digits"
+    }
+  },
+  "new-password": {
+    "title": "New Password",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "submit_button": "Change Password",
+    "validation": {
+      "password_min": "Password must be at least 8 characters",
+      "confirm_password": "Please confirm your password",
+      "passwords_not_match": "Passwords do not match"
+    }
+  }
+}
