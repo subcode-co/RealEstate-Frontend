@@ -41,7 +41,6 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-
 }
 
 :root {
@@ -112,8 +111,8 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
-@theme{
-    --color-main-dark: #282828;
+@theme {
+  --color-main-dark: #282828;
   --color-main-navy: #054457;
   --color-main-green: #3fb38b;
   --color-main-light-green: #e1f9f1;
@@ -138,14 +137,12 @@
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
 
-.door-left{
+.door-left {
   clip-path: polygon(0 1%, 100% 16%, 100% 100%, 0% 100%);
 }
-.door-right{
-clip-path: polygon(0 16%, 100% 0, 100% 100%, 0 100%);
+.door-right {
+  clip-path: polygon(0 16%, 100% 0, 100% 100%, 0 100%);
 }
-
-
 
 /* Global scrollbar styles */
 ::-webkit-scrollbar {
@@ -169,16 +166,13 @@ clip-path: polygon(0 16%, 100% 0, 100% 100%, 0 100%);
 }
 
 .notifction-scroll::-webkit-scrollbar-track {
-  background:#DDE8F9; /* خلفية المسار */
+  background: #dde8f9; /* خلفية المسار */
 }
 
 .notifction-scroll::-webkit-scrollbar-thumb {
   background: var(--color-main-green); /* لون المقبض */
   border-radius: 3px;
 }
-
-
-
 
 /* React Image Gallery Styles */
 /* Main gallery container */
@@ -193,13 +187,11 @@ clip-path: polygon(0 16%, 100% 0, 100% 100%, 0 100%);
   width: 100%;
   margin: 0 auto;
   object-fit: contain;
-
 }
 
 /* Thumbnail container */
 .image-gallery-thumbnails-wrapper {
   padding-block: 0.75rem;
-
 }
 
 /* Individual thumbnail */
@@ -214,7 +206,6 @@ clip-path: polygon(0 16%, 100% 0, 100% 100%, 0 100%);
 .image-gallery-thumbnail:hover,
 .image-gallery-thumbnail.active {
   border-color: var(--color-main-green) !important;
-
 }
 
 .image-gallery-thumbnail img {
@@ -222,13 +213,10 @@ clip-path: polygon(0 16%, 100% 0, 100% 100%, 0 100%);
   object-fit: cover;
 }
 
-
-
 .image-gallery-left-nav,
 .image-gallery-right-nav {
   display: none;
 }
-
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -236,10 +224,14 @@ clip-path: polygon(0 16%, 100% 0, 100% 100%, 0 100%);
     max-height: 450px !important;
   }
 }
-.react-international-phone-input-container{
+.react-international-phone-input-container {
   direction: ltr !important;
 }
-.react-international-phone-input-container .react-international-phone-country-selector-button {
-  @apply h-full px-2 ;
+.react-international-phone-input-container
+  .react-international-phone-country-selector-button {
+  @apply h-full px-2;
 }
 
+button {
+  cursor: pointer;
+}
