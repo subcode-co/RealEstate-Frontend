@@ -235,3 +235,7 @@
 button {
   cursor: pointer;
 }
+
+body {
+  overflow-y: scroll;
+}

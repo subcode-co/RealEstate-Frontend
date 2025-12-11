@@ -21,45 +21,75 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { BsSearch } from "react-icons/bs";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
-  type: z.string().min(1, "هذا الحقل مطلوب"),
-  location: z.string().min(1, "هذا الحقل مطلوب"),
-  space: z.string().min(1, "هذا الحقل مطلوب"),
-  price: z.string().min(1, "هذا الحقل مطلوب"),
+  operationType: z.string().optional(),
+  rooms: z.string().optional(),
+  type: z.string().optional(),
+  finish: z.string().optional(),
 });
 
 export default function FilterForm() {
-  const [status, setStatus] = useState("sell");
+  const [operationType, setOperationType] = useState("sale");
+  const router = useRouter();
+
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      type: "villa",
-      location: "",
-      space: "",
-      price: "",
+      operationType: "sale",
+      rooms: "",
+      type: "",
+      finish: "",
     },
   });
 
   const onSubmit = (values) => {
-    console.log(values);
+    // Build query parameters
+    const params = new URLSearchParams();
+
+    // Add operation type (sale/rent)
+    params.set("operation_type", operationType);
+
+    // Add number of rooms
+    if (values.rooms) {
+      params.set("rooms", values.rooms);
+    }
+
+    // Map type to category (matching estates filter logic)
+    if (values.type) {
+      const categoryMap = {
+        villa: "فيلا",
+        apartment: "شقة",
+        land: "برج",
+      };
+      params.set("category", categoryMap[values.type] || values.type);
+    }
+
+    // Add finishing type
+    if (values.finish) {
+      params.set("finishing_type", values.finish);
+    }
+
+    // Navigate to estates page with search params
+    router.push(`/estats?${params.toString()}`);
   };
 
   return (
     <div className="w-full self-end">
       <div className="flex items-center cursor-pointer ">
         <button
-          onClick={() => setStatus("sell")}
+          onClick={() => setOperationType("sale")}
           className={`h-12 bg-[#F5F5F5] text-[#A6A6A6]  px-6 ${
-            status === "sell" && "text-main-green bg-[#FEFEFF]"
+            operationType === "sale" && "text-main-green bg-[#FEFEFF]"
           }`}
         >
           بيع
         </button>
         <button
-          onClick={() => setStatus("rent")}
+          onClick={() => setOperationType("rent")}
           className={`h-12 bg-[#F5F5F5] text-[#A6A6A6]  px-6 ${
-            status === "rent" && "text-main-green bg-[#FEFEFF]"
+            operationType === "rent" && "text-main-green bg-[#FEFEFF]"
           }`}
         >
           ايجار
@@ -97,111 +127,54 @@ export default function FilterForm() {
             )}
           />
 
-          {/* الموقع */}
+          {/* عدد الغرف */}
           <FormField
             control={form.control}
-            name="location"
+            name="rooms"
             render={({ field }) => (
               <FormItem className={"max-md:w-1/2"}>
-                <FormLabel>الموقع</FormLabel>
+                <FormLabel>عدد الغرف</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="border-none shadow-none focus-visible:ring-0 p-0">
                       <SelectValue
-                        placeholder="اختر "
+                        placeholder="اختر عدد الغرف"
                         className="text-main-navy"
                       />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="all">الكل</SelectItem>
-                    <SelectItem value="makka">مكة</SelectItem>
-                    <SelectItem value="madenah">المدينة</SelectItem>
+                    {Array.from({ length: 10 }, (_, i) => i + 1).map((item) => (
+                      <SelectItem key={item} value={item.toString()}>
+                        {item}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
-          {/* المساحة */}
+          {/* نوع التشطيب */}
           <FormField
             control={form.control}
-            name="space"
+            name="finish"
             render={({ field }) => (
               <FormItem className={"max-md:w-1/2"}>
-                <FormLabel>المساحة</FormLabel>
+                <FormLabel>نوع التشطيب</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="border-none shadow-none focus-visible:ring-0 p-0">
                       <SelectValue
-                        placeholder="اختر "
+                        placeholder="اختر نوع التشطيب"
                         className="text-main-navy"
                       />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="420">420 m2</SelectItem>
-                    <SelectItem value="540">540 m2</SelectItem>
-                    <SelectItem value="600">600 m2</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {/* السعر */}
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem className={"max-md:w-1/2"}>
-                <FormLabel>السعر</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger className="border-none shadow-none focus-visible:ring-0 p-0">
-                      <SelectValue
-                        placeholder="اختر "
-                        className="text-main-navy"
-                      />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem
-                      className={"flex gap-2 items-center "}
-                      value="200-350"
-                    >
-                      <Image
-                        src="/images/ryal-green.svg"
-                        alt="currency"
-                        width={10}
-                        height={10}
-                      />{" "}
-                      200-350{" "}
-                    </SelectItem>
-                    <SelectItem
-                      className={"flex gap-2 items-center "}
-                      value="350-500"
-                    >
-                      <Image
-                        src="/images/ryal-green.svg"
-                        alt="currency"
-                        width={10}
-                        height={10}
-                      />{" "}
-                      350-500{" "}
-                    </SelectItem>
-                    <SelectItem
-                      className={"flex gap-2 items-center "}
-                      value="500-700"
-                    >
-                      <Image
-                        src="/images/ryal-green.svg"
-                        alt="currency"
-                        width={10}
-                        height={10}
-                      />{" "}
-                      500-700{" "}
-                    </SelectItem>
+                    <SelectItem value="luxury">فاخر</SelectItem>
+                    <SelectItem value="good">جيد</SelectItem>
+                    <SelectItem value="basic">بسيط</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
