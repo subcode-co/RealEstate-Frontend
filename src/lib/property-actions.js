@@ -91,13 +91,6 @@ export async function getPropertyBySlug(slug) {
 
     const result = await response.json();
 
-    console.log("Property API Response:", {
-      status: response.status,
-      success: result.success,
-      hasData: !!result.data,
-      slug,
-    });
-
     if (result.success) {
       return { code: response.status, success: true, data: result.data };
     } else {

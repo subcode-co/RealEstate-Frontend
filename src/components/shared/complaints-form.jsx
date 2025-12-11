@@ -91,7 +91,6 @@ const ComplaintsForm = () => {
       url: "/complaints",
       data: values,
     });
-    console.log(res);
     if (res?.code === 200) {
       toast.success(res?.data?.message);
       form.reset();

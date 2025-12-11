@@ -48,7 +48,6 @@ export function ForgetForm() {
 
   async function onSubmit(values) {
     const res = await postData({ url: "/forgot-password", data: values });
-    console.log(res);
     if (res?.code === 200) {
       toast.success(res?.data?.message);
       const encodedCode = encodeURIComponent(res?.data?.data?.reset_code);

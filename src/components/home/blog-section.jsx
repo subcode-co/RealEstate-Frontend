@@ -15,10 +15,8 @@ const BlogSection = async () => {
   const t = await getTranslations("blog");
   let data = [];
   const response = await getData({ url: "/blogs", revalidate: 0 });
-  console.log({ response });
   data = response?.code == 200 ? response?.data?.data : [];
 
-  console.log({ data });
   return (
     <section className="container space-y-6 py-12">
       {/* header */}

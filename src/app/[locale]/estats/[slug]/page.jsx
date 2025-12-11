@@ -29,32 +29,19 @@ export default async function EstateSinglePage({ params }) {
   const locale = await getLocale();
   const t = await getTranslations("property_details");
 
-  console.log({ locale });
-  console.log("Fetching property with slug:", slug);
+  const tBreadcrumbs = await getTranslations("breadcrumbs");
 
   // Fetch property data
   const propertyResponse = await getPropertyBySlug(slug);
-
-  console.log("Property response:", {
-    success: propertyResponse.success,
-    hasData: !!propertyResponse.data,
-  });
 
   if (!propertyResponse.success || !propertyResponse.data) {
     notFound();
   }
 
   const property = propertyResponse.data;
-  console.log({ property });
   // Fetch similar properties
   const similarResponse = await getSimilarProperties(property.id);
   const similarProperties = similarResponse.success ? similarResponse.data : [];
-
-  console.log("Similar properties:", {
-    success: similarResponse.success,
-    count: similarProperties.length,
-    properties: similarProperties,
-  });
 
   // Generate Google Maps URL
   const mapsUrl =
@@ -71,7 +58,7 @@ export default async function EstateSinglePage({ params }) {
           <div className="space-y-4">
             <CustomBreadcrumbs
               items={[
-                { label: t("breadcrumbs.estates"), href: "/estats" },
+                { label: tBreadcrumbs("estates"), href: "/estats" },
                 { label: property.title },
               ]}
             />

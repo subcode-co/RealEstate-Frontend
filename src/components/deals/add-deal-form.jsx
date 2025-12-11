@@ -99,10 +99,6 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
 
-    // Debug: Log the data being sent
-    console.log("Form data being sent:", data);
-    console.log("Is edit mode:", isEditMode);
-
     try {
       let result;
 
@@ -113,8 +109,6 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         // Create new deal
         result = await createDirectDeal(data);
       }
-
-      console.log("API Response:", result);
 
       if (result.success) {
         toast.success(

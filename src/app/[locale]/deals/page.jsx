@@ -40,9 +40,7 @@ const Page = () => {
   async function fetchDeals(page = currentPage) {
     setIsLoading(true);
     try {
-      console.log(`Fetching deals from server action, page: ${page}`);
       const result = await getDirectDeals(page);
-      console.log("Direct deals response:", result);
 
       if (result.success) {
         setDeals(result.data || []);
