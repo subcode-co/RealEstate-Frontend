@@ -6,13 +6,33 @@ import PartnerSection from "@/components/home/partner-section";
 import ServicesSection from "@/components/home/services-section";
 import StateFilterSection from "@/components/home/state-filter";
 import StatesSection from "@/components/home/states-section";
+import { getData } from "@/lib/fetch-methods";
 
-export default function Home() {
+export default async function Home() {
+  let homeData = {};
+  const response = await getData({ url: "/home" });
+  homeData =
+    response?.code === 200 && response?.data?.success
+      ? response?.data?.data
+      : {};
+
+  const {
+    contentSections = [],
+    coreValues = [],
+    statistics = [],
+    platformRating = "4.8",
+    video = null,
+  } = homeData;
+
   return (
     <>
-      <HeroSection />
-      <AboutSection />
-      <ServicesSection />
+      <HeroSection video={video} />
+      <AboutSection
+        sections={contentSections}
+        platformRating={platformRating}
+        statistics={statistics}
+      />
+      <ServicesSection coreValues={coreValues} />
       <StateFilterSection />
       <StatesSection />
       <ClientReviews />

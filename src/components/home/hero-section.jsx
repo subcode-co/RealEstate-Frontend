@@ -6,7 +6,7 @@ import { FaLongArrowAltRight } from "react-icons/fa";
 import { MdArrowForwardIos } from "react-icons/md";
 import FilterForm from "../shared/filter-form";
 
-const HeroSection = () => {
+const HeroSection = ({ video = null }) => {
   const whatsappNumber = "201068389295"; // بدون علامة +
   const message = encodeURIComponent(
     "مرحباً، أنا مهتم بطلب استشارة خبير عقاري"
@@ -15,6 +15,9 @@ const HeroSection = () => {
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
     window.open(whatsappUrl, "_blank");
   };
+
+  const videoSrc = video || "/images/hero.mp4";
+
   return (
     <section className="container  pt-12 p-6  bg-main-light-gray rounded-b-[3rem]  space-y-12">
       {/* title */}
@@ -63,7 +66,7 @@ const HeroSection = () => {
         {/* video */}
         <div className="relative lg:h-[30vh] lg:w-[65%] w-full hover rounded-[3rem] overflow-hidden ">
           <video
-            src="/images/hero.mp4"
+            src={videoSrc}
             autoPlay
             loop
             muted
