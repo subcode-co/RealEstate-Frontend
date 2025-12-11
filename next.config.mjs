@@ -8,7 +8,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-
+  output: "standalone",
   webpack(config) {
     // دعم استيراد SVG كـ React Component
     config.module.rules.push({
