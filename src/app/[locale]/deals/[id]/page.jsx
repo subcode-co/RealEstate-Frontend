@@ -1,5 +1,5 @@
-"use client"
-import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs"
+"use client";
+import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   FaMoneyBillWave,
@@ -8,20 +8,106 @@ import {
   FaBuilding,
   FaChartLine,
   FaExchangeAlt,
+  FaCalendarAlt,
+  FaCheckCircle,
 } from "react-icons/fa";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { useEffect, useState } from "react";
+import { getData } from "@/lib/fetch-methods";
+import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 const SingleDealPage = () => {
+  const params = useParams();
+  const offerId = params.id;
+  const [offer, setOffer] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (offerId) {
+      fetchOffer();
+    }
+  }, [offerId]);
+
+  async function fetchOffer() {
+    setIsLoading(true);
+    try {
+      const response = await getData({ url: `/offers/${offerId}` });
+      if (response?.code === 200 && response?.data?.success) {
+        setOffer(response.data.data);
+      } else {
+        toast.error(response?.data?.message || "فشل في جلب البيانات");
+      }
+    } catch (error) {
+      toast.error("حدث خطأ أثناء جلب البيانات");
+      console.error("Error fetching offer:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <main className="space-y-6">
+        <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
+          <div className="h-4 bg-gray-200 rounded w-1/3 animate-pulse" />
+          <div className="h-8 bg-gray-200 rounded w-1/2 animate-pulse" />
+        </div>
+        <div className="container border border-gray-300 p-10 space-y-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-24 bg-gray-200 rounded animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (!offer) {
+    return (
+      <main className="space-y-6">
+        <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
+          <CustomBreadcrumbs items={[{ label: "الصفقات", href: "/deals" }]} />
+          <h1 className="text-main-navy text-2xl font-bold">
+            الصفقة غير موجودة
+          </h1>
+        </div>
+        <div className="container border border-gray-300 p-10">
+          <p className="text-center text-gray-500">
+            لم يتم العثور على الصفقة المطلوبة
+          </p>
+        </div>
+      </main>
+    );
+  }
+
   const stats = [
-    { icon: <FaExchangeAlt />, label: "عدد العمليات", value: "24" },
-    { icon: <FaRulerCombined />, label: "المساحة المتداولة", value: "224 م²" },
-    { icon: <FaBuilding />, label: "عدد العقارات المتداولة", value: "240" },
-    { icon: <FaTag />, label: "أقل سعر", value: "720 ر.س" },
-    { icon: <FaTag />, label: "أعلى سعر", value: "720,000 ر.س" },
-    { icon: <FaChartLine />, label: "متوسط السعر", value: "720,000 ر.س" },
-    { icon: <FaMoneyBillWave />, label: "إجمالي قيمة الصفقات", value: "720,000 ر.س" },
-    { icon: <FaMoneyBillWave />, label: "إجمالي قيمة الأصول", value: "720,000 ر.س" },
+    { icon: <FaTag />, label: "السعر", value: `${offer.price} ر.س` },
+    {
+      icon: <FaCalendarAlt />,
+      label: "مدة الصلاحية",
+      value: `${offer.validityDays} يوم`,
+    },
+    {
+      icon: <FaCheckCircle />,
+      label: "عدد المميزات",
+      value: offer.features?.length || 0,
+    },
+    {
+      icon: <FaBuilding />,
+      label: "الحالة",
+      value: offer.isActive ? "نشط" : "غير نشط",
+    },
   ];
+
   const data = [
     { name: "Jan", high: 10000, avg: 8000, low: 6000 },
     { name: "Feb", high: 12000, avg: 9000, low: 7000 },
@@ -29,27 +115,58 @@ const SingleDealPage = () => {
     { name: "Apr", high: 25000, avg: 18000, low: 10000 },
     { name: "May", high: 30000, avg: 20000, low: 12000 },
   ];
+
   return (
-    <main className='space-y-6'>
-      <div className='bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container'>
-        <CustomBreadcrumbs items={[{ label: 'الصفقات', href: "/deals" }, { label: 'صفقة فيلا العاشر' }]} />
-        <h1 className='text-main-navy text-2xl font-bold'>الصفقات المباشرة</h1>
-      </div>  
-      <div className='container border border-gray-300 p-10 space-y-8'>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+    <main className="space-y-6">
+      <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
+        <CustomBreadcrumbs
+          items={[{ label: "الصفقات", href: "/deals" }, { label: offer.name }]}
+        />
+        <h1 className="text-main-navy text-2xl font-bold">{offer.name}</h1>
+        <p className="text-gray-600">{offer.description}</p>
+      </div>
+      <div className="container border border-gray-300 p-10 space-y-8">
+        {/* Stats Grid */}
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((item, i) => (
-            <Card key={i} className="shadow-sm border border-gray-100 rounded-none rounded-s-lg">
-              <CardContent className="flex items-center p-2 gap-2 ">
-                <div className="bg-main-green text-white p-2 text-lg rounded ">{item.icon}</div>
+            <Card
+              key={i}
+              className="shadow-sm border border-gray-100 rounded-none rounded-s-lg"
+            >
+              <CardContent className="flex items-center p-4 gap-3">
+                <div className="bg-main-green text-white p-3 text-lg rounded">
+                  {item.icon}
+                </div>
                 <div>
-                <div className="text-gray-500 text-sm">{item.label}</div>
-                <div className="text-xs font-semibold ">{item.value}</div>
+                  <div className="text-gray-500 text-sm">{item.label}</div>
+                  <div className="text-sm font-semibold">{item.value}</div>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
+        {/* Features Section */}
+        {offer.features && offer.features.length > 0 && (
+          <Card className="p-6">
+            <h3 className="text-lg font-semibold mb-4 text-main-navy">
+              المميزات
+            </h3>
+            <ul className="grid sm:grid-cols-2 gap-3">
+              {offer.features.map((feature, index) => (
+                <li
+                  key={index}
+                  className="flex items-center gap-2 text-gray-700"
+                >
+                  <FaCheckCircle className="text-main-green flex-shrink-0" />
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        )}
+
+        {/* Chart */}
         <Card className="p-4 lg:w-1/2 mx-auto">
           <h3 className="text-center font-semibold mb-4">تغير الأسعار</h3>
           <ResponsiveContainer width="100%" height={250}>
@@ -57,15 +174,53 @@ const SingleDealPage = () => {
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="high" stroke="#16a34a" strokeWidth={2} name="الأعلى" />
-              <Line type="monotone" dataKey="avg" stroke="#86efac" strokeDasharray="5 5" name="المتوسط" />
-              <Line type="monotone" dataKey="low" stroke="#a3a3a3" name="الأقل" />
+              <Line
+                type="monotone"
+                dataKey="high"
+                stroke="#16a34a"
+                strokeWidth={2}
+                name="الأعلى"
+              />
+              <Line
+                type="monotone"
+                dataKey="avg"
+                stroke="#86efac"
+                strokeDasharray="5 5"
+                name="المتوسط"
+              />
+              <Line
+                type="monotone"
+                dataKey="low"
+                stroke="#a3a3a3"
+                name="الأقل"
+              />
             </LineChart>
           </ResponsiveContainer>
         </Card>
+
+        {/* Additional Info */}
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold mb-4 text-main-navy">
+            معلومات إضافية
+          </h3>
+          <div className="grid sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="text-gray-500">تاريخ الإنشاء: </span>
+              <span className="font-semibold">
+                {new Date(offer.createdAt).toLocaleDateString("ar-SA")}
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-500">آخر تحديث: </span>
+              <span className="font-semibold">
+                {new Date(offer.updatedAt).toLocaleDateString("ar-SA")}
+              </span>
+            </div>
+          </div>
+        </Card>
       </div>
     </main>
-  )
-}
+  );
+};
 
-export default SingleDealPage
+export default SingleDealPage;

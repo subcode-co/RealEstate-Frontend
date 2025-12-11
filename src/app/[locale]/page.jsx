@@ -8,17 +8,16 @@ import StateFilterSection from "@/components/home/state-filter";
 import StatesSection from "@/components/home/states-section";
 
 export default function Home() {
-
   return (
     <>
-      <HeroSection/>
+      <HeroSection />
       <AboutSection />
       <ServicesSection />
       <StateFilterSection />
-      <StatesSection/>
-      <ClientReviews/>
+      <StatesSection />
+      <ClientReviews />
       <BlogSection />
-      <PartnerSection/>
+      <PartnerSection />
     </>
-  )
+  );
 }
