@@ -1,16 +1,15 @@
-import { Link } from "@/i18n/navigation";
-import { Calendar } from "lucide-react";
+import { Calendar, Pencil } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
-const DealsTable = ({ deals = [], isLoading = false }) => {
+const DealsTable = ({ deals = [], isLoading = false, onEdit }) => {
   if (isLoading) {
     return (
       <div className="space-y-4 mt-8">
         {Array.from({ length: 5 }).map((_, index) => (
           <div
             key={index}
-            className="grid grid-cols-5 border rounded px-4 py-6 animate-pulse"
+            className="grid grid-cols-6 border rounded px-4 py-6 animate-pulse"
           >
             <div className="flex items-center gap-1">
               <div className="size-12 bg-gray-200 rounded" />
@@ -18,6 +17,10 @@ const DealsTable = ({ deals = [], isLoading = false }) => {
                 <div className="h-4 bg-gray-200 rounded w-3/4" />
                 <div className="h-3 bg-gray-200 rounded w-1/2" />
               </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="h-3 bg-gray-200 rounded w-20" />
+              <div className="h-4 bg-gray-200 rounded w-24" />
             </div>
             <div className="flex flex-col gap-2">
               <div className="h-3 bg-gray-200 rounded w-20" />
@@ -52,10 +55,9 @@ const DealsTable = ({ deals = [], isLoading = false }) => {
   return (
     <div className="space-y-4 mt-8">
       {deals.map((deal) => (
-        <Link
-          href={`/deals/${deal.id}`}
+        <div
           key={deal.id}
-          className="grid grid-cols-5 border rounded px-4 py-6 hover:shadow-md transition-shadow max-md:grid-cols-1 max-md:gap-4"
+          className="grid grid-cols-6 border rounded px-4 py-6 hover:shadow-md transition-shadow max-md:grid-cols-1 max-md:gap-4"
         >
           {/* Property Info */}
           <div className="flex items-center gap-1">
@@ -108,7 +110,21 @@ const DealsTable = ({ deals = [], isLoading = false }) => {
               {new Date(deal.createdAt).toLocaleDateString("ar-SA")}
             </p>
           </div>
-        </Link>
+
+          {/* Actions */}
+          <div className="flex items-center justify-center">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onEdit && onEdit(deal);
+              }}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              title="تعديل الصفقة"
+            >
+              <Pencil size={18} className="text-main-green" />
+            </button>
+          </div>
+        </div>
       ))}
     </div>
   );

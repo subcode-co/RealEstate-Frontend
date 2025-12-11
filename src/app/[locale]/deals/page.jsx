@@ -27,6 +27,7 @@ const Page = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [meta, setMeta] = useState(null);
+  const [selectedDeal, setSelectedDeal] = useState(null);
   const tabstyle =
     "bg-gray-100 p-4 data-[state=active]:bg-main-light-green data-[state=active]:border-b data-[state=active]:border-main-green rounde-none rounded-s-lg last:rounded-none last:rounded-s-lg  ";
 
@@ -58,6 +59,21 @@ const Page = () => {
     }
   }
 
+  const handleEdit = (deal) => {
+    setSelectedDeal(deal);
+    setOpen(true);
+  };
+
+  const handleAddNew = () => {
+    setSelectedDeal(null);
+    setOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpen(false);
+    setSelectedDeal(null);
+  };
+
   return (
     <main className="space-y-6">
       <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
@@ -68,7 +84,7 @@ const Page = () => {
         <Tabs dir={locale === "ar" ? "rtl" : "ltr"} defaultValue="houre">
           <div className="flex justify-between items-center">
             {/* search */}
-            <div className="relative">
+            {/* <div className="relative">
               <MdOutlineLocationOn className="absolute end-3 top-1/2 -translate-y-1/2 text-gray-500" />
               <Input
                 placeholder="جميع المناطق"
@@ -76,9 +92,9 @@ const Page = () => {
                   "!h-10 placeholder:text-xs rounded-none rounded-s-lg"
                 }
               />
-            </div>
+            </div> */}
             {/* tabs */}
-            <TabsList className="bg-transparent !h-auto flex items-center gap-1">
+            {/* <TabsList className="bg-transparent !h-auto flex items-center gap-1">
               <TabsTrigger value="houre" className={tabstyle}>
                 ساعة
               </TabsTrigger>
@@ -94,21 +110,28 @@ const Page = () => {
               <TabsTrigger value="year" className={tabstyle}>
                 سنة
               </TabsTrigger>
-            </TabsList>
+            </TabsList> */}
             {/* add */}
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger className=" text-main-green px-4 py-2 rounded flex items-center gap-2 border border-main-green text-sm hover:bg-main-green hover:text-white transition-all duration-300 ">
-                {" "}
-                <FaPlus />
-                أضافة صفقة
-              </DialogTrigger>
+            <button
+              onClick={handleAddNew}
+              className="text-main-green px-4 ms-auto py-2 rounded flex items-center gap-2 border border-main-green text-sm hover:bg-main-green hover:text-white transition-all duration-300"
+            >
+              <FaPlus />
+              أضافة صفقة
+            </button>
+
+            <Dialog open={open} onOpenChange={handleCloseDialog}>
               <DialogContent className={"lg:w-[80%]"}>
                 <DialogHeader>
                   <DialogTitle className={"text-center text-xl font-bold"}>
-                    إضافة صفقة جديدة
+                    {selectedDeal ? "تعديل الصفقة" : "إضافة صفقة جديدة"}
                   </DialogTitle>
                   <DialogDescription asChild>
-                    <AddDealForm setOpen={setOpen} onSuccess={fetchDeals} />
+                    <AddDealForm
+                      setOpen={handleCloseDialog}
+                      onSuccess={fetchDeals}
+                      deal={selectedDeal}
+                    />
                   </DialogDescription>
                 </DialogHeader>
               </DialogContent>
@@ -116,7 +139,11 @@ const Page = () => {
           </div>
           {["houre", "day", "week", "month", "year"].map((tab) => (
             <TabsContent key={tab} value={tab}>
-              <DealsTable deals={deals} isLoading={isLoading} />
+              <DealsTable
+                deals={deals}
+                isLoading={isLoading}
+                onEdit={handleEdit}
+              />
 
               {/* Pagination */}
               {!isLoading && deals.length > 0 && meta && (

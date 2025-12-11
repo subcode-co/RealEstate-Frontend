@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createDirectDeal } from "@/actions/deals";
+import { createDirectDeal, updateDirectDeal } from "@/actions/deals";
 import { toast } from "sonner";
 
 const schema = z.object({
@@ -36,14 +36,16 @@ const schema = z.object({
   identity_number: z.string().min(1, "رقم الهوية مطلوب"),
 });
 
-export default function AddDealForm({ setOpen, onSuccess }) {
+export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const labelStyle = "block text-sm font-medium text-main-navy mb-2";
+  const isEditMode = !!deal;
 
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -67,19 +69,55 @@ export default function AddDealForm({ setOpen, onSuccess }) {
     },
   });
 
+  // Pre-populate form when editing
+  useEffect(() => {
+    if (deal) {
+      reset({
+        start_date: deal.startDate || "",
+        end_date: deal.endDate || "",
+        city: deal.city || "",
+        district: deal.district || "",
+        country: deal.country || "",
+        plan_number: deal.planNumber?.toString() || "",
+        plot_number: deal.plotNumber?.toString() || "",
+        min_area: deal.minArea?.toString() || "",
+        max_area: deal.maxArea?.toString() || "",
+        min_total_price: deal.minTotalPrice?.toString() || "",
+        max_total_price: deal.maxTotalPrice?.toString() || "",
+        min_price_per_meter: deal.minPricePerMeter?.toString() || "",
+        max_price_per_meter: deal.maxPricePerMeter?.toString() || "",
+        property_type_id: deal.propertyTypeId?.toString() || "",
+        transaction_type: deal.transactionType || "",
+        identity_number: deal.identityNumber || "",
+      });
+    }
+  }, [deal, reset]);
+
   const onSubmit = async (data) => {
     setIsSubmitting(true);
 
     // Debug: Log the data being sent
     console.log("Form data being sent:", data);
+    console.log("Is edit mode:", isEditMode);
 
     try {
-      const result = await createDirectDeal(data);
+      let result;
+
+      if (isEditMode) {
+        // Update existing deal
+        result = await updateDirectDeal(deal.id, data);
+      } else {
+        // Create new deal
+        result = await createDirectDeal(data);
+      }
 
       console.log("API Response:", result);
 
       if (result.success) {
-        toast.success(result.message || "تم إضافة الصفقة بنجاح");
+        toast.success(
+          result.message ||
+            (isEditMode ? "تم تحديث الصفقة بنجاح" : "تم إضافة الصفقة بنجاح")
+        );
         setOpen(false);
         // Refetch deals list
         if (onSuccess) {
@@ -87,12 +125,17 @@ export default function AddDealForm({ setOpen, onSuccess }) {
         }
       } else {
         // Show detailed error message
-        toast.error(result.message || "فشل في إضافة الصفقة");
+        toast.error(
+          result.message ||
+            (isEditMode ? "فشل في تحديث الصفقة" : "فشل في إضافة الصفقة")
+        );
         console.error("API Error:", result);
       }
     } catch (error) {
-      toast.error("حدث خطأ أثناء إضافة الصفقة");
-      console.error("Error adding deal:", error);
+      toast.error(
+        "حدث خطأ أثناء " + (isEditMode ? "تحديث" : "إضافة") + " الصفقة"
+      );
+      console.error("Error:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -361,7 +404,13 @@ export default function AddDealForm({ setOpen, onSuccess }) {
           إلغاء
         </Button>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "جاري الإضافة..." : "إضافة الصفقة"}
+          {isSubmitting
+            ? isEditMode
+              ? "جاري التحديث..."
+              : "جاري الإضافة..."
+            : isEditMode
+            ? "تحديث الصفقة"
+            : "إضافة الصفقة"}
         </Button>
       </div>
     </form>
