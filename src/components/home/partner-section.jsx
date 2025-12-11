@@ -1,51 +1,63 @@
-import React from 'react'
-import SectionHeader from '../shared/section-header'
+import React from "react";
+import SectionHeader from "../shared/section-header";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel"
-import { useLocale } from 'next-intl'
-import Partnercard from '../shared/partner-card'
-import { getLocale, getTranslations } from 'next-intl/server'
-import { getData } from '@/lib/fetch-methods'
+} from "@/components/ui/carousel";
+import { useLocale } from "next-intl";
+import Partnercard from "../shared/partner-card";
+import { getLocale, getTranslations } from "next-intl/server";
+import { getData } from "@/lib/fetch-methods";
 
 const PartnerSection = async () => {
   const locale = await getLocale();
-  const t =await  getTranslations("partner")
-  let data=[];
+  const t = await getTranslations("partner");
+  let data = [];
   const response = await getData({
     url: "/companies",
-  })
-  data=response?.code==200 ? response?.data?.data : [];
+    revalidate: 0,
+  });
+  data = response?.code == 200 ? response?.data?.data : [];
   return (
-    <section className='container space-y-6 py-12'>
+    <section className="container space-y-6 py-12">
       {/* header */}
-      <SectionHeader>
-        {t("title")}
-      </SectionHeader>
+      <SectionHeader>{t("title")}</SectionHeader>
 
       {/* slider */}
-      <Carousel className={"space-y-8"} opts={{ loop: true, direction: locale === "ar" ? "rtl" : "ltr", align: "start" }}>
+      <Carousel
+        className={"space-y-8"}
+        opts={{
+          loop: true,
+          direction: locale === "ar" ? "rtl" : "ltr",
+          align: "start",
+        }}
+      >
         {/* title */}
-        <h3 className='text-4xl font-semibold'>{t("title")}</h3>
+        <h3 className="text-4xl font-semibold">{t("title")}</h3>
         <CarouselContent className={"p-1"}>
-          {
-            data?.map((item, index) => (
-              <CarouselItem key={index} className="lg:basis-1/4 md:basis-1/2 basis-[90%]" >
-                <Partnercard item={item}/>
-              </CarouselItem>))
-          }
+          {data?.map((item, index) => (
+            <CarouselItem
+              key={index}
+              className="lg:basis-1/4 md:basis-1/2 basis-[90%]"
+            >
+              <Partnercard item={item} />
+            </CarouselItem>
+          ))}
         </CarouselContent>
-        <div className={`flex items-center justify-center gap-3  ${locale === "ar" ? "flex-row-reverse" : ""}`}>
+        <div
+          className={`flex items-center justify-center gap-3  ${
+            locale === "ar" ? "flex-row-reverse" : ""
+          }`}
+        >
           <CarouselPrevious className={"static translate-0 "} />
           <CarouselNext className={"static translate-0 "} />
         </div>
       </Carousel>
     </section>
-  )
-}
+  );
+};
 
-export default PartnerSection
+export default PartnerSection;

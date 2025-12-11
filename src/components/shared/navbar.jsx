@@ -87,7 +87,7 @@ const LocationIcon = () => {
   );
 };
 
-const Navbar = () => {
+const Navbar = ({ topnavColor = "#1a1a1a" }) => {
   const { user, logout } = useContext(UserContext);
 
   return (
@@ -113,7 +113,10 @@ const Navbar = () => {
         <LocaleSwitcher />
       </div>
       {/* nav */}
-      <div className="bg-main-dark px-6 py-2 rounded-t-xl flex items-center justify-between">
+      <div
+        className="px-6 py-2 rounded-t-xl flex items-center justify-between"
+        style={{ backgroundColor: topnavColor }}
+      >
         {/* logo */}
         <Link href="/">
           <Image
@@ -210,7 +213,10 @@ const Navbar = () => {
           <SheetTrigger className="md:hidden">
             <GiHamburgerMenu className="text-white text-2xl hover:text-main-green" />
           </SheetTrigger>
-          <SheetContent className={"bg-main-dark border-none"}>
+          <SheetContent
+            className={"border-none"}
+            style={{ backgroundColor: topnavColor }}
+          >
             <SheetHeader>
               <SheetTitle>
                 {/* logo */}

@@ -1,22 +1,21 @@
-import { NextIntlClientProvider, hasLocale } from 'next-intl';
-import { notFound } from 'next/navigation';
-import { routing } from '@/i18n/routing';
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
+import { routing } from "@/i18n/routing";
 import "../globals.css";
-import { getMessages } from 'next-intl/server';
-import { Alexandria } from 'next/font/google';
-import Footer from '@/components/shared/footer';
-import Navbar from '@/components/shared/navbar';
-import FloatingSocials from '@/components/shared/FloatingSocials';
-import { Toaster } from 'sonner';
-import UserContextProvider from '@/context/user-context';
+import { getMessages } from "next-intl/server";
+import { Alexandria } from "next/font/google";
+import Footer from "@/components/shared/footer";
+import Navbar from "@/components/shared/navbar";
+import FloatingSocials from "@/components/shared/FloatingSocials";
+import { Toaster } from "sonner";
+import UserContextProvider from "@/context/user-context";
+import { getData } from "@/lib/fetch-methods";
 
 const alexandria = Alexandria({
-  subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-  variable: '--font-alexandria'
-})
-
-
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-alexandria",
+});
 
 export const metadata = {
   title: "Create Next App",
@@ -24,8 +23,16 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children, params }) {
-  const { locale } = await params || "ar";
+  const { locale } = (await params) || "ar";
   const messages = await getMessages();
+
+  // Fetch navbar color
+  let navbarColor = "#22c55e"; // Default green color
+  const colorResponse = await getData({ url: "/topnav-color", revalidate: 0 });
+  if (colorResponse?.code === 200 && colorResponse?.data?.success) {
+    navbarColor = colorResponse.data.data.topnavColor || navbarColor;
+  }
+
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
@@ -36,15 +43,17 @@ export default async function RootLayout({ children, params }) {
         dir={locale === "ar" ? "rtl" : "ltr"}
         className={`${alexandria.className} antialiased text-main-navy relative`}
       >
-        <NextIntlClientProvider messages={messages} locale={locale} >
+        <NextIntlClientProvider messages={messages} locale={locale}>
           <UserContextProvider>
-            <Toaster dir={locale === "ar" ? "rtl" : "ltr"} richColors position="top-right" />
+            <Toaster
+              dir={locale === "ar" ? "rtl" : "ltr"}
+              richColors
+              position="top-right"
+            />
             <div className="fixed top-0 left-0 right-0 z-50">
-              <Navbar />
+              <Navbar topnavColor={navbarColor} />
             </div>
-            <div className="mt-40">
-              {children}
-            </div>
+            <div className="mt-40">{children}</div>
             <FloatingSocials />
             <Footer />
           </UserContextProvider>
