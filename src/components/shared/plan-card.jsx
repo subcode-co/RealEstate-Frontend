@@ -34,7 +34,7 @@ export default function PlanCard({ title, price, features, popular }) {
           {title}
         </CardTitle>
         <p className="text-3xl font-bold text-main-green">
-          {price}
+          {price} {t("currency")}
           <span className="text-sm text-gray-500 font-normal">
             {" "}
             / {t("monthly") || "شهريًا"}
