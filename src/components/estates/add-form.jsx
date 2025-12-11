@@ -1,136 +1,604 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { z } from "zod"
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useLocale } from "next-intl";
+import { addProperty } from "@/lib/property-actions";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Upload, Trash2 } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Upload, Trash2 } from "lucide-react";
 
-const schema = z.object({
-  adType: z.string().min(1, "مطلوب"),
-  description: z.string().min(1, "مطلوب"),
-  rooms: z.string().min(1, "مطلوب"),
-  bathrooms: z.string().min(1, "مطلوب"),
-  area: z.string().min(1, "مطلوب"),
-  country: z.string().min(1, "مطلوب"),
-  city: z.string().min(1, "مطلوب"),
-  priceMin: z.string().min(1, "مطلوب"),
-  priceMax: z.string().min(1, "مطلوب"),
-})
+const schema = z
+  .object({
+    title: z.string().min(1, "مطلوب"),
+    description: z.string().min(1, "مطلوب"),
+    operationType: z.string().min(1, "مطلوب"),
+    categoryId: z.string().min(1, "مطلوب"),
+    rooms: z
+      .string()
+      .min(1, "مطلوب")
+      .regex(/^\d+$/, "يجب أن يكون رقماً صحيحاً"),
+    bathrooms: z
+      .string()
+      .min(1, "مطلوب")
+      .regex(/^\d+$/, "يجب أن يكون رقماً صحيحاً"),
+    balconies: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^\d+$/.test(val), {
+        message: "يجب أن يكون رقماً صحيحاً",
+      }),
+    garages: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^\d+$/.test(val), {
+        message: "يجب أن يكون رقماً صحيحاً",
+      }),
+    area: z
+      .string()
+      .min(1, "مطلوب")
+      .regex(/^\d+(\.\d+)?$/, "يجب أن يكون رقماً"),
+    usableArea: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^\d+(\.\d+)?$/.test(val), {
+        message: "يجب أن يكون رقماً",
+      }),
+    countryId: z.string().min(1, "مطلوب"),
+    cityId: z.string().min(1, "مطلوب"),
+    district: z.string().optional(),
+    finishingType: z.string().min(1, "مطلوب"),
+    priceMin: z
+      .string()
+      .min(1, "مطلوب")
+      .regex(/^\d+(\.\d+)?$/, "يجب أن يكون رقماً"),
+    priceMax: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^\d+(\.\d+)?$/.test(val), {
+        message: "يجب أن يكون رقماً",
+      }),
+    priceHidden: z.string().optional(),
+    latitude: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^-?\d+(\.\d+)?$/.test(val), {
+        message: "يجب أن يكون رقماً",
+      }),
+    longitude: z
+      .string()
+      .optional()
+      .refine((val) => !val || /^-?\d+(\.\d+)?$/.test(val), {
+        message: "يجب أن يكون رقماً",
+      }),
+  })
+  .refine(
+    (data) => {
+      // Validate that priceMax is greater than or equal to priceMin if provided
+      if (data.priceMax && data.priceMin) {
+        const min = parseFloat(data.priceMin);
+        const max = parseFloat(data.priceMax);
+        return max >= min;
+      }
+      return true;
+    },
+    {
+      message: "السعر الأقصى يجب أن يكون أكبر من أو يساوي السعر الأدنى",
+      path: ["priceMax"],
+    }
+  );
 
-export default function AddForm({setOpen}) {
-  const [photos, setPhotos] = useState([])
-  const [video, setVideo] = useState(null)
-const lableStyle = "block text-sm font-medium text-main-navy mb-2"
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
+export default function AddForm({ setOpen }) {
+  const locale = useLocale();
+  const [photos, setPhotos] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [countries, setCountries] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  const lableStyle = "block text-sm font-medium text-main-navy mb-2";
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      adType: "",
+      title: "",
       description: "",
+      operationType: "",
+      categoryId: "",
       rooms: "",
       bathrooms: "",
+      balconies: "",
+      garages: "",
       area: "",
-      country: "",
-      city: "",
+      usableArea: "",
+      countryId: "",
+      cityId: "",
+      district: "",
+      finishingType: "",
       priceMin: "",
       priceMax: "",
-    }
-  })
+      priceHidden: "0",
+      latitude: "",
+      longitude: "",
+    },
+  });
 
-  const onSubmit = (data) => {
-    console.log({ ...data, photos, video })
-  }
+  // Fetch countries and cities on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch countries
+        const countriesRes = await fetch(
+          "https://halool.tsd-education.com/api/countries",
+          {
+            headers: {
+              "Accept-Language": locale,
+              Accept: "application/json",
+            },
+          }
+        );
+        const countriesData = await countriesRes.json();
+        if (countriesData.success) {
+          setCountries(countriesData.data);
+        }
+
+        // Fetch cities
+        const citiesRes = await fetch(
+          "https://halool.tsd-education.com/api/cities",
+          {
+            headers: {
+              "Accept-Language": locale,
+              Accept: "application/json",
+            },
+          }
+        );
+        const citiesData = await citiesRes.json();
+        if (citiesData.success) {
+          setCities(citiesData.data);
+        }
+      } catch (err) {
+        console.error("Error fetching countries/cities:", err);
+      }
+    };
+
+    fetchData();
+  }, [locale]);
+
+  const onSubmit = async (data) => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      // Create FormData for multipart/form-data submission
+      const formData = new FormData();
+
+      // Add text fields
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("operation_type", data.operationType);
+      formData.append("category_id", data.categoryId);
+
+      // Add numeric fields (convert to numbers)
+      formData.append("rooms", parseInt(data.rooms, 10));
+      formData.append("bathrooms", parseInt(data.bathrooms, 10));
+      if (data.balconies)
+        formData.append("balconies", parseInt(data.balconies, 10));
+      if (data.garages) formData.append("garages", parseInt(data.garages, 10));
+
+      // Add area fields (convert to numbers)
+      formData.append("area", parseFloat(data.area));
+      if (data.usableArea)
+        formData.append("usable_area", parseFloat(data.usableArea));
+
+      // Add location fields
+      formData.append("country_id", data.countryId);
+      formData.append("city_id", data.cityId);
+      if (data.district) formData.append("district", data.district);
+
+      // Add finishing type
+      formData.append("finishing_type", data.finishingType);
+
+      // Add price fields (convert to numbers)
+      const priceMin = parseFloat(data.priceMin);
+      formData.append("price_min", priceMin);
+
+      // Only add price_max if it's provided and greater than price_min
+      if (data.priceMax) {
+        const priceMax = parseFloat(data.priceMax);
+        if (priceMax >= priceMin) {
+          formData.append("price_max", priceMax);
+        }
+      }
+
+      formData.append("price_hidden", data.priceHidden || "0");
+
+      // Add coordinates (convert to numbers if provided)
+      if (data.latitude && data.latitude.trim() !== "") {
+        formData.append("latitude", parseFloat(data.latitude));
+      }
+      if (data.longitude && data.longitude.trim() !== "") {
+        formData.append("longitude", parseFloat(data.longitude));
+      }
+
+      // Add images
+      photos.forEach((photo) => {
+        formData.append("images[]", photo);
+      });
+
+      // Add videos
+      videos.forEach((video) => {
+        formData.append("videos[]", video);
+      });
+
+      // Use server action to add property
+      const result = await addProperty(formData);
+
+      if (result.success && (result.code === 200 || result.code === 201)) {
+        setSuccess(true);
+        setTimeout(() => {
+          setOpen(false);
+          // Refresh the page to show the new property
+          window.location.reload();
+        }, 1500);
+      } else {
+        // Handle validation errors
+        if (result.code === 422 && result.data?.data) {
+          const errors = result.data.data;
+          const errorMessages = Object.values(errors).flat();
+          setError(errorMessages.join("\n"));
+        } else {
+          setError(result.message || "فشل في إضافة العقار");
+        }
+      }
+    } catch (err) {
+      console.error("Error adding property:", err);
+      setError("حدث خطأ أثناء إضافة العقار");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 rtl text-right">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-6 rtl text-right"
+    >
+      {/* Success/Error Messages */}
+      {success && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+          تم إضافة العقار بنجاح!
+        </div>
+      )}
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded whitespace-pre-line">
+          {error}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-        {/* نوع الإعلان */}
+        {/* العنوان */}
         <div>
-          <Label className={lableStyle}>نوع الإعلان<span className="text-red-500">*</span></Label>
-          <Select onValueChange={(v) => setValue("adType", v)} dir="rtl">
-            <SelectTrigger className={"w-full"}><SelectValue placeholder="نوع العقار" /></SelectTrigger>
+          <Label className={lableStyle}>
+            عنوان العقار<span className="text-red-500">*</span>
+          </Label>
+          <Input placeholder="مثلاً: شقة فاخرة للبيع" {...register("title")} />
+          {errors.title && (
+            <p className="text-red-500 text-sm">{errors.title.message}</p>
+          )}
+        </div>
+
+        {/* نوع العملية */}
+        <div>
+          <Label className={lableStyle}>
+            نوع العملية<span className="text-red-500">*</span>
+          </Label>
+          <Select onValueChange={(v) => setValue("operationType", v)} dir="rtl">
+            <SelectTrigger className={"w-full"}>
+              <SelectValue placeholder="بيع أو إيجار" />
+            </SelectTrigger>
             <SelectContent>
-              <SelectItem value="new">عقار جديد</SelectItem>
-              <SelectItem value="used">مستعمل</SelectItem>
+              <SelectItem value="sale">بيع</SelectItem>
+              <SelectItem value="rent">إيجار</SelectItem>
             </SelectContent>
           </Select>
-          {errors.adType && <p className="text-red-500 text-sm">{errors.adType.message}</p>}
+          {errors.operationType && (
+            <p className="text-red-500 text-sm">
+              {errors.operationType.message}
+            </p>
+          )}
         </div>
 
+        {/* نوع العقار */}
         <div>
-          <Label className={lableStyle}>الوصف<span className="text-red-500">*</span></Label>
-          <Input placeholder="الوصف هنا" {...register("description")} />
-          {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
-        </div>
-        <div>
-          <Label className={lableStyle}>عدد الغرف<span className="text-red-500">*</span></Label>
-          <Input placeholder="مثلاً 3" {...register("rooms")} />
-          {errors.rooms && <p className="text-red-500 text-sm">{errors.rooms.message}</p>}
-        </div>
-
-        <div>
-          <Label className={lableStyle}>عدد الحمامات<span className="text-red-500">*</span></Label>
-          <Input placeholder="مثلاً 2" {...register("bathrooms")} />
-          {errors.bathrooms && <p className="text-red-500 text-sm">{errors.bathrooms.message}</p>}
-        </div>
-
-        <div>
-          <Label className={lableStyle}>المساحة<span className="text-red-500">*</span></Label>
-          <Input placeholder="مثلاً 150 م²" {...register("area")} />
-          {errors.area && <p className="text-red-500 text-sm">{errors.area.message}</p>}
-        </div>
-
-        <div>
-          <Label className={lableStyle}>الدولة<span className="text-red-500">*</span></Label>
-          <Select onValueChange={(v) => setValue("country", v)} dir="rtl">
-            <SelectTrigger className={"w-full"}><SelectValue placeholder="المملكة العربية السعودية" /></SelectTrigger>
+          <Label className={lableStyle}>
+            نوع العقار<span className="text-red-500">*</span>
+          </Label>
+          <Select onValueChange={(v) => setValue("categoryId", v)} dir="rtl">
+            <SelectTrigger className={"w-full"}>
+              <SelectValue placeholder="اختر نوع العقار" />
+            </SelectTrigger>
             <SelectContent>
-              <SelectItem value="sa">المملكة العربية السعودية</SelectItem>
-              <SelectItem value="eg">مصر</SelectItem>
+              <SelectItem value="1">شقة</SelectItem>
+              <SelectItem value="2">فيلا</SelectItem>
+              <SelectItem value="3">برج</SelectItem>
+              <SelectItem value="4">منزل</SelectItem>
             </SelectContent>
           </Select>
-          {errors.country && <p className="text-red-500 text-sm">{errors.country.message}</p>}
+          {errors.categoryId && (
+            <p className="text-red-500 text-sm">{errors.categoryId.message}</p>
+          )}
+        </div>
+
+        <div className="md:col-span-3">
+          <Label className={lableStyle}>
+            الوصف<span className="text-red-500">*</span>
+          </Label>
+          <Textarea
+            placeholder="وصف تفصيلي للعقار"
+            {...register("description")}
+            rows={3}
+          />
+          {errors.description && (
+            <p className="text-red-500 text-sm">{errors.description.message}</p>
+          )}
+        </div>
+        <div>
+          <Label className={lableStyle}>
+            عدد الغرف<span className="text-red-500">*</span>
+          </Label>
+          <Input
+            type="number"
+            min="0"
+            step="1"
+            placeholder="مثلاً 3"
+            {...register("rooms")}
+          />
+          {errors.rooms && (
+            <p className="text-red-500 text-sm">{errors.rooms.message}</p>
+          )}
         </div>
 
         <div>
-          <Label className={lableStyle}>المدينة<span className="text-red-500">*</span></Label>
-          <Input placeholder="مثلاً الرياض" {...register("city")} />
-          {errors.city && <p className="text-red-500 text-sm">{errors.city.message}</p>}
+          <Label className={lableStyle}>
+            عدد الحمامات<span className="text-red-500">*</span>
+          </Label>
+          <Input
+            type="number"
+            min="0"
+            step="1"
+            placeholder="مثلاً 2"
+            {...register("bathrooms")}
+          />
+          {errors.bathrooms && (
+            <p className="text-red-500 text-sm">{errors.bathrooms.message}</p>
+          )}
         </div>
 
         <div>
-          <Label className={lableStyle}>السعر (حد أدنى)<span className="text-red-500">*</span></Label>
+          <Label className={lableStyle}>
+            المساحة<span className="text-red-500">*</span>
+          </Label>
+          <Input
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="مثلاً 150"
+            {...register("area")}
+          />
+          {errors.area && (
+            <p className="text-red-500 text-sm">{errors.area.message}</p>
+          )}
+        </div>
+
+        <div>
+          <Label className={lableStyle}>عدد الشرفات</Label>
+          <Input
+            type="number"
+            min="0"
+            step="1"
+            placeholder="مثلاً 1"
+            {...register("balconies")}
+          />
+        </div>
+
+        <div>
+          <Label className={lableStyle}>عدد المواقف</Label>
+          <Input
+            type="number"
+            min="0"
+            step="1"
+            placeholder="مثلاً 1"
+            {...register("garages")}
+          />
+        </div>
+
+        <div>
+          <Label className={lableStyle}>المساحة القابلة للاستخدام</Label>
+          <Input
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="مثلاً 140"
+            {...register("usableArea")}
+          />
+        </div>
+
+        <div>
+          <Label className={lableStyle}>
+            الدولة<span className="text-red-500">*</span>
+          </Label>
+          <Select onValueChange={(v) => setValue("countryId", v)} dir="rtl">
+            <SelectTrigger className={"w-full"}>
+              <SelectValue placeholder="اختر الدولة" />
+            </SelectTrigger>
+            <SelectContent>
+              {countries.map((country) => (
+                <SelectItem key={country.id} value={country.id.toString()}>
+                  {country.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.countryId && (
+            <p className="text-red-500 text-sm">{errors.countryId.message}</p>
+          )}
+        </div>
+
+        <div>
+          <Label className={lableStyle}>
+            المدينة<span className="text-red-500">*</span>
+          </Label>
+          <Select onValueChange={(v) => setValue("cityId", v)} dir="rtl">
+            <SelectTrigger className={"w-full"}>
+              <SelectValue placeholder="اختر المدينة" />
+            </SelectTrigger>
+            <SelectContent>
+              {cities.map((city) => (
+                <SelectItem key={city.id} value={city.id.toString()}>
+                  {city.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.cityId && (
+            <p className="text-red-500 text-sm">{errors.cityId.message}</p>
+          )}
+        </div>
+
+        <div>
+          <Label className={lableStyle}>الحي</Label>
+          <Input placeholder="مثلاً التجمع الخامس" {...register("district")} />
+        </div>
+
+        <div>
+          <Label className={lableStyle}>
+            نوع التشطيب<span className="text-red-500">*</span>
+          </Label>
+          <Select onValueChange={(v) => setValue("finishingType", v)} dir="rtl">
+            <SelectTrigger className={"w-full"}>
+              <SelectValue placeholder="اختر نوع التشطيب" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">بدون تشطيب</SelectItem>
+              <SelectItem value="basic">بسيط</SelectItem>
+              <SelectItem value="good">جيد</SelectItem>
+              <SelectItem value="luxury">فاخر</SelectItem>
+              <SelectItem value="super_luxury">سوبر لوكس</SelectItem>
+            </SelectContent>
+          </Select>
+          {errors.finishingType && (
+            <p className="text-red-500 text-sm">
+              {errors.finishingType.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <Label className={lableStyle}>
+            السعر (حد أدنى)<span className="text-red-500">*</span>
+          </Label>
           <div className="flex gap-2">
-            <Input type="number" step="0.01" placeholder="0" {...register("priceMin")} />
+            <Input
+              type="number"
+              step="0.01"
+              placeholder="0"
+              {...register("priceMin")}
+            />
             <Select defaultValue="sar">
-              <SelectTrigger className="w-24 bg-main-navy  text-white"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="w-24 bg-main-navy  text-white">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="sar">(ر.س)</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          {errors.priceMin && <p className="text-red-500 text-sm">{errors.priceMin.message}</p>}
+          {errors.priceMin && (
+            <p className="text-red-500 text-sm">{errors.priceMin.message}</p>
+          )}
         </div>
 
         <div>
-          <Label className={lableStyle}>السعر (حد أعلى)<span className="text-red-500">*</span></Label>
+          <Label className={lableStyle}>
+            السعر (حد أعلى)<span className="text-red-500">*</span>
+          </Label>
           <div className="flex gap-2">
-            <Input type="number" step="0.01" placeholder="0" {...register("priceMax")} />
+            <Input
+              type="number"
+              step="0.01"
+              placeholder="0"
+              {...register("priceMax")}
+            />
             <Select defaultValue="sar">
-              <SelectTrigger className="w-24 bg-main-navy  text-white"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="w-24 bg-main-navy  text-white">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="sar">(ر.س)</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          {errors.priceMax && <p className="text-red-500 text-sm">{errors.priceMax.message}</p>}
+          {errors.priceMax && (
+            <p className="text-red-500 text-sm">{errors.priceMax.message}</p>
+          )}
+        </div>
+
+        <div>
+          <Label className={lableStyle}>الموقع (خط العرض)</Label>
+          <Input
+            type="number"
+            step="any"
+            placeholder="30.0444"
+            {...register("latitude")}
+          />
+        </div>
+
+        <div>
+          <Label className={lableStyle}>الموقع (خط الطول)</Label>
+          <Input
+            type="number"
+            step="any"
+            placeholder="31.2357"
+            {...register("longitude")}
+          />
+        </div>
+
+        <div>
+          <Label className={lableStyle}>إخفاء السعر</Label>
+          <Select
+            onValueChange={(v) => setValue("priceHidden", v)}
+            dir="rtl"
+            defaultValue="0"
+          >
+            <SelectTrigger className={"w-full"}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="0">لا</SelectItem>
+              <SelectItem value="1">نعم</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -141,64 +609,120 @@ const lableStyle = "block text-sm font-medium text-main-navy mb-2"
           <div className="border-2 border-dashed rounded-lg p-12 text-center">
             <input
               type="file"
-              accept="image/*,video/*"
+              accept="image/*"
               multiple
               onChange={(e) => {
                 if (e.target.files) {
-                  const newFiles = Array.from(e.target.files)
-                  setPhotos((prev) => [...prev, ...newFiles])
+                  const newFiles = Array.from(e.target.files);
+                  setPhotos((prev) => [...prev, ...newFiles]);
                 }
               }}
               className="hidden"
-              id="media"
+              id="images"
             />
-            <label htmlFor="media" className="cursor-pointer inline-flex items-center gap-2 text-sm text-gray-600">
-              <Upload size={18} /> رفع صور أو فيديوهات
+            <label
+              htmlFor="images"
+              className="cursor-pointer inline-flex items-center gap-2 text-sm text-gray-600"
+            >
+              <Upload size={18} /> رفع صور
             </label>
           </div>
 
-          {/* عرض الصور والفيديوهات معاً */}
+          <div className="border-2 border-dashed rounded-lg p-12 text-center mt-4">
+            <input
+              type="file"
+              accept="video/*"
+              multiple
+              onChange={(e) => {
+                if (e.target.files) {
+                  const newFiles = Array.from(e.target.files);
+                  setVideos((prev) => [...prev, ...newFiles]);
+                }
+              }}
+              className="hidden"
+              id="videos"
+            />
+            <label
+              htmlFor="videos"
+              className="cursor-pointer inline-flex items-center gap-2 text-sm text-gray-600"
+            >
+              <Upload size={18} /> رفع فيديوهات
+            </label>
+          </div>
+
+          {/* عرض الصور */}
           {photos.length > 0 && (
             <div className="flex flex-wrap gap-3 mt-4">
-              {photos.map((file, i) => {
-                const isVideo = file.type.startsWith("video/")
-                return (
-                  <div
-                    key={i}
-                    className="relative border rounded-lg p-2 w-[100px] h-[100px] flex items-center justify-center bg-gray-50 "
+              <p className="w-full text-sm font-medium">الصور:</p>
+              {photos.map((file, i) => (
+                <div
+                  key={i}
+                  className="relative border rounded-lg p-2 w-[100px] h-[100px] flex items-center justify-center bg-gray-50 "
+                >
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={file.name}
+                    className="object-cover w-full h-full rounded-md"
+                  />
+                  <button
+                    type="button"
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                    onClick={() =>
+                      setPhotos(photos.filter((_, idx) => idx !== i))
+                    }
                   >
-                    {isVideo ? (
-                      <video
-                        src={URL.createObjectURL(file)}
-                        className="object-cover w-full h-full rounded-md"
-                        controls
-                      />
-                    ) : (
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt={file.name}
-                        className="object-cover w-full h-full rounded-md"
-                      />
-                    )}
-                    <button
-                      type="button"
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
-                      onClick={() => setPhotos(photos.filter((_, idx) => idx !== i))}
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                )
-              })}
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* عرض الفيديوهات */}
+          {videos.length > 0 && (
+            <div className="flex flex-wrap gap-3 mt-4">
+              <p className="w-full text-sm font-medium">الفيديوهات:</p>
+              {videos.map((file, i) => (
+                <div
+                  key={i}
+                  className="relative border rounded-lg p-2 w-[100px] h-[100px] flex items-center justify-center bg-gray-50 "
+                >
+                  <video
+                    src={URL.createObjectURL(file)}
+                    className="object-cover w-full h-full rounded-md"
+                    controls
+                  />
+                  <button
+                    type="button"
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                    onClick={() =>
+                      setVideos(videos.filter((_, idx) => idx !== i))
+                    }
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
             </div>
           )}
         </CardContent>
       </Card>
 
       <div className="flex justify-center gap-3 mt-6">
-        <Button type="button" onClick={() => {setOpen(false)}}>إلغاء</Button>
-        <Button type="submit">نشر</Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => {
+            setOpen(false);
+          }}
+          disabled={loading}
+        >
+          إلغاء
+        </Button>
+        <Button type="submit" disabled={loading}>
+          {loading ? "جاري النشر..." : "نشر"}
+        </Button>
       </div>
     </form>
-  )
+  );
 }

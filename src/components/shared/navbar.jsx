@@ -136,7 +136,7 @@ const Navbar = ({ topnavColor = "#1a1a1a" }) => {
             </Link>
           </li>
           <li>
-            <HoverCard>
+            {/* <HoverCard>
               <HoverCardTrigger className="cursor-pointer">
                 <p className="cursor-pointer">العقارات</p>
               </HoverCardTrigger>
@@ -168,7 +168,8 @@ const Navbar = ({ topnavColor = "#1a1a1a" }) => {
                   </li>
                 </ul>
               </HoverCardContent>
-            </HoverCard>
+            </HoverCard> */}
+            <Link href="/estats">العقارات</Link>
           </li>
           <li>
             <Link href="/partners">الوكلاء</Link>

@@ -5,49 +5,71 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Link } from '@/i18n/navigation';
-import { useLocale } from 'next-intl';
+import { Link } from "@/i18n/navigation";
+import { useLocale } from "next-intl";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
-import SectionHeader from '../shared/section-header';
-import StatesCard from '../shared/state-card';
-const StatesSection = ({title="عقارات مميزة",subTitle="أفضل العقارات المميزة",description="نقترح لك بعض أفضل العقارات المميزة  والموثوقة لدينا "}) => {
+import SectionHeader from "../shared/section-header";
+import StatesCard from "../shared/state-card";
+
+const StatesSection = ({
+  title = "عقارات مميزة",
+  subTitle = "أفضل العقارات المميزة",
+  description = "نقترح لك بعض أفضل العقارات المميزة والموثوقة لدينا",
+  properties = null,
+}) => {
   const locale = useLocale();
+
+  // Use provided properties or fall back to placeholder
+  const displayItems =
+    properties && properties.length > 0
+      ? properties
+      : Array.from({ length: 7 });
+
   return (
-    <section className='container  py-12 space-y-8'>
+    <section className="container py-12 space-y-8">
       {/* title */}
-      <div className='flex items-center justify-between max-md:flex-col max-md:gap-6'>
-      <div className='space-y-6'>
-        <SectionHeader>
-          {title}
-        </SectionHeader>
-        <h3 className='text-4xl font-semibold'>{subTitle}</h3>
-        <p className='text-xs'>{description}</p>
+      <div className="flex items-center justify-between max-md:flex-col max-md:gap-6">
+        <div className="space-y-6">
+          <SectionHeader>{title}</SectionHeader>
+          <h3 className="text-4xl font-semibold">{subTitle}</h3>
+          <p className="text-xs">{description}</p>
         </div>
         {/* link */}
-        <Link href={"/states"} className=' flex items-center gap-1 hover:gap-2 transation-all duration-300 text-main-green text-sm  w-fit'>
-          <IoIosArrowDroprightCircle size={20} className='drop-shadow-xl'/>
+        <Link
+          href={"/estats"}
+          className="flex items-center gap-1 hover:gap-2 transation-all duration-300 text-main-green text-sm w-fit"
+        >
+          <IoIosArrowDroprightCircle size={20} className="drop-shadow-xl" />
           <span>عرض الكل</span>
         </Link>
       </div>
 
       {/* slider */}
-      <Carousel className={"space-y-8"} opts={{ loop: true, direction: locale === "ar" ? "rtl" : "ltr", align: "start" }}>
-        {/* title */}
+      <Carousel
+        className={"space-y-8"}
+        opts={{
+          loop: true,
+          direction: locale === "ar" ? "rtl" : "ltr",
+          align: "start",
+        }}
+      >
         <CarouselContent className={"p-1"}>
-          {
-            Array.from({ length: 7 }).map((_, index) => (
-              <CarouselItem key={index} className="lg:basis-1/4 md:basis-1/2 basis-[90%]" >
-                <StatesCard/>
-              </CarouselItem>))
-          }
+          {displayItems.map((property, index) => (
+            <CarouselItem
+              key={property?.id || index}
+              className="lg:basis-1/4 md:basis-1/2 basis-[90%]"
+            >
+              <StatesCard property={property} />
+            </CarouselItem>
+          ))}
         </CarouselContent>
-        <div className='flex items-center justify-center gap-3 flex-row-reverse '>
-          <CarouselPrevious className={"static translate-0 "} />
-          <CarouselNext className={"static translate-0 "} />
+        <div className="flex items-center justify-center gap-3 flex-row-reverse">
+          <CarouselPrevious className={"static translate-0"} />
+          <CarouselNext className={"static translate-0"} />
         </div>
       </Carousel>
     </section>
-  )
-}
+  );
+};
 
-export default StatesSection
+export default StatesSection;

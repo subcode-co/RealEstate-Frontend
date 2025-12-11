@@ -36,66 +36,70 @@ const StatesCard = ({ withBorder = true, property }) => {
   } = property;
 
   return (
-    <div
-      className={`${
-        withBorder && "border-2 border-gray-200"
-      } bg-white rounded-lg p-4 space-y-5`}
-    >
-      {/* image and favorate */}
-      <div className="h-52 rounded-xl relative overflow-hidden">
-        {/* favorate */}
-        <button className="group bg-white p-2 rounded-md absolute z-10 text-main-green top-4 start-4">
-          <BsBookmarkDash size={20} className=" " />
-        </button>
-        {/* space */}
-        {area && (
-          <div className="text-[.6rem] font-semibold w-fit bg-white p-2 rounded-md absolute z-10  top-4 end-4">
-            {area}
-            <sup>m2</sup>
-          </div>
-        )}
-        {/* special */}
-        {isFeatured && (
-          <div className="text-xs font-semibold w-fit bg-main-green text-white p-2 rounded-t-md absolute z-10  top-1/2 -start-5  -rotate-90">
-            عقار مميز
-          </div>
-        )}
-        <Image
-          src={first_image || "/images/state.png"}
-          fill
-          alt={title || "property"}
-          className="static w-full h-full object-cover rounded-xl"
-        />
-      </div>
-
-      {/* content */}
-      <div className="space-y-2">
-        <h4 className=" font-bold text-lg line-clamp-1">{title}</h4>
-        <p className="text-xs text-gray-400">
-          {city}, {country}
-        </p>
-        {/* price */}
-        <div className="flex items-center gap-1">
-          <p className="text-xl font-bold text-main-green">{formattedPrice}</p>
-          {!property.priceHidden && (
-            <Image
-              src={ryal}
-              alt="ryal"
-              width={20}
-              height={20}
-              className="size-4 object-contain"
-            />
+    <Link href={`/estats/${slug || id}`} className="block">
+      <div
+        className={`${
+          withBorder && "border-2 border-gray-200"
+        } bg-white rounded-lg p-4 space-y-5 hover:shadow-lg transition-shadow duration-300 cursor-pointer`}
+      >
+        {/* image and favorate */}
+        <div className="h-52 rounded-xl relative overflow-hidden">
+          {/* favorate */}
+          <button
+            onClick={(e) => e.preventDefault()}
+            className="group bg-white p-2 rounded-md absolute z-10 text-main-green top-4 start-4"
+          >
+            <BsBookmarkDash size={20} className=" " />
+          </button>
+          {/* space */}
+          {area && (
+            <div className="text-[.6rem] font-semibold w-fit bg-white p-2 rounded-md absolute z-10  top-4 end-4">
+              {area}
+              <sup>m2</sup>
+            </div>
           )}
+          {/* special */}
+          {isFeatured && (
+            <div className="text-xs font-semibold w-fit bg-main-green text-white p-2 rounded-t-md absolute z-10  top-1/2 -start-5  -rotate-90">
+              عقار مميز
+            </div>
+          )}
+          <Image
+            src={first_image || "/images/state.png"}
+            fill
+            alt={title || "property"}
+            className="static w-full h-full object-cover rounded-xl"
+          />
+        </div>
+
+        {/* content */}
+        <div className="space-y-2">
+          <h4 className=" font-bold text-lg line-clamp-1">{title}</h4>
+          <p className="text-xs text-gray-400">
+            {city}, {country}
+          </p>
+          {/* price */}
+          <div className="flex items-center gap-1">
+            <p className="text-xl font-bold text-main-green">
+              {formattedPrice}
+            </p>
+            {!property.priceHidden && (
+              <Image
+                src={ryal}
+                alt="ryal"
+                width={20}
+                height={20}
+                className="size-4 object-contain"
+              />
+            )}
+          </div>
+        </div>
+        {/* link */}
+        <div className="text-sm font-medium block text-center w-3/4 mx-auto  rounded-md  py-2 px-3 border-1 border-main-green text-main-green hover:bg-main-green hover:text-white transition-all duration-300">
+          عرض التفاصيل
         </div>
       </div>
-      {/* link */}
-      <Link
-        href={`/estats/${slug || id}`}
-        className="text-sm font-medium block text-center w-3/4 mx-auto  rounded-md  py-2 px-3 border-1 border-main-green text-main-green hover:bg-main-green hover:text-white transition-all duration-300"
-      >
-        عرض التفاصيل
-      </Link>
-    </div>
+    </Link>
   );
 };
 
