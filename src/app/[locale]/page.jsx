@@ -24,6 +24,22 @@ export default async function Home() {
     video = null,
   } = homeData;
 
+  // Fetch featured properties
+  let featuredProperties = [];
+  try {
+    const featuredResponse = await getData({
+      url: "/properties/featured",
+      revalidate: 60,
+    });
+    if (featuredResponse?.code === 200 && featuredResponse?.data?.success) {
+      featuredProperties = featuredResponse.data.data || [];
+    }
+  } catch (error) {
+    console.error("Error fetching featured properties:", error);
+    // Fallback to empty array on error
+    featuredProperties = [];
+  }
+
   return (
     <>
       <HeroSection video={video} />
@@ -34,7 +50,7 @@ export default async function Home() {
       />
       <ServicesSection coreValues={coreValues} />
       <StateFilterSection />
-      <StatesSection />
+      <StatesSection properties={featuredProperties} />
       <ClientReviews />
       <BlogSection />
       <PartnerSection />

@@ -1,5 +1,12 @@
 {
-  "home": "home page",
+  "home": {
+    "featured_properties": {
+      "title": "Featured Properties",
+      "subtitle": "Best Featured Properties",
+      "description": "We suggest some of our best and trusted featured properties",
+      "view_all": "View All"
+    }
+  },
   "about": "about",
   "contact": "contact",
   "Complaints": {

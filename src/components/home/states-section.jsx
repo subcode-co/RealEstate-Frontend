@@ -1,3 +1,4 @@
+"use client";
 import {
   Carousel,
   CarouselContent,
@@ -6,18 +7,14 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Link } from "@/i18n/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import SectionHeader from "../shared/section-header";
 import StatesCard from "../shared/state-card";
 
-const StatesSection = ({
-  title = "عقارات مميزة",
-  subTitle = "أفضل العقارات المميزة",
-  description = "نقترح لك بعض أفضل العقارات المميزة والموثوقة لدينا",
-  properties = null,
-}) => {
+const StatesSection = ({ properties = null }) => {
   const locale = useLocale();
+  const t = useTranslations("home.featured_properties");
 
   // Use provided properties or fall back to placeholder
   const displayItems =
@@ -30,9 +27,9 @@ const StatesSection = ({
       {/* title */}
       <div className="flex items-center justify-between max-md:flex-col max-md:gap-6">
         <div className="space-y-6">
-          <SectionHeader>{title}</SectionHeader>
-          <h3 className="text-4xl font-semibold">{subTitle}</h3>
-          <p className="text-xs">{description}</p>
+          <SectionHeader>{t("title")}</SectionHeader>
+          <h3 className="text-4xl font-semibold">{t("subtitle")}</h3>
+          <p className="text-xs">{t("description")}</p>
         </div>
         {/* link */}
         <Link
@@ -40,7 +37,7 @@ const StatesSection = ({
           className="flex items-center gap-1 hover:gap-2 transation-all duration-300 text-main-green text-sm w-fit"
         >
           <IoIosArrowDroprightCircle size={20} className="drop-shadow-xl" />
-          <span>عرض الكل</span>
+          <span>{t("view_all")}</span>
         </Link>
       </div>
 
