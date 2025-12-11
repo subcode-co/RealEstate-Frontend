@@ -14,35 +14,45 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import AddForm from "@/components/estates/add-form";
+import AddDealForm from "@/components/deals/add-deal-form";
 import DealsTable from "@/components/shared/deals-table";
-import { getData } from "@/lib/fetch-methods";
+import { getDirectDeals } from "@/actions/deals";
 import { toast } from "sonner";
 
 const Page = () => {
   const locale = useLocale();
   const [open, setOpen] = React.useState(false);
-  const [offers, setOffers] = useState([]);
+  const [deals, setDeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [meta, setMeta] = useState(null);
   const tabstyle =
     "bg-gray-100 p-4 data-[state=active]:bg-main-light-green data-[state=active]:border-b data-[state=active]:border-main-green rounde-none rounded-s-lg last:rounded-none last:rounded-s-lg  ";
 
   useEffect(() => {
-    fetchOffers();
-  }, []);
+    fetchDeals();
+  }, [currentPage]);
 
-  async function fetchOffers() {
+  async function fetchDeals(page = currentPage) {
     setIsLoading(true);
     try {
-      const response = await getData({ url: "/offers" });
-      if (response?.code === 200 && response?.data?.success) {
-        setOffers(response.data.data || []);
+      console.log(`Fetching deals from server action, page: ${page}`);
+      const result = await getDirectDeals(page);
+      console.log("Direct deals response:", result);
+
+      if (result.success) {
+        setDeals(result.data || []);
+        setMeta(result.meta);
+        setTotalPages(result.meta?.lastPage || 1);
+        setCurrentPage(result.meta?.currentPage || 1);
       } else {
-        toast.error(response?.data?.message || "فشل في جلب البيانات");
+        console.error("API Error Response:", result);
+        toast.error(result.message || "فشل في جلب البيانات");
       }
     } catch (error) {
+      console.error("Error fetching deals:", error);
       toast.error("حدث خطأ أثناء جلب البيانات");
-      console.error("Error fetching offers:", error);
     } finally {
       setIsLoading(false);
     }
@@ -98,7 +108,7 @@ const Page = () => {
                     إضافة صفقة جديدة
                   </DialogTitle>
                   <DialogDescription asChild>
-                    <AddForm setOpen={setOpen} />
+                    <AddDealForm setOpen={setOpen} onSuccess={fetchDeals} />
                   </DialogDescription>
                 </DialogHeader>
               </DialogContent>
@@ -106,7 +116,36 @@ const Page = () => {
           </div>
           {["houre", "day", "week", "month", "year"].map((tab) => (
             <TabsContent key={tab} value={tab}>
-              <DealsTable offers={offers} isLoading={isLoading} />
+              <DealsTable deals={deals} isLoading={isLoading} />
+
+              {/* Pagination */}
+              {!isLoading && deals.length > 0 && meta && (
+                <div className="flex items-center justify-between mt-6 px-4">
+                  <div className="text-sm text-gray-600">
+                    صفحة {currentPage} من {totalPages} ({meta.total} صفقة)
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(1, prev - 1))
+                      }
+                      disabled={currentPage === 1}
+                      className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                    >
+                      السابق
+                    </button>
+                    <button
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                      }
+                      disabled={currentPage === totalPages}
+                      className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
+                    >
+                      التالي
+                    </button>
+                  </div>
+                </div>
+              )}
             </TabsContent>
           ))}
         </Tabs>

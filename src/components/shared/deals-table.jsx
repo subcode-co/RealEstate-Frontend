@@ -2,9 +2,8 @@ import { Link } from "@/i18n/navigation";
 import { Calendar } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-import { MdSocialDistance } from "react-icons/md";
 
-const DealsTable = ({ offers = [], isLoading = false }) => {
+const DealsTable = ({ deals = [], isLoading = false }) => {
   if (isLoading) {
     return (
       <div className="space-y-4 mt-8">
@@ -42,7 +41,7 @@ const DealsTable = ({ offers = [], isLoading = false }) => {
     );
   }
 
-  if (!offers || offers.length === 0) {
+  if (!deals || deals.length === 0) {
     return (
       <div className="mt-8 text-center py-12 border rounded">
         <p className="text-gray-500">لا توجد صفقات متاحة حالياً</p>
@@ -52,62 +51,61 @@ const DealsTable = ({ offers = [], isLoading = false }) => {
 
   return (
     <div className="space-y-4 mt-8">
-      {offers.map((offer) => (
+      {deals.map((deal) => (
         <Link
-          key={offer.id}
-          href={`/deals/${offer.id}`}
-          className="grid grid-cols-5 border rounded px-4 py-6 hover:bg-gray-100 "
+          href={`/deals/${deal.id}`}
+          key={deal.id}
+          className="grid grid-cols-5 border rounded px-4 py-6 hover:shadow-md transition-shadow max-md:grid-cols-1 max-md:gap-4"
         >
-          {/* title */}
+          {/* Property Info */}
           <div className="flex items-center gap-1">
             <Image
-              src="/images/partner.png"
-              alt={offer.name}
-              width={100}
-              height={100}
-              className="size-12 object-cover"
+              src="/images/logo.svg"
+              alt={deal.propertyType}
+              width={50}
+              height={50}
+              className="size-12"
             />
-            <div className="flex flex-col gap-2">
-              <h3 className="text-sm font-semibold ">{offer.name}</h3>
-              <p className="text-xs">{offer.description}</p>
+            <div className="flex flex-col gap-1">
+              <h3 className="text-sm font-semibold">{deal.propertyType}</h3>
+              <p className="text-xs text-gray-500">
+                {deal.city} - {deal.district}
+              </p>
             </div>
           </div>
-          {/* price */}
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xs ">قيمة الصفقة</h3>
-            <p className=" font-semibold flex items-center gap-1">
-              {offer.price}{" "}
-              <Image
-                src="/images/ryal-green.svg"
-                alt="ryal"
-                width={100}
-                height={100}
-                className="size-3 object-cover"
-              />
+
+          {/* Area Range */}
+          <div className="flex flex-col gap-1">
+            <p className="text-xs text-gray-500">المساحة</p>
+            <p className="text-sm font-semibold">
+              {deal.minArea} - {deal.maxArea} م²
             </p>
           </div>
-          {/* validity days */}
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xs ">مدة الصلاحية</h3>
-            <p className=" font-semibold flex items-center gap-1">
-              {offer.validityDays} يوم{" "}
-              <Calendar size={12} className=" text-main-green" />
+
+          {/* Price Range */}
+          <div className="flex flex-col gap-1">
+            <p className="text-xs text-gray-500">السعر الإجمالي</p>
+            <p className="text-sm font-semibold">
+              {deal.minTotalPrice.toLocaleString()} -{" "}
+              {deal.maxTotalPrice.toLocaleString()} ر.س
             </p>
           </div>
-          {/* features count */}
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xs ">المميزات</h3>
-            <p className=" font-semibold flex items-center gap-1">
-              {offer.features?.length || 0} ميزة{" "}
-              <MdSocialDistance className=" text-main-green" />
+
+          {/* Price per Meter */}
+          <div className="flex flex-col gap-1">
+            <p className="text-xs text-gray-500">سعر المتر</p>
+            <p className="text-sm font-semibold">
+              {deal.minPricePerMeter.toLocaleString()} -{" "}
+              {deal.maxPricePerMeter.toLocaleString()} ر.س
             </p>
           </div>
-          {/* date */}
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xs ">تاريخ الإضافة</h3>
-            <p className=" font-semibold flex items-center gap-1">
-              {new Date(offer.createdAt).toLocaleDateString("ar-SA")}{" "}
-              <Calendar size={12} className=" text-main-green" />
+
+          {/* Date */}
+          <div className="flex flex-col gap-1">
+            <p className="text-xs text-gray-500">تاريخ الإنشاء</p>
+            <p className="text-sm font-semibold flex items-center gap-1">
+              <Calendar size={14} />
+              {new Date(deal.createdAt).toLocaleDateString("ar-SA")}
             </p>
           </div>
         </Link>

@@ -74,6 +74,24 @@ export async function postData({ url, data, isFormData, locale }) {
       body,
     });
 
+    // Check if response is JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const textResponse = await response.text();
+      console.error(
+        "Non-JSON response received:",
+        textResponse.substring(0, 500)
+      );
+      return {
+        code: response.status,
+        success: false,
+        message: `Server returned ${response.status}: Expected JSON but got ${
+          contentType || "unknown type"
+        }`,
+        rawResponse: textResponse.substring(0, 200),
+      };
+    }
+
     const resData = await response.json();
     return { code: response.status, success: true, data: resData };
   } catch (err) {
