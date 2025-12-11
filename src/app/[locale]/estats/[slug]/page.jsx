@@ -1,6 +1,6 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import { PiBathtub, PiPhoneCallLight } from "react-icons/pi";
 import {
@@ -23,24 +23,12 @@ import {
   getSimilarProperties,
 } from "@/lib/property-actions";
 
-// Helper functions
-const finishingTypeMap = {
-  none: "بدون تشطيب",
-  basic: "بسيط",
-  good: "جيد",
-  luxury: "فاخر",
-  super_luxury: "سوبر لوكس",
-};
-
-const operationTypeMap = {
-  sale: "للبيع",
-  rent: "للإيجار",
-};
-
 export default async function EstateSinglePage({ params }) {
   // In Next.js 15, params is a Promise and must be awaited
   const { slug } = await params;
   const locale = await getLocale();
+  const t = await getTranslations("property_details");
+
   console.log({ locale });
   console.log("Fetching property with slug:", slug);
 
@@ -83,8 +71,8 @@ export default async function EstateSinglePage({ params }) {
           <div className="space-y-4">
             <CustomBreadcrumbs
               items={[
-                { label: "العقارات", href: "/estats" },
-                { label: "تفاصيل العقار" },
+                { label: t("breadcrumbs.estates"), href: "/estats" },
+                { label: property.title },
               ]}
             />
             <h1 className="text-main-navy text-2xl font-bold">
@@ -102,7 +90,7 @@ export default async function EstateSinglePage({ params }) {
                 <span className="text-main-green font-bold">
                   {property.viewsCount || 0}
                 </span>
-                <span>مشاهدات</span>
+                <span>{t("views")}</span>
               </div>
             </div>
           </div>
@@ -143,7 +131,7 @@ export default async function EstateSinglePage({ params }) {
           {/* description */}
           <div className="rounded-xl border">
             <div className="p-6 border-b">
-              <h2 className="font-bold">الوصف</h2>
+              <h2 className="font-bold">{t("description")}</h2>
             </div>
             <div className="p-6">
               <div
@@ -156,7 +144,7 @@ export default async function EstateSinglePage({ params }) {
           {/* details */}
           <div className="rounded-xl border">
             <div className="p-6 border-b">
-              <h2 className="font-bold">تفاصيل العقار</h2>
+              <h2 className="font-bold">{t("details_title")}</h2>
             </div>
             <div className="divide-y divide-gray-300">
               {/* First Row */}
@@ -164,19 +152,19 @@ export default async function EstateSinglePage({ params }) {
                 <div className="flex items-center justify-between p-3">
                   <div className="flex items-center gap-2 text-gray-600">
                     <TiHomeOutline className="size-5 text-main-green" />
-                    <span>عدد الجراجات</span>
+                    <span>{t("fields.garages")}</span>
                   </div>
                   <span className="font-medium text-main-green">
-                    {property.garages || "لايوجد"}
+                    {property.garages || t("fields.none")}
                   </span>
                 </div>
                 <div className="flex items-center justify-between p-3">
                   <div className="flex items-center gap-2 text-gray-600">
                     <TiHomeOutline className="size-5 text-main-green" />
-                    <span>البلكونة</span>
+                    <span>{t("fields.balconies")}</span>
                   </div>
                   <span className="font-medium text-main-green">
-                    {property.balconies || "لايوجد"}
+                    {property.balconies || t("fields.none")}
                   </span>
                 </div>
               </div>
@@ -186,7 +174,7 @@ export default async function EstateSinglePage({ params }) {
                 <div className="flex items-center justify-between p-3">
                   <div className="flex items-center gap-2 text-gray-600">
                     <MdOutlineBed className="size-5 text-main-green" />
-                    <span>عدد الغرف</span>
+                    <span>{t("fields.rooms")}</span>
                   </div>
                   <span className="font-medium text-main-green">
                     {property.rooms}
@@ -195,7 +183,7 @@ export default async function EstateSinglePage({ params }) {
                 <div className="flex items-center justify-between p-3">
                   <div className="flex items-center gap-2 text-gray-600">
                     <PiBathtub className="size-5 text-main-green" />
-                    <span>عدد الحمامات</span>
+                    <span>{t("fields.bathrooms")}</span>
                   </div>
                   <span className="font-medium text-main-green">
                     {property.bathrooms}
@@ -208,19 +196,19 @@ export default async function EstateSinglePage({ params }) {
                 <div className="flex items-center justify-between p-3">
                   <div className="flex items-center gap-2 text-gray-600">
                     <TiHomeOutline className="size-5 text-main-green" />
-                    <span>المساحة</span>
+                    <span>{t("fields.area")}</span>
                   </div>
                   <span className="font-medium text-main-green">
-                    {property.area} م²
+                    {property.area} {t("fields.area_unit") || "m²"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between p-3">
                   <div className="flex items-center gap-2 text-gray-600">
                     <TiHomeOutline className="size-5 text-main-green" />
-                    <span>نوع التشطيب</span>
+                    <span>{t("fields.finishing_type")}</span>
                   </div>
                   <span className="font-medium text-main-green">
-                    {finishingTypeMap[property.finishingType] ||
+                    {t(`finishing_types.${property.finishingType}`) ||
                       property.finishingType}
                   </span>
                 </div>
@@ -232,7 +220,7 @@ export default async function EstateSinglePage({ params }) {
           {property.amenities && property.amenities.length > 0 && (
             <div className="rounded-xl border">
               <div className="p-6 border-b">
-                <h2 className="font-bold">المميزات</h2>
+                <h2 className="font-bold">{t("amenities_title")}</h2>
               </div>
               <div className="p-6 grid grid-cols-3 gap-4 gap-y-6 text-xs font-semibold">
                 {property.amenities.map((amenity, index) => (
@@ -249,7 +237,7 @@ export default async function EstateSinglePage({ params }) {
           {mapsUrl && (
             <div className="rounded-xl border">
               <div className="p-6 border-b">
-                <h2 className="font-bold">الموقع</h2>
+                <h2 className="font-bold">{t("location_title")}</h2>
               </div>
               <div className="p-6">
                 <iframe
@@ -270,11 +258,13 @@ export default async function EstateSinglePage({ params }) {
           <div className="rounded-xl border">
             <div className="p-6 border-b">
               <h2 className="font-bold">
-                تقييمات العملاء عن العقار
+                {t("reviews_title")}
                 {property.totalReviews > 0 && (
-                  <span className="text-sm text-gray-500 mr-2">
-                    ({property.totalReviews} تقييم - متوسط{" "}
-                    {property.averageRating})
+                  <span className="text-sm text-gray-500 mr-2 ltr:ml-2">
+                    {t("reviews_subtitle", {
+                      count: property.totalReviews,
+                      rating: property.averageRating,
+                    })}
                   </span>
                 )}
               </h2>
@@ -287,17 +277,17 @@ export default async function EstateSinglePage({ params }) {
           {/* payment */}
           <div className="rounded-xl border">
             <div className="p-6 border-b">
-              <h2 className="font-bold">طرق الدفع</h2>
+              <h2 className="font-bold">{t("payment_methods")}</h2>
             </div>
             <div className="p-6 grid grid-cols-3 gap-4 gap-y-6 text-xs font-semibold">
               <div className="flex items-center gap-2">
                 <IoIosCheckmarkCircle className="size-4 text-main-green" />
-                <p>كاش</p>
+                <p>{t("cash")}</p>
                 <FaMoneyBillWave className="size-4 text-main-green" />
               </div>
               <div className="flex items-center gap-2">
                 <IoIosCheckmarkCircle className="size-4 text-main-green" />
-                <p>تحويل بنكي</p>
+                <p>{t("bank_transfer")}</p>
                 <BsBank className="size-4 text-main-green" />
               </div>
             </div>
@@ -306,7 +296,7 @@ export default async function EstateSinglePage({ params }) {
           {/* ads - KEEP STATIC */}
           <div className="rounded-xl border">
             <div className="p-6 border-b">
-              <h2 className="font-bold">اعلان الهيئه العامه للعقار</h2>
+              <h2 className="font-bold">{t("advertisement")}</h2>
             </div>
             <div className="p-6 flex items-center justify-center">
               <Image
@@ -328,9 +318,9 @@ export default async function EstateSinglePage({ params }) {
       {similarProperties && similarProperties.length > 0 && (
         <div className="">
           <StatesSection
-            title="عقارات مشابهة"
-            subTitle="عقارات مشابهة"
-            description="نقترح لك بعض أفضل العقارات المميزة والموثوقة لدينا"
+            title={t("similar_properties.title")}
+            subTitle={t("similar_properties.subtitle")}
+            description={t("similar_properties.description")}
             properties={similarProperties}
           />
         </div>

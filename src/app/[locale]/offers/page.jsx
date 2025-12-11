@@ -2,8 +2,10 @@ import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import OfferCard from "@/components/shared/offer-card";
 import { getData } from "@/lib/fetch-methods";
 import React from "react";
+import { getTranslations } from "next-intl/server";
 
 const OffersPage = async () => {
+  const t = await getTranslations("offers_page");
   let offers = [];
 
   try {
@@ -18,13 +20,13 @@ const OffersPage = async () => {
   return (
     <main className="space-y-6">
       <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
-        <CustomBreadcrumbs items={[{ label: "العروض" }]} />
-        <h1 className="text-main-navy text-2xl font-bold">العروض</h1>
+        <CustomBreadcrumbs items={[{ label: t("title") }]} />
+        <h1 className="text-main-navy text-2xl font-bold">{t("title")}</h1>
       </div>
       <div className="container border border-gray-300 p-10">
         {offers.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">لا توجد عروض متاحة حالياً</p>
+            <p className="text-gray-500">{t("no_offers")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">

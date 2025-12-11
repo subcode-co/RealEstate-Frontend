@@ -1,11 +1,19 @@
 "use client";
 
 import { CheckCircle2 } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export default function PlanCard({ title, price, features, popular }) {
+  const t = useTranslations("packages_page");
   return (
     <Card
       className={cn(
@@ -16,23 +24,31 @@ export default function PlanCard({ title, price, features, popular }) {
       {/* شارة الباقة المميزة */}
       {popular && (
         <span className="absolute -top-3 right-3 bg-main-green text-white text-xs font-semibold py-1 px-3 rounded-full">
-          الأكثر شهرة
+          {t("popular_badge") || "الأكثر شهرة"}
         </span>
       )}
 
       {/* العنوان والسعر */}
       <CardHeader className="text-center space-y-3 pt-6">
-        <CardTitle className="text-lg font-bold text-main-navy">{title}</CardTitle>
+        <CardTitle className="text-lg font-bold text-main-navy">
+          {title}
+        </CardTitle>
         <p className="text-3xl font-bold text-main-green">
           {price}
-          <span className="text-sm text-gray-500 font-normal"> / شهريًا</span>
+          <span className="text-sm text-gray-500 font-normal">
+            {" "}
+            / {t("monthly") || "شهريًا"}
+          </span>
         </p>
       </CardHeader>
 
       {/* المميزات */}
       <CardContent className="space-y-3">
         {features.map((feature, index) => (
-          <div key={index} className="flex items-center gap-2 text-sm text-gray-700">
+          <div
+            key={index}
+            className="flex items-center gap-2 text-sm text-gray-700"
+          >
             <CheckCircle2 className="text-main-green w-4 h-4" />
             <span>{feature}</span>
           </div>
@@ -49,7 +65,7 @@ export default function PlanCard({ title, price, features, popular }) {
               : "bg-main-navy text-white hover:bg-main-navy/80"
           )}
         >
-          اشترك الآن
+          {t("subscribe_now") || "اشترك الآن"}
         </Button>
       </CardFooter>
     </Card>

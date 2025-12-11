@@ -51,7 +51,7 @@
   "partner": {
     "title": "Success Partners"
   },
-    "blog": {
+  "blog": {
     "title": "Blogs",
     "subtitle": "Selected Articles",
     "description": "Some of the most read articles from our blog"
@@ -102,8 +102,8 @@
       "code_length": "Code must be 4 digits"
     }
   },
-  "login":{
-    "title":"Login",
+  "login": {
+    "title": "Login",
     "phone_number": "Phone Number",
     "password": "Password",
     "password_placeholder": "Enter your password",
@@ -133,6 +133,236 @@
       "password_min": "Password must be at least 8 characters",
       "confirm_password": "Please confirm your password",
       "passwords_not_match": "Passwords do not match"
+    }
+  },
+  "Navbar": {
+    "address": "Main Address - Riyadh",
+    "home": "Home",
+    "estates": "Properties",
+    "partners": "Partners",
+    "packages": "Packages",
+    "blogs": "Blogs",
+    "deals": "Deals",
+    "offers": "Offers",
+    "ads": "Ads"
+  },
+  "breadcrumbs": {
+    "home": "Home",
+    "about_us": "About Us",
+    "login": "Login",
+    "sign_up": "Sign Up",
+    "otp": "OTP Verification",
+    "forget_password": "Forget Password",
+    "reset_code": "Reset Code",
+    "new_password": "New Password",
+    "estates": "Properties",
+    "partners": "Partners",
+    "blogs": "Blogs",
+    "contact_us": "Contact Us",
+    "privacy_policy": "Privacy Policy",
+    "terms_conditions": "Terms & Conditions",
+    "favorite": "Favorites",
+    "offers": "Offers",
+    "packages": "Packages",
+    "user_manual": "User Manual",
+    "notifications": "Notifications",
+    "deals": "Deals",
+    "complaints": "Complaints",
+    "details": "Property Details"
+  },
+  "offers_page": {
+    "title": "Offers",
+    "no_offers": "No offers available currently",
+    "currency": "SAR",
+    "valid_for": "Valid for {days} days",
+    "features": "Features:",
+    "other_features": "+{count} other features"
+  },
+  "packages_page": {
+    "title": "Packages",
+    "basic_plan": "Basic Plan",
+    "premium_plan": "Premium Plan",
+    "golden_plan": "Golden Plan",
+    "popular_badge": "Most Popular",
+    "monthly": "Monthly",
+    "subscribe_now": "Subscribe Now",
+    "features": {
+      "publish_5": "Publish 5 Properties",
+      "support_working_hours": "Support during working hours",
+      "limited_visibility": "Limited visibility in search results",
+      "publish_15": "Publish 15 Properties",
+      "support_24": "24/7 Support",
+      "top_visibility": "Top visibility in search results",
+      "featured_ads": "Featured Ads",
+      "unlimited_publish": "Unlimited Properties",
+      "support_vip": "VIP Support",
+      "home_ads": "Home Page Ads",
+      "analytics": "Property Analytics"
+    }
+  },
+  "deals_page": {
+    "title": "Direct Deals",
+    "add_deal": "Add Deal",
+    "edit_deal": "Edit Deal",
+    "new_deal": "Add New Deal",
+    "page_info": "Page {page} of {totalPages} ({total} deals)",
+    "previous": "Previous",
+    "next": "Next",
+    "error_fetch": "Failed to fetch data",
+    "error_generic": "An error occurred while fetching data"
+  },
+  "property_details": {
+    "views": "Views",
+    "description": "Description",
+    "details_title": "Property Details",
+    "amenities_title": "Amenities",
+    "location_title": "Location",
+    "reviews_title": "Client Reviews",
+    "reviews_subtitle": "({count} reviews - average {rating})",
+    "payment_methods": "Payment Methods",
+    "cash": "Cash",
+    "bank_transfer": "Bank Transfer",
+    "advertisement": "General Real Estate Authority Ad",
+    "similar_properties": {
+      "title": "Similar Properties",
+      "subtitle": "Similar Properties",
+      "description": "We suggest some of our best and trusted properties"
+    },
+    "fields": {
+      "area_unit": "m²",
+      "garages": "Garages",
+      "balconies": "Balconies",
+      "rooms": "Rooms",
+      "bathrooms": "Bathrooms",
+      "area": "Area",
+      "finishing_type": "Finishing Type",
+      "none": "None",
+      "usable_area": "Usable Area",
+      "operation_type": "Operation Type"
+    },
+    "finishing_types": {
+      "none": "No Finishing",
+      "basic": "Basic",
+      "good": "Good",
+      "luxury": "Luxury",
+      "super_luxury": "Super Luxury"
+    },
+    "operation_types": {
+      "sale": "For Sale",
+      "rent": "For Rent"
+    }
+  },
+  "estate_card": {
+    "show_details": "Show Details",
+    "featured": "Featured",
+    "deal": "Serious Request",
+    "sar": "SAR",
+    "sqm": "m²",
+    "price_hidden": "Contact for Price",
+    "no_reviews": "No reviews yet"
+  },
+  "property_actions": {
+    "show_more": "Show More",
+    "buy_now": "Buy Now",
+    "whatsapp": "WhatsApp",
+    "message": "Message",
+    "call_us": "Call Us",
+    "whatsapp_message": "Hello, I am interested in this property ({title}) and would like to know more details."
+  },
+  "add_deal": {
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "city": "City",
+    "district": "District",
+    "country": "Country",
+    "plan_number": "Plan Number",
+    "plot_number": "Plot Number",
+    "min_area": "Min Area (m²)",
+    "max_area": "Max Area (m²)",
+    "min_total_price": "Min Total Price",
+    "max_total_price": "Max Total Price",
+    "min_price_per_meter": "Min Price Per Meter",
+    "max_price_per_meter": "Max Price Per Meter",
+    "property_type": "Property Type",
+    "transaction_type": "Transaction Type",
+    "identity_number": "Identity Number",
+    "select_property_type": "Select Property Type",
+    "select_transaction_type": "Select Transaction Type",
+    "cancel": "Cancel",
+    "add_deal": "Add Deal",
+    "update_deal": "Update Deal",
+    "adding": "Adding...",
+    "updating": "Updating...",
+    "success_add": "Deal added successfully",
+    "success_update": "Deal updated successfully",
+    "error_add": "Failed to add deal",
+    "error_update": "Failed to update deal",
+    "types": {
+      "residential": "Residential",
+      "commercial": "Commercial",
+      "industrial": "Industrial",
+      "agricultural": "Agricultural"
+    },
+    "transactions": {
+      "ownership_transfer": "Ownership Transfer",
+      "mortgage": "Mortgage",
+      "mortgage_release": "Mortgage Release",
+      "division_merge": "Division/Merge"
+    }
+  },
+  "validations": {
+    "required": "This field is required",
+    "email_invalid": "Invalid email address",
+    "phone_min": "Phone number must be at least 10 digits",
+    "password_min": "Password must be at least 8 characters",
+    "confirm_password": "Passwords do not match",
+    "name_min": "Name must be at least 2 characters",
+    "code_length": "Code must be 4 digits",
+    "role_required": "Please select account type",
+    "price_range_invalid": "Invalid price range"
+  },
+  "toasts": {
+    "success": "Operation completed successfully",
+    "error": "Something went wrong",
+    "unauthorized": "You must be logged in first",
+    "login_success": "Logged in successfully",
+    "login_failed": "Login failed",
+    "register_success": "Account created successfully",
+    "otp_sent": "Verification code sent",
+    "otp_verified": "Code verified successfully",
+    "password_changed": "Password changed successfully",
+    "email_sent": "Email sent successfully",
+    "complaint_sent": "Complaint submitted successfully",
+    "newsletter_success": "Subscribed to newsletter successfully",
+    "newsletter_error": "Failed to subscribe to newsletter",
+    "fetch_error": "Failed to fetch data"
+  },
+  "estates_filter": {
+    "operation_type": "Operation Type",
+    "property_type": "Property Type",
+    "rooms": "Rooms",
+    "finishing_type": "Finishing Type",
+    "location": "Location",
+    "price_range": "Price Range",
+    "search": "Search",
+    "clear": "Clear",
+    "customize_property": "Customize Your Property",
+    "customize_description": "Search for the property you want",
+    "from": "From",
+    "to": "To",
+    "types": {
+      "villa": "Villa",
+      "apartment": "Apartment",
+      "land": "Land"
+    },
+    "finishes": {
+      "luxury": "Luxury",
+      "average": "Good",
+      "simple": "Basic"
+    },
+    "operations": {
+      "sale": "Sale",
+      "rent": "Rent"
     }
   }
 }

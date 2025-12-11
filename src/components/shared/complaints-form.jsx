@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,64 +11,62 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { useLocale, useTranslations } from 'next-intl'
-import { Loader2 } from "lucide-react"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useLocale, useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import { Textarea } from "../ui/textarea";
 import { getData, postData } from "@/lib/fetch-methods";
 import { useState, useEffect } from "react";
-import { PhoneInput } from "react-international-phone"
-import "react-international-phone/style.css"
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
 import { getToken } from "@/services";
 const ComplaintsForm = () => {
-  const [types, setTypes] = useState([])
-  const [isLoadingTypes, setIsLoadingTypes] = useState(true)
-  const t = useTranslations('Complaints')
-  const locale = useLocale()
-  const router = useRouter()
+  const [types, setTypes] = useState([]);
+  const [isLoadingTypes, setIsLoadingTypes] = useState(true);
+  const t = useTranslations("Complaints");
+  const locale = useLocale();
+  const router = useRouter();
   async function getComplaints() {
     try {
-      setIsLoadingTypes(true)
-      const response = await getData({ url: '/complaints/types' })
+      setIsLoadingTypes(true);
+      const response = await getData({ url: "/complaints/types" });
       if (response?.code == 200) {
-        setTypes(response?.data?.data || [])
+        setTypes(response?.data?.data || []);
       }
     } catch (error) {
-      console.error('Error fetching complaint types:', error)
+      console.error("Error fetching complaint types:", error);
     } finally {
-      setIsLoadingTypes(false)
+      setIsLoadingTypes(false);
     }
   }
   useEffect(() => {
-    getComplaints()
-  }, [])
+    getComplaints();
+  }, []);
 
   const formSchema = z.object({
     complaint_type_id: z.string({
-      required_error: t('validation.complaint_type_required'),
+      required_error: t("validation.complaint_type_required"),
     }),
     phone: z.string().min(10, {
-      message: t('validation.phone_min'),
+      message: t("validation.phone_min"),
     }),
     email: z.string().email({
-      message: t('validation.email_invalid'),
+      message: t("validation.email_invalid"),
     }),
     body: z.string().min(10, {
-      message: t('validation.message_min'),
+      message: t("validation.message_min"),
     }),
-  })
-
-
+  });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -78,36 +76,34 @@ const ComplaintsForm = () => {
       email: "",
       body: "",
     },
-  })
-  const { isSubmitting } = form.formState
+  });
+  const { isSubmitting } = form.formState;
 
   async function onSubmit(values) {
-    const token = await getToken()
+    const token = await getToken();
     if (!token) {
-      toast.error(t('validation.unauthorized'))
-      router.push('/auth/login')
-      return
+      toast.error(t("validation.unauthorized"));
+      router.push("/auth/login");
+      return;
     }
 
     const res = await postData({
       url: "/complaints",
       data: values,
-    })
-    console.log(res)
+    });
+    console.log(res);
     if (res?.code === 200) {
-      toast.success(res?.data?.message)
-      form.reset()
-    }
-    else {
-      toast.error(res?.data?.message)
+      toast.success(res?.data?.message);
+      form.reset();
+    } else {
+      toast.error(res?.data?.message || t("validation.error"));
     }
   }
 
-  const inputStyle = "!h-14 rounded-none rounded-s-lg"
+  const inputStyle = "!h-14 rounded-none rounded-s-lg";
 
   return (
     <div className=" w-full ">
-
       <Form {...form}>
         <form
           dir={locale === "ar" ? "rtl" : "ltr"}
@@ -119,11 +115,15 @@ const ComplaintsForm = () => {
             name="complaint_type_id"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('complaint_type')}</FormLabel>
-                <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} defaultValue={field.value}>
+                <FormLabel>{t("complaint_type")}</FormLabel>
+                <Select
+                  dir={locale === "ar" ? "rtl" : "ltr"}
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger className={`${inputStyle} w-full`}>
-                      <SelectValue placeholder={t('select_type')} />
+                      <SelectValue placeholder={t("select_type")} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -149,10 +149,10 @@ const ComplaintsForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('email')}</FormLabel>
+                <FormLabel>{t("email")}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t('enter_email')}
+                    placeholder={t("enter_email")}
                     className={inputStyle}
                     type="email"
                     {...field}
@@ -167,7 +167,7 @@ const ComplaintsForm = () => {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('phone_number')}</FormLabel>
+                <FormLabel>{t("phone_number")}</FormLabel>
                 <FormControl>
                   <PhoneInput
                     {...field}
@@ -188,10 +188,10 @@ const ComplaintsForm = () => {
             name="body"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('message_label')}</FormLabel>
+                <FormLabel>{t("message_label")}</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder={t('message_placeholder')}
+                    placeholder={t("message_placeholder")}
                     className={`${inputStyle} !h-30`}
                     {...field}
                   />
@@ -203,14 +203,18 @@ const ComplaintsForm = () => {
           <Button
             disabled={isSubmitting}
             type="submit"
-            className='rounded-none h-12 bg-main-green text-white lg:py-4 lg:!px-8 p-3 rounded-tr-2xl max-lg:text-xs font-semibold flex items-center gap-2 w-fit  mt-8'
+            className="rounded-none h-12 bg-main-green text-white lg:py-4 lg:!px-8 p-3 rounded-tr-2xl max-lg:text-xs font-semibold flex items-center gap-2 w-fit  mt-8"
           >
-            {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : t('submit_complaint')}
+            {isSubmitting ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              t("submit_complaint")
+            )}
           </Button>
         </form>
       </Form>
     </div>
-  )
-}
+  );
+};
 
-export default ComplaintsForm
+export default ComplaintsForm;

@@ -3,8 +3,11 @@ import React from "react";
 import { BsBookmarkDash } from "react-icons/bs";
 import ryal from "@/assets/ryal.svg";
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 const StatesCard = ({ withBorder = true, property }) => {
+  const t = useTranslations("estate_card");
+
   // If no property data, show placeholder
   if (!property) {
     return (
@@ -55,13 +58,13 @@ const StatesCard = ({ withBorder = true, property }) => {
           {area && (
             <div className="text-[.6rem] font-semibold w-fit bg-white p-2 rounded-md absolute z-10  top-4 end-4">
               {area}
-              <sup>m2</sup>
+              <sup>{t("sqm")}</sup>
             </div>
           )}
           {/* special */}
           {isFeatured && (
             <div className="text-xs font-semibold w-fit bg-main-green text-white p-2 rounded-t-md absolute z-10  top-1/2 -start-5  -rotate-90">
-              عقار مميز
+              {t("featured")}
             </div>
           )}
           <Image
@@ -96,7 +99,7 @@ const StatesCard = ({ withBorder = true, property }) => {
         </div>
         {/* link */}
         <div className="text-sm font-medium block text-center w-3/4 mx-auto  rounded-md  py-2 px-3 border-1 border-main-green text-main-green hover:bg-main-green hover:text-white transition-all duration-300">
-          عرض التفاصيل
+          {t("show_details")}
         </div>
       </div>
     </Link>

@@ -3,14 +3,24 @@ import React from "react";
 import { BsBookmarkDash } from "react-icons/bs";
 import ryal from "@/assets/ryal.svg";
 import { Link } from "@/i18n/navigation";
-import { TbMapPin2 } from "react-icons/tb";
-import { IoCalendarOutline } from "react-icons/io5";
-import { LuBath, LuCarFront } from "react-icons/lu";
-import { MdOutlineSocialDistance } from "react-icons/md";
+import { useTranslations } from "next-intl";
 
-const EstateCard = ({ withBorder = true, property }) => {
-  // If no property data, show placeholder/skeleton
-  if (!property) {
+const EstateCard = ({
+  withBorder = true,
+  property,
+  id,
+  img,
+  title,
+  location,
+  price,
+  area,
+  isFeatured,
+  slug,
+}) => {
+  const t = useTranslations("estate_card");
+
+  // If no property data passed, return placeholder/skeleton
+  if (!property && !title) {
     return (
       <div
         className={`${
@@ -27,140 +37,130 @@ const EstateCard = ({ withBorder = true, property }) => {
     );
   }
 
-  const {
-    id,
-    slug,
-    title,
-    city,
-    country,
-    formattedPrice,
-    area,
-    first_image,
-    isFeatured,
-    isDeal,
-    postedAt,
-    bathrooms,
-    garages,
-    priceHidden,
-  } = property;
-
-  // Format date
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("ar-SA");
-  };
+  // Use property object if available, otherwise use individual props
+  const displayData = property
+    ? {
+        id: property.id,
+        slug: property.slug,
+        title: property.title,
+        city: property.city,
+        country: property.country,
+        formattedPrice: property.formattedPrice,
+        priceHidden: property.priceHidden,
+        area: property.area,
+        first_image: property.first_image,
+        isFeatured: property.isFeatured,
+        isDeal: property.isDeal,
+      }
+    : {
+        id,
+        slug,
+        title,
+        city: location?.split(",")[0],
+        country: location?.split(",")[1],
+        formattedPrice: price,
+        priceHidden: false,
+        area,
+        first_image: img,
+        isFeatured,
+        isDeal: false,
+      };
 
   return (
-    <Link href={`/estats/${slug || id}`} className="block">
+    <Link
+      href={`/estats/${displayData.slug || displayData.id}`}
+      className="block h-full"
+    >
       <div
         className={`${
           withBorder && "border-2 border-gray-200"
-        } bg-white rounded-lg p-4 space-y-5 hover:shadow-lg transition-shadow duration-300 cursor-pointer`}
+        } bg-white rounded-lg p-4 space-y-5 hover:shadow-lg transition-shadow duration-300 h-full flex flex-col cursor-pointer`}
       >
         {/* image and favorate */}
-        <div className="h-52 rounded-xl relative overflow-hidden">
+        <div className="h-52 rounded-xl relative overflow-hidden shrink-0">
           {/* favorate */}
           <button
-            onClick={(e) => e.preventDefault()}
-            className="group bg-white p-2 rounded-md absolute z-10 text-main-green top-4 start-4"
+            onClick={(e) => {
+              e.preventDefault();
+              // Add bookmark logic here
+            }}
+            className="group bg-white p-2 rounded-md absolute z-10 text-main-green top-4 start-4 hover:bg-main-green hover:text-white transition-colors"
           >
-            <BsBookmarkDash size={20} className=" " />
+            <BsBookmarkDash size={20} className="" />
           </button>
-          {/* space */}
-          {area && (
-            <div className="text-[.6rem] font-semibold w-fit bg-white p-2 rounded-md absolute z-10  top-4 end-4">
-              {area}
-              <sup>m2</sup>
+
+          {/* tags container */}
+          <div className="absolute top-4 end-4 z-10 flex flex-col gap-2 items-end">
+            {/* area */}
+            {displayData.area && (
+              <div className="text-[.6rem] font-semibold w-fit bg-white p-2 rounded-md">
+                {displayData.area}
+                <sup>{t("sqm")}</sup>
+              </div>
+            )}
+          </div>
+
+          {/* special/featured tag */}
+          {displayData.isFeatured && (
+            <div className="text-xs font-semibold w-fit bg-main-green text-white p-2 rounded-t-md absolute z-10 top-1/2 -start-5 -rotate-90 shadow-md">
+              {t("featured")}
             </div>
           )}
-          {/* special */}
-          {(isDeal || isFeatured) && (
-            <div className="absolute z-10 bottom-0  left-1/2 -translate-x-1/2 flex items-center justify-center gap-2">
-              {isDeal && (
-                <p className="text-[10px] font-semibold w-fit bg-main-navy text-white p-2 rounded-t-md shrink-0">
-                  طلب جــاد
-                </p>
-              )}
-              {isFeatured && (
-                <p className="text-[10px] font-semibold w-fit bg-main-green text-white p-2 rounded-t-md shrink-0">
-                  عقار مميز
-                </p>
-              )}
+
+          {/* deal tag */}
+          {displayData.isDeal && (
+            <div className="text-xs font-semibold w-fit bg-red-500 text-white p-2 rounded-t-md absolute z-10 top-20 -start-5 -rotate-90 shadow-md">
+              {t("deal")}
             </div>
           )}
+
           <Image
-            src={first_image || "/images/state.png"}
+            src={displayData.first_image || "/images/state.png"}
             fill
-            alt={title || "property"}
-            className="static w-full h-full object-cover rounded-xl"
+            alt={displayData.title || "property"}
+            className="static w-full h-full object-cover rounded-xl transition-transform duration-500 hover:scale-110"
           />
         </div>
 
-        {/* price and date */}
-        <div className="flex items-center justify-between">
-          {/* date */}
-          <div className="flex items-center gap-2">
-            <IoCalendarOutline size={20} className="text-main-green" />
-            <p className="text-xs text-gray-400">{formatDate(postedAt)}</p>
-          </div>
-          {/* price */}
-          <div className="flex items-center gap-1">
-            <p className="text-xl font-bold text-main-green">
-              {formattedPrice}
-            </p>
-            {!priceHidden && (
-              <Image
-                src={ryal}
-                alt="ryal"
-                width={20}
-                height={20}
-                className="size-4 object-contain"
-              />
-            )}
-          </div>
-        </div>
         {/* content */}
-        <div className="space-y-2">
-          <h4 className=" font-bold text-lg line-clamp-1">{title}</h4>
+        <div className="space-y-2 flex-grow flex flex-col">
+          <h4
+            className="font-bold text-lg line-clamp-1"
+            title={displayData.title}
+          >
+            {displayData.title}
+          </h4>
+          <p className="text-xs text-gray-400 line-clamp-1">
+            {displayData.city}
+            {displayData.country ? `, ${displayData.country}` : ""}
+          </p>
 
-          {/* location */}
-          <div className="flex items-center gap-2">
-            <div className="size-6 rounded-full bg-[#DDFFF3] flex items-center justify-center">
-              <TbMapPin2 className="text-main-green" />
-            </div>
-            <p className="text-xs text-gray-400">
-              {city}, {country}
-            </p>
-          </div>
-          {/* features */}
-          <div className="flex items-center gap-2">
-            {/* car */}
-            {garages > 0 && (
-              <div className="flex items-center gap-2">
-                <LuCarFront className="text-main-green" />
-                <p className="text-xs text-main-navy">{garages}</p>
-              </div>
-            )}
-            {/* bath */}
-            {bathrooms > 0 && (
-              <div className="flex items-center gap-2">
-                <LuBath className="text-main-green" />
-                <p className="text-xs text-main-navy">{bathrooms}</p>
-              </div>
-            )}
-            {/* distance */}
-            {area && (
-              <div className="flex items-center gap-2">
-                <MdOutlineSocialDistance className="text-main-green" />
-                <p className="text-xs text-main-navy">{area} m2</p>
-              </div>
+          {/* price */}
+          <div className="flex items-center gap-1 mt-auto pt-2">
+            {displayData.priceHidden ? (
+              <p className="text-xl font-bold text-main-green hover:underline">
+                {t("price_hidden")}
+              </p>
+            ) : (
+              <>
+                <p className="text-xl font-bold text-main-green">
+                  {displayData.formattedPrice?.replace(" ريال", "")}
+                </p>
+                <Image
+                  src={ryal}
+                  alt="ryal"
+                  width={20}
+                  height={20}
+                  className="size-4 object-contain"
+                />
+              </>
             )}
           </div>
         </div>
-        {/* link */}
-        <div className="text-sm font-medium block text-center w-3/4 mx-auto  rounded-md  py-2 px-3 border-1 border-main-green text-main-green hover:bg-main-green hover:text-white transition-all duration-300">
-          عرض التفاصيل
+
+        {/* link button */}
+        <div className="text-sm font-medium block text-center w-3/4 mx-auto rounded-md py-2 px-3 border-1 border-main-green text-main-green hover:bg-main-green hover:text-white transition-all duration-300 mt-2">
+          {t("show_details")}
         </div>
       </div>
     </Link>

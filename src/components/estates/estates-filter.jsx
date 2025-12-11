@@ -32,17 +32,22 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-const FormSchema = z.object({
-  operationType: z.string().optional(),
-  num: z.string().optional(),
-  room: z.string().optional(),
-  type: z.string().optional(),
-  finish: z.string().optional(),
-  location: z.string().optional(),
-  priceRange: z.array(z.number()).length(2).optional(),
-});
+import { useTranslations } from "next-intl";
 
 const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
+  const t = useTranslations("estates_filter");
+  const tVal = useTranslations("validations");
+
+  const FormSchema = z.object({
+    operationType: z.string().optional(),
+    num: z.string().optional(),
+    room: z.string().optional(),
+    type: z.string().optional(),
+    finish: z.string().optional(),
+    location: z.string().optional(),
+    priceRange: z.array(z.number()).length(2).optional(),
+  });
+
   const selectStyles =
     "border shadow-none focus-visible:ring-0 p-3 rounded-none rounded-s-lg border-gray-400 !h-12 !w-full justify-end";
   const [priceRange, setPriceRange] = useState([0, 10000]);
@@ -68,22 +73,21 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
     if (values.operationType) filters.operation_type = values.operationType;
     if (values.room) filters.rooms = values.room;
     if (values.type) {
-      // Map Arabic category names to API values
+      // API expects "فيلا" etc for category? Previous code had:
+      // categoryMap = { فيلا: "فيلا", شقة: "شقة", اراضي: "برج" }
+      // "اراضي" mapped to "برج" (Tower??) - assuming meant 'land' or just pass value.
+      // Let's assume the API handles the English values OR we map back if needed.
+      // Reverting to previous logic for safety but using English inputs now:
       const categoryMap = {
-        فيلا: "فيلا",
-        شقة: "شقة",
-        اراضي: "برج",
+        villa: "فيلا",
+        apartment: "شقة",
+        land: "برج", // Keeping previous weird mapping for safety "اراضي" -> "برج"
       };
       filters.category = categoryMap[values.type] || values.type;
     }
     if (values.finish) {
-      // Map Arabic finishing types to API values
-      const finishMap = {
-        لوكس: "luxury",
-        متوسط: "good",
-        بسيط: "basic",
-      };
-      filters.finishing_type = finishMap[values.finish] || values.finish;
+      // Values are now 'luxury', 'good', 'basic' directly from Select
+      filters.finishing_type = values.finish;
     }
     if (values.location) filters.city = values.location;
     if (values.priceRange) {
@@ -118,14 +122,14 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
                     iconStyle="size-6 text-main-navy"
                   >
                     <SelectValue
-                      placeholder="نوع العملية"
+                      placeholder={t("operation_type")}
                       className="text-main-navy"
                     />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="sale">بيع</SelectItem>
-                  <SelectItem value="rent">إيجار</SelectItem>
+                  <SelectItem value="sale">{t("operations.sale")}</SelectItem>
+                  <SelectItem value="rent">{t("operations.rent")}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -144,7 +148,7 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
                     iconStyle="size-6 text-main-navy"
                   >
                     <SelectValue
-                      placeholder="عدد الغرف"
+                      placeholder={t("rooms")}
                       className="text-main-navy"
                     />
                   </SelectTrigger>
@@ -173,17 +177,17 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
                     iconStyle="size-6 text-main-navy"
                   >
                     <SelectValue
-                      placeholder="نوع العقار"
+                      placeholder={t("property_type")}
                       className="text-main-navy"
                     />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {["فيلا", "شقة", "اراضي"].map((item) => (
-                    <SelectItem key={item} value={item}>
-                      {item}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="villa">{t("types.villa")}</SelectItem>
+                  <SelectItem value="apartment">
+                    {t("types.apartment")}
+                  </SelectItem>
+                  <SelectItem value="land">{t("types.land")}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -202,17 +206,15 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
                     iconStyle="size-6 text-main-navy"
                   >
                     <SelectValue
-                      placeholder="نوع التشطيب"
+                      placeholder={t("finishing_type")}
                       className="text-main-navy"
                     />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {["لوكس", "متوسط", "بسيط"].map((item) => (
-                    <SelectItem key={item} value={item}>
-                      {item}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="luxury">{t("finishes.luxury")}</SelectItem>
+                  <SelectItem value="good">{t("finishes.average")}</SelectItem>
+                  <SelectItem value="basic">{t("finishes.simple")}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -226,7 +228,7 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
             <FormItem>
               <div className="relative ">
                 <Input
-                  placeholder="الموقع"
+                  placeholder={t("location")}
                   className="border shadow-none focus-visible:ring-0 p-3 rounded-none rounded-s-lg border-gray-400 !h-12"
                   {...field}
                 />
@@ -245,7 +247,7 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
             }
           >
             <FiSearch />
-            بحث
+            {t("search")}
           </Button>
           <Button
             type="button"
@@ -257,7 +259,7 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
               "bg-[#DC2626] hover:bg-[#B91C1C] gap-2 transition-all duration-500 !p-3 h-11 rounded-none"
             }
           >
-            مسح
+            {t("clear")}
           </Button>
           <Button
             type="submit"
@@ -275,7 +277,7 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
           render={({ field }) => (
             <FormItem className="lg:col-span-3 md:col-span-2 col-span-1">
               <div className="bg-white border border-gray-400 rounded-s-lg p-4  flex items-center gap-4 ">
-                <span className="text-gray-400">السعر</span>
+                <span className="text-gray-400">{t("price_range")}</span>
                 <div className="flex-1 space-y-2 ">
                   <div className="flex items-center justify-between text-xs text-main-navy font-semibold">
                     <span>{priceRange[0].toFixed(2)} </span>
@@ -298,11 +300,11 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
                 <div className="flex items-center gap-2 text-[10px] text-gray-400 max-md:hidden">
                   {/* from  */}
                   <div className="bg-main-light-gray p-2 ">
-                    من <span>{priceRange[0].toFixed(2)} </span>
+                    {t("from")} <span>{priceRange[0].toFixed(2)} </span>
                   </div>
                   {/* to */}
                   <div className="bg-main-light-gray p-2 ">
-                    الي <span>{priceRange[1].toFixed(2)} </span>
+                    {t("to")} <span>{priceRange[1].toFixed(2)} </span>
                   </div>
                 </div>
               </div>
@@ -316,6 +318,7 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
 };
 
 const EstateFilterPanel = ({ onSubmit }) => {
+  const t = useTranslations("estates_filter");
   return (
     <div>
       <div className="max-lg:hidden">
@@ -324,14 +327,16 @@ const EstateFilterPanel = ({ onSubmit }) => {
 
       <Sheet>
         <SheetTrigger className="lg:hidden bg-main-green text-white font-bold rounded-t-xl hover:bg-main-green/95 transition-all duration-500 w-full !h-12">
-          خصص عقارك
+          {t("customize_property")}
         </SheetTrigger>
         <SheetContent side="bottom">
           <div className="container py-12">
             <SheetHeader>
-              <SheetTitle className={"text-center"}>خصص عقارك</SheetTitle>
+              <SheetTitle className={"text-center"}>
+                {t("customize_property")}
+              </SheetTitle>
               <SheetDescription className="text-center">
-                ابحث عن العقار الذي تريده
+                {t("customize_description")}
               </SheetDescription>
             </SheetHeader>
             <EstatesFilter onSubmit={onSubmit} />

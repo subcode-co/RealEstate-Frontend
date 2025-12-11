@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,60 +11,62 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
-import { useLocale, useTranslations } from "next-intl"
-import { FaLongArrowAltRight } from "react-icons/fa"
-import { useSearchParams } from "next/navigation"
-import { toast } from "sonner"
-import { postData } from "@/lib/fetch-methods"
-import { Loader2 } from "lucide-react"
-import { useRouter } from "@/i18n/navigation"
-import { useState } from "react"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { useLocale, useTranslations } from "next-intl";
+import { FaLongArrowAltRight } from "react-icons/fa";
+import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { postData } from "@/lib/fetch-methods";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "@/i18n/navigation";
+import { useState } from "react";
 
 export function ResetCodeForm() {
-  const locale = useLocale()
-  const t = useTranslations('otp')
-  const tv = useTranslations('otp.validation')
-  const searchParams = useSearchParams()
-  const mobile = searchParams.get("mobile")
-  const code = searchParams.get("code")
-  const router = useRouter()
-  const [resendLoading, setResendLoading] = useState(false)
+  const locale = useLocale();
+  const t = useTranslations("otp");
+  const tv = useTranslations("otp.validation");
+  const searchParams = useSearchParams();
+  const mobile = searchParams.get("mobile");
+  const code = searchParams.get("code");
+  const router = useRouter();
+  const [resendLoading, setResendLoading] = useState(false);
 
   const formSchema = z.object({
     otp: z.string().length(4, {
       message: tv("code_length"),
     }),
-  })
+  });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       otp: code,
     },
-  })
+  });
 
-  const { isSubmitting } = form.formState
+  const { isSubmitting } = form.formState;
   async function onSubmit(values) {
     const data = {
       mobile: mobile,
       code: values.otp,
-    }
+    };
 
-    const res = await postData({ url: "/verify-reset-code", data })
+    const res = await postData({ url: "/verify-reset-code", data });
     if (res?.code === 200) {
-      toast.success(res?.data?.message)
-      const encodedToken = encodeURIComponent(res?.data?.data?.token)
-      router.push(`/auth/new-password?token=${encodedToken}`)
+      toast.success(res?.data?.message);
+      const encodedToken = encodeURIComponent(res?.data?.data?.token);
+      router.push(`/auth/new-password?token=${encodedToken}`);
     } else {
-      toast.error(res?.data?.message)
+      toast.error(res?.data?.message || t("validation.error"));
     }
-    form.reset()
+    form.reset();
   }
-
-
 
   return (
     <div className="lg:p-20 p-8 border border-main-gray rounded-lg flex max-lg:flex-col items-start gap-8 w-full">
@@ -74,7 +76,12 @@ export function ResetCodeForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6 w-full"
         >
-          <p className="text-xs font-bold">{t('code_sent_to')} <span className="font-bold text-main-green" dir="ltr" >{mobile}</span></p>
+          <p className="text-xs font-bold">
+            {t("code_sent_to")}{" "}
+            <span className="font-bold text-main-green" dir="ltr">
+              {mobile}
+            </span>
+          </p>
           <FormField
             control={form.control}
             name="otp"
@@ -82,7 +89,9 @@ export function ResetCodeForm() {
               <FormItem className="">
                 <FormControl>
                   <div>
-                    <FormLabel className="text-xs font-bold mb-2">{t('enter_code')}</FormLabel>
+                    <FormLabel className="text-xs font-bold mb-2">
+                      {t("enter_code")}
+                    </FormLabel>
                     <InputOTP
                       maxLength={4}
                       {...field}
@@ -116,16 +125,20 @@ export function ResetCodeForm() {
             <Button
               disabled={isSubmitting}
               type="submit"
-              className='rounded-none h-12 bg-main-green text-white lg:py-4 lg:!px-8 p-3 rounded-tr-2xl max-lg:text-xs font-semibold flex items-center gap-2 w-fit'
+              className="rounded-none h-12 bg-main-green text-white lg:py-4 lg:!px-8 p-3 rounded-tr-2xl max-lg:text-xs font-semibold flex items-center gap-2 w-fit"
             >
-              {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <FaLongArrowAltRight size={20} />}
-              <p>{t('verify_button')}</p>
+              {isSubmitting ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <FaLongArrowAltRight size={20} />
+              )}
+              <p>{t("verify_button")}</p>
             </Button>
           </div>
         </form>
       </Form>
     </div>
-  )
+  );
 }
 
-export default ResetCodeForm
+export default ResetCodeForm;

@@ -16,30 +16,33 @@ import {
 } from "@/components/ui/select";
 import { createDirectDeal, updateDirectDeal } from "@/actions/deals";
 import { toast } from "sonner";
-
-const schema = z.object({
-  start_date: z.string().min(1, "تاريخ البداية مطلوب"),
-  end_date: z.string().min(1, "تاريخ النهاية مطلوب"),
-  city: z.string().min(1, "المدينة مطلوبة"),
-  district: z.string().min(1, "الحي مطلوب"),
-  country: z.string().min(1, "الدولة مطلوبة"),
-  plan_number: z.string().min(1, "رقم المخطط مطلوب"),
-  plot_number: z.string().min(1, "رقم القطعة مطلوب"),
-  min_area: z.string().min(1, "الحد الأدنى للمساحة مطلوب"),
-  max_area: z.string().min(1, "الحد الأعلى للمساحة مطلوب"),
-  min_total_price: z.string().min(1, "الحد الأدنى للسعر الإجمالي مطلوب"),
-  max_total_price: z.string().min(1, "الحد الأعلى للسعر الإجمالي مطلوب"),
-  min_price_per_meter: z.string().min(1, "الحد الأدنى لسعر المتر مطلوب"),
-  max_price_per_meter: z.string().min(1, "الحد الأعلى لسعر المتر مطلوب"),
-  property_type_id: z.string().min(1, "نوع العقار مطلوب"),
-  transaction_type: z.string().min(1, "نوع المعاملة مطلوب"),
-  identity_number: z.string().min(1, "رقم الهوية مطلوب"),
-});
+import { useTranslations } from "next-intl";
 
 export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
+  const t = useTranslations("add_deal");
+  const tVal = useTranslations("validations");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const labelStyle = "block text-sm font-medium text-main-navy mb-2";
   const isEditMode = !!deal;
+
+  const schema = z.object({
+    start_date: z.string().min(1, tVal("required")),
+    end_date: z.string().min(1, tVal("required")),
+    city: z.string().min(1, tVal("required")),
+    district: z.string().min(1, tVal("required")),
+    country: z.string().min(1, tVal("required")),
+    plan_number: z.string().min(1, tVal("required")),
+    plot_number: z.string().min(1, tVal("required")),
+    min_area: z.string().min(1, tVal("required")),
+    max_area: z.string().min(1, tVal("required")),
+    min_total_price: z.string().min(1, tVal("required")),
+    max_total_price: z.string().min(1, tVal("required")),
+    min_price_per_meter: z.string().min(1, tVal("required")),
+    max_price_per_meter: z.string().min(1, tVal("required")),
+    property_type_id: z.string().min(1, tVal("required")),
+    transaction_type: z.string().min(1, tVal("required")),
+    identity_number: z.string().min(1, tVal("required")),
+  });
 
   const {
     register,
@@ -116,7 +119,7 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
       if (result.success) {
         toast.success(
           result.message ||
-            (isEditMode ? "تم تحديث الصفقة بنجاح" : "تم إضافة الصفقة بنجاح")
+            (isEditMode ? t("success_update") : t("success_add"))
         );
         setOpen(false);
         // Refetch deals list
@@ -126,15 +129,12 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
       } else {
         // Show detailed error message
         toast.error(
-          result.message ||
-            (isEditMode ? "فشل في تحديث الصفقة" : "فشل في إضافة الصفقة")
+          result.message || (isEditMode ? t("error_update") : t("error_add"))
         );
         console.error("API Error:", result);
       }
     } catch (error) {
-      toast.error(
-        "حدث خطأ أثناء " + (isEditMode ? "تحديث" : "إضافة") + " الصفقة"
-      );
+      toast.error(isEditMode ? t("error_update") : t("error_add"));
       console.error("Error:", error);
     } finally {
       setIsSubmitting(false);
@@ -150,7 +150,8 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* تاريخ البداية */}
         <div>
           <Label className={labelStyle}>
-            تاريخ البداية<span className="text-red-500">*</span>
+            {t("start_date")}
+            <span className="text-red-500">*</span>
           </Label>
           <Input type="date" {...register("start_date")} />
           {errors.start_date && (
@@ -161,7 +162,8 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* تاريخ النهاية */}
         <div>
           <Label className={labelStyle}>
-            تاريخ النهاية<span className="text-red-500">*</span>
+            {t("end_date")}
+            <span className="text-red-500">*</span>
           </Label>
           <Input type="date" {...register("end_date")} />
           {errors.end_date && (
@@ -172,9 +174,10 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* المدينة */}
         <div>
           <Label className={labelStyle}>
-            المدينة<span className="text-red-500">*</span>
+            {t("city")}
+            <span className="text-red-500">*</span>
           </Label>
-          <Input placeholder="مثلاً الرياض" {...register("city")} />
+          <Input placeholder={t("city")} {...register("city")} />
           {errors.city && (
             <p className="text-red-500 text-sm">{errors.city.message}</p>
           )}
@@ -183,9 +186,10 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* الحي */}
         <div>
           <Label className={labelStyle}>
-            الحي<span className="text-red-500">*</span>
+            {t("district")}
+            <span className="text-red-500">*</span>
           </Label>
-          <Input placeholder="مثلاً حي الورود" {...register("district")} />
+          <Input placeholder={t("district")} {...register("district")} />
           {errors.district && (
             <p className="text-red-500 text-sm">{errors.district.message}</p>
           )}
@@ -194,12 +198,10 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* الدولة */}
         <div>
           <Label className={labelStyle}>
-            الدولة<span className="text-red-500">*</span>
+            {t("country")}
+            <span className="text-red-500">*</span>
           </Label>
-          <Input
-            placeholder="المملكة العربية السعودية"
-            {...register("country")}
-          />
+          <Input placeholder={t("country")} {...register("country")} />
           {errors.country && (
             <p className="text-red-500 text-sm">{errors.country.message}</p>
           )}
@@ -208,9 +210,10 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* رقم المخطط */}
         <div>
           <Label className={labelStyle}>
-            رقم المخطط<span className="text-red-500">*</span>
+            {t("plan_number")}
+            <span className="text-red-500">*</span>
           </Label>
-          <Input placeholder="مثلاً 125" {...register("plan_number")} />
+          <Input placeholder={t("plan_number")} {...register("plan_number")} />
           {errors.plan_number && (
             <p className="text-red-500 text-sm">{errors.plan_number.message}</p>
           )}
@@ -219,9 +222,10 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* رقم القطعة */}
         <div>
           <Label className={labelStyle}>
-            رقم القطعة<span className="text-red-500">*</span>
+            {t("plot_number")}
+            <span className="text-red-500">*</span>
           </Label>
-          <Input placeholder="مثلاً 45" {...register("plot_number")} />
+          <Input placeholder={t("plot_number")} {...register("plot_number")} />
           {errors.plot_number && (
             <p className="text-red-500 text-sm">{errors.plot_number.message}</p>
           )}
@@ -230,11 +234,12 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* الحد الأدنى للمساحة */}
         <div>
           <Label className={labelStyle}>
-            الحد الأدنى للمساحة (م²)<span className="text-red-500">*</span>
+            {t("min_area")}
+            <span className="text-red-500">*</span>
           </Label>
           <Input
             type="number"
-            placeholder="مثلاً 120"
+            placeholder={t("min_area")}
             {...register("min_area")}
           />
           {errors.min_area && (
@@ -245,11 +250,12 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* الحد الأعلى للمساحة */}
         <div>
           <Label className={labelStyle}>
-            الحد الأعلى للمساحة (م²)<span className="text-red-500">*</span>
+            {t("max_area")}
+            <span className="text-red-500">*</span>
           </Label>
           <Input
             type="number"
-            placeholder="مثلاً 300"
+            placeholder={t("max_area")}
             {...register("max_area")}
           />
           {errors.max_area && (
@@ -260,11 +266,12 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* الحد الأدنى للسعر الإجمالي */}
         <div>
           <Label className={labelStyle}>
-            الحد الأدنى للسعر الإجمالي<span className="text-red-500">*</span>
+            {t("min_total_price")}
+            <span className="text-red-500">*</span>
           </Label>
           <Input
             type="number"
-            placeholder="مثلاً 50000"
+            placeholder={t("min_total_price")}
             {...register("min_total_price")}
           />
           {errors.min_total_price && (
@@ -277,11 +284,12 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* الحد الأعلى للسعر الإجمالي */}
         <div>
           <Label className={labelStyle}>
-            الحد الأعلى للسعر الإجمالي<span className="text-red-500">*</span>
+            {t("max_total_price")}
+            <span className="text-red-500">*</span>
           </Label>
           <Input
             type="number"
-            placeholder="مثلاً 900000"
+            placeholder={t("max_total_price")}
             {...register("max_total_price")}
           />
           {errors.max_total_price && (
@@ -294,11 +302,12 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* الحد الأدنى لسعر المتر */}
         <div>
           <Label className={labelStyle}>
-            الحد الأدنى لسعر المتر<span className="text-red-500">*</span>
+            {t("min_price_per_meter")}
+            <span className="text-red-500">*</span>
           </Label>
           <Input
             type="number"
-            placeholder="مثلاً 2500"
+            placeholder={t("min_price_per_meter")}
             {...register("min_price_per_meter")}
           />
           {errors.min_price_per_meter && (
@@ -311,11 +320,12 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* الحد الأعلى لسعر المتر */}
         <div>
           <Label className={labelStyle}>
-            الحد الأعلى لسعر المتر<span className="text-red-500">*</span>
+            {t("max_price_per_meter")}
+            <span className="text-red-500">*</span>
           </Label>
           <Input
             type="number"
-            placeholder="مثلاً 4000"
+            placeholder={t("max_price_per_meter")}
             {...register("max_price_per_meter")}
           />
           {errors.max_price_per_meter && (
@@ -328,20 +338,21 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* نوع العقار */}
         <div>
           <Label className={labelStyle}>
-            نوع العقار<span className="text-red-500">*</span>
+            {t("property_type")}
+            <span className="text-red-500">*</span>
           </Label>
           <Select
             onValueChange={(v) => setValue("property_type_id", v)}
             dir="rtl"
           >
             <SelectTrigger className={"w-full"}>
-              <SelectValue placeholder="اختر نوع العقار" />
+              <SelectValue placeholder={t("select_property_type")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">سكني</SelectItem>
-              <SelectItem value="2">تجاري</SelectItem>
-              <SelectItem value="3">صناعي</SelectItem>
-              <SelectItem value="4">زراعي</SelectItem>
+              <SelectItem value="1">{t("types.residential")}</SelectItem>
+              <SelectItem value="2">{t("types.commercial")}</SelectItem>
+              <SelectItem value="3">{t("types.industrial")}</SelectItem>
+              <SelectItem value="4">{t("types.agricultural")}</SelectItem>
             </SelectContent>
           </Select>
           {errors.property_type_id && (
@@ -354,20 +365,29 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* نوع المعاملة */}
         <div>
           <Label className={labelStyle}>
-            نوع المعاملة<span className="text-red-500">*</span>
+            {t("transaction_type")}
+            <span className="text-red-500">*</span>
           </Label>
           <Select
             onValueChange={(v) => setValue("transaction_type", v)}
             dir="rtl"
           >
             <SelectTrigger className={"w-full"}>
-              <SelectValue placeholder="اختر نوع المعاملة" />
+              <SelectValue placeholder={t("select_transaction_type")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="ownership_transfer">نقل ملكية</SelectItem>
-              <SelectItem value="mortgage">رهن</SelectItem>
-              <SelectItem value="mortgage_release">فك رهن</SelectItem>
-              <SelectItem value="division_merge">تقسيم/دمج</SelectItem>
+              <SelectItem value="ownership_transfer">
+                {t("transactions.ownership_transfer")}
+              </SelectItem>
+              <SelectItem value="mortgage">
+                {t("transactions.mortgage")}
+              </SelectItem>
+              <SelectItem value="mortgage_release">
+                {t("transactions.mortgage_release")}
+              </SelectItem>
+              <SelectItem value="division_merge">
+                {t("transactions.division_merge")}
+              </SelectItem>
             </SelectContent>
           </Select>
           {errors.transaction_type && (
@@ -380,10 +400,11 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
         {/* رقم الهوية */}
         <div>
           <Label className={labelStyle}>
-            رقم الهوية<span className="text-red-500">*</span>
+            {t("identity_number")}
+            <span className="text-red-500">*</span>
           </Label>
           <Input
-            placeholder="مثلاً PROP-00012"
+            placeholder={t("identity_number")}
             {...register("identity_number")}
           />
           {errors.identity_number && (
@@ -401,16 +422,16 @@ export default function AddDealForm({ setOpen, onSuccess, deal = null }) {
           onClick={() => setOpen(false)}
           disabled={isSubmitting}
         >
-          إلغاء
+          {t("cancel")}
         </Button>
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting
             ? isEditMode
-              ? "جاري التحديث..."
-              : "جاري الإضافة..."
+              ? t("updating")
+              : t("adding")
             : isEditMode
-            ? "تحديث الصفقة"
-            : "إضافة الصفقة"}
+            ? t("update_deal")
+            : t("add_deal")}
         </Button>
       </div>
     </form>

@@ -102,8 +102,8 @@
       "code_length": "يجب أن يتكون الكود من 4 أرقام"
     }
   },
-  "login":{
-    "title":"تسجيل الدخول",
+  "login": {
+    "title": "تسجيل الدخول",
     "phone_number": "رقم الهاتف",
     "password": "كلمة المرور",
     "password_placeholder": "أدخل كلمة المرور",
@@ -133,6 +133,236 @@
       "password_min": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
       "confirm_password": "الرجاء تأكيد كلمة المرور",
       "passwords_not_match": "كلمتا المرور غير متطابقتين"
+    }
+  },
+  "Navbar": {
+    "address": "العنوان الرئيسي - الرياض",
+    "home": "الرئيسية",
+    "estates": "العقارات",
+    "partners": "الوكلاء",
+    "packages": "الباقات",
+    "blogs": "المدونة",
+    "deals": "الصفقات",
+    "offers": "العروض",
+    "ads": "الإعلانات"
+  },
+  "breadcrumbs": {
+    "home": "الرئيسية",
+    "about_us": "من نحن",
+    "login": "تسجيل الدخول",
+    "sign_up": "إنشاء حساب",
+    "otp": "التحقق من الرمز",
+    "forget_password": "نسيت كلمة المرور",
+    "reset_code": "إعادة تعيين الرمز",
+    "new_password": "كلمة مرور جديدة",
+    "estates": "العقارات",
+    "partners": "شركاء النجاح",
+    "blogs": "المدونة",
+    "contact_us": "اتصل بنا",
+    "privacy_policy": "سياسة الخصوصية",
+    "terms_conditions": "الشروط والأحكام",
+    "favorite": "المفضلة",
+    "offers": "العروض",
+    "packages": "الباقات",
+    "user_manual": "دليل المستخدم",
+    "notifications": "الإشعارات",
+    "deals": "الصفقات",
+    "complaints": "الشكاوى",
+    "details": "تفاصيل العقار"
+  },
+  "offers_page": {
+    "title": "العروض",
+    "no_offers": "لا توجد عروض متاحة حالياً",
+    "currency": "ر.س",
+    "valid_for": "صالح لمدة {days} يوم",
+    "features": "المميزات:",
+    "other_features": "+{count} مميزات أخرى"
+  },
+  "packages_page": {
+    "title": "الباقات",
+    "basic_plan": "الباقة الأساسية",
+    "premium_plan": "الباقة المميزة",
+    "golden_plan": "الباقة الذهبية",
+    "popular_badge": "الأكثر شهرة",
+    "monthly": "شهريًا",
+    "subscribe_now": "اشترك الآن",
+    "features": {
+      "publish_5": "نشر 5 عقارات",
+      "support_working_hours": "دعم فني خلال أوقات العمل",
+      "limited_visibility": "ظهور محدود في نتائج البحث",
+      "publish_15": "نشر 15 عقار",
+      "support_24": "دعم فني على مدار الساعة",
+      "top_visibility": "ظهور في أعلى نتائج البحث",
+      "featured_ads": "إعلانات مميزة",
+      "unlimited_publish": "عدد غير محدود من العقارات",
+      "support_vip": "دعم فني VIP",
+      "home_ads": "إعلانات في الصفحة الرئيسية",
+      "analytics": "تحليل أداء العقارات"
+    }
+  },
+  "deals_page": {
+    "title": "الصفقات المباشرة",
+    "add_deal": "إضافة صفقة",
+    "edit_deal": "تعديل الصفقة",
+    "new_deal": "إضافة صفقة جديدة",
+    "page_info": "صفحة {page} من {totalPages} ({total} صفقة)",
+    "previous": "السابق",
+    "next": "التالي",
+    "error_fetch": "فشل في جلب البيانات",
+    "error_generic": "حدث خطأ أثناء جلب البيانات"
+  },
+  "property_details": {
+    "views": "مشاهدات",
+    "description": "الوصف",
+    "details_title": "تفاصيل العقار",
+    "amenities_title": "المميزات",
+    "location_title": "الموقع",
+    "reviews_title": "تقييمات العملاء عن العقار",
+    "reviews_subtitle": "({count} تقييم - متوسط {rating})",
+    "payment_methods": "طرق الدفع",
+    "cash": "كاش",
+    "bank_transfer": "تحويل بنكي",
+    "advertisement": "اعلان الهيئه العامه للعقار",
+    "similar_properties": {
+      "title": "عقارات مشابهة",
+      "subtitle": "عقارات مشابهة",
+      "description": "نقترح لك بعض أفضل العقارات المميزة والموثوقة لدينا"
+    },
+    "fields": {
+      "area_unit": "م²",
+      "garages": "عدد الجراجات",
+      "balconies": "البلكوة",
+      "rooms": "عدد الغرف",
+      "bathrooms": "عدد الحمامات",
+      "area": "المساحة",
+      "finishing_type": "نوع التشطيب",
+      "none": "لا يوجد",
+      "usable_area": "المساحة الصافية",
+      "operation_type": "نوع العملية"
+    },
+    "finishing_types": {
+      "none": "بدون تشطيب",
+      "basic": "بسيط",
+      "good": "جيد",
+      "luxury": "فاخر",
+      "super_luxury": "سوبر لوكس"
+    },
+    "operation_types": {
+      "sale": "للبيع",
+      "rent": "للإيجار"
+    }
+  },
+  "estate_card": {
+    "show_details": "عرض التفاصيل",
+    "featured": "عقار مميز",
+    "deal": "طلب جاد",
+    "sar": "ريال",
+    "sqm": "م²",
+    "price_hidden": "تواصل للسعر",
+    "no_reviews": "لا توجد تقييمات بعد"
+  },
+  "property_actions": {
+    "show_more": "عرض المزيد",
+    "buy_now": "شراء الآن",
+    "whatsapp": "واتساب",
+    "message": "رسالة",
+    "call_us": "اتصل بنا",
+    "whatsapp_message": "مرحباً، أنا مهتم بشراء هذا العقار ({title}) وأريد معرفة المزيد من التفاصيل."
+  },
+  "add_deal": {
+    "start_date": "تاريخ البداية",
+    "end_date": "تاريخ النهاية",
+    "city": "المدينة",
+    "district": "الحي",
+    "country": "الدولة",
+    "plan_number": "رقم المخطط",
+    "plot_number": "رقم القطعة",
+    "min_area": "الحد الأدنى للمساحة (م²)",
+    "max_area": "الحد الأعلى للمساحة (م²)",
+    "min_total_price": "الحد الأدنى للسعر الإجمالي",
+    "max_total_price": "الحد الأعلى للسعر الإجمالي",
+    "min_price_per_meter": "الحد الأدنى لسعر المتر",
+    "max_price_per_meter": "الحد الأعلى لسعر المتر",
+    "property_type": "نوع العقار",
+    "transaction_type": "نوع المعاملة",
+    "identity_number": "رقم الهوية",
+    "select_property_type": "اختر نوع العقار",
+    "select_transaction_type": "اختر نوع المعاملة",
+    "cancel": "إلغاء",
+    "add_deal": "إضافة الصفقة",
+    "update_deal": "تحديث الصفقة",
+    "adding": "جاري الإضافة...",
+    "updating": "جاري التحديث...",
+    "success_add": "تم إضافة الصفقة بنجاح",
+    "success_update": "تم تحديث الصفقة بنجاح",
+    "error_add": "فشل في إضافة الصفقة",
+    "error_update": "فشل في تحديث الصفقة",
+    "types": {
+      "residential": "سكني",
+      "commercial": "تجاري",
+      "industrial": "صناعي",
+      "agricultural": "زراعي"
+    },
+    "transactions": {
+      "ownership_transfer": "نقل ملكية",
+      "mortgage": "رهن",
+      "mortgage_release": "فك رهن",
+      "division_merge": "تقسيم/دمج"
+    }
+  },
+  "validations": {
+    "required": "هذا الحقل مطلوب",
+    "email_invalid": "البريد الإلكتروني غير صالح",
+    "phone_min": "يجب أن يتكون رقم الهاتف من 10 أرقام على الأقل",
+    "password_min": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
+    "confirm_password": "كلمة المرور غير متطابقة",
+    "name_min": "يجب أن يكون الاسم مكون من حرفين على الأقل",
+    "code_length": "يجب أن يتكون الكود من 4 أرقام",
+    "role_required": "الرجاء اختيار نوع الحساب",
+    "price_range_invalid": "نطاق السعر غير صالح"
+  },
+  "toasts": {
+    "success": "تمت العملية بنجاح",
+    "error": "حدث خطأ ما",
+    "unauthorized": "يجب تسجيل الدخول أولاً",
+    "login_success": "تم تسجيل الدخول بنجاح",
+    "login_failed": "فشل تسجيل الدخول",
+    "register_success": "تم إنشاء الحساب بنجاح",
+    "otp_sent": "تم إرسال رمز التحقق",
+    "otp_verified": "تم التحقق من الرمز بنجاح",
+    "password_changed": "تم تغيير كلمة المرور بنجاح",
+    "email_sent": "تم إرسال البريد الإلكتروني بنجاح",
+    "complaint_sent": "تم إرسال الشكوى بنجاح",
+    "newsletter_success": "تم الاشتراك في النشرة البريدية",
+    "newsletter_error": "فشل الاشتراك في النشرة البريدية",
+    "fetch_error": "فشل في جلب البيانات"
+  },
+  "estates_filter": {
+    "operation_type": "نوع العملية",
+    "property_type": "نوع العقار",
+    "rooms": "عدد الغرف",
+    "finishing_type": "نوع التشطيب",
+    "location": "الموقع",
+    "price_range": "نطاق السعر",
+    "search": "بحث",
+    "clear": "مسح",
+    "customize_property": "خصص عقارك",
+    "customize_description": "ابحث عن العقار الذي تريده",
+    "from": "من",
+    "to": "إلى",
+    "types": {
+      "villa": "فيلا",
+      "apartment": "شقة",
+      "land": "اراضي"
+    },
+    "finishes": {
+      "luxury": "لوكس",
+      "average": "متوسط",
+      "simple": "بسيط"
+    },
+    "operations": {
+      "sale": "بيع",
+      "rent": "إيجار"
     }
   }
 }

@@ -3,7 +3,7 @@ import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import React, { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { FaLocationArrow, FaPlus } from "react-icons/fa";
 import { MdOutlineLocationOn } from "react-icons/md";
 import {
@@ -21,6 +21,8 @@ import { toast } from "sonner";
 
 const Page = () => {
   const locale = useLocale();
+  const t = useTranslations("deals_page");
+  const tNav = useTranslations("Navbar"); // or breadcrumbs
   const [open, setOpen] = React.useState(false);
   const [deals, setDeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,11 +51,11 @@ const Page = () => {
         setCurrentPage(result.meta?.currentPage || 1);
       } else {
         console.error("API Error Response:", result);
-        toast.error(result.message || "فشل في جلب البيانات");
+        toast.error(result.message || t("error_fetch"));
       }
     } catch (error) {
       console.error("Error fetching deals:", error);
-      toast.error("حدث خطأ أثناء جلب البيانات");
+      toast.error(t("error_generic"));
     } finally {
       setIsLoading(false);
     }
@@ -77,8 +79,8 @@ const Page = () => {
   return (
     <main className="space-y-6">
       <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
-        <CustomBreadcrumbs items={[{ label: "الصفقات" }]} />
-        <h1 className="text-main-navy text-2xl font-bold">الصفقات المباشرة</h1>
+        <CustomBreadcrumbs items={[{ label: t("title") }]} />
+        <h1 className="text-main-navy text-2xl font-bold">{t("title")}</h1>
       </div>
       <div className="container border border-gray-300 p-10">
         <Tabs dir={locale === "ar" ? "rtl" : "ltr"} defaultValue="houre">
@@ -117,14 +119,14 @@ const Page = () => {
               className="text-main-green px-4 ms-auto py-2 rounded flex items-center gap-2 border border-main-green text-sm hover:bg-main-green hover:text-white transition-all duration-300"
             >
               <FaPlus />
-              أضافة صفقة
+              {t("add_deal")}
             </button>
 
             <Dialog open={open} onOpenChange={handleCloseDialog}>
               <DialogContent className={"lg:w-[80%]"}>
                 <DialogHeader>
                   <DialogTitle className={"text-center text-xl font-bold"}>
-                    {selectedDeal ? "تعديل الصفقة" : "إضافة صفقة جديدة"}
+                    {selectedDeal ? t("edit_deal") : t("new_deal")}
                   </DialogTitle>
                   <DialogDescription asChild>
                     <AddDealForm
@@ -149,7 +151,11 @@ const Page = () => {
               {!isLoading && deals.length > 0 && meta && (
                 <div className="flex items-center justify-between mt-6 px-4">
                   <div className="text-sm text-gray-600">
-                    صفحة {currentPage} من {totalPages} ({meta.total} صفقة)
+                    {t("page_info", {
+                      page: currentPage,
+                      totalPages: totalPages,
+                      total: meta.total,
+                    })}
                   </div>
                   <div className="flex gap-2">
                     <button
@@ -159,7 +165,7 @@ const Page = () => {
                       disabled={currentPage === 1}
                       className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
                     >
-                      السابق
+                      {t("previous")}
                     </button>
                     <button
                       onClick={() =>
@@ -168,7 +174,7 @@ const Page = () => {
                       disabled={currentPage === totalPages}
                       className="px-4 py-2 border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-100"
                     >
-                      التالي
+                      {t("next")}
                     </button>
                   </div>
                 </div>

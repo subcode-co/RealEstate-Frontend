@@ -66,7 +66,7 @@ export function LoginForm() {
       setUser(res?.data?.data?.user);
       router.push(`/`);
     } else {
-      toast.error(res?.data?.message || "فشل في تسجيل الدخول");
+      toast.error(res?.data?.message || t("login_failed"));
     }
   }
 

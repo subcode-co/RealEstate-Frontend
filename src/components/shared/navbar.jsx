@@ -27,6 +27,8 @@ import LocaleSwitcher from "./locale-switcher";
 import { useContext } from "react";
 import { UserContext } from "@/context/user-context";
 import { LogInIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 const LocationIcon = () => {
   return (
     <svg
@@ -89,6 +91,7 @@ const LocationIcon = () => {
 
 const Navbar = ({ topnavColor = "#1a1a1a" }) => {
   const { user, logout } = useContext(UserContext);
+  const t = useTranslations("Navbar");
 
   return (
     <div className="container py-4 space-y-2 bg-white">
@@ -97,7 +100,7 @@ const Navbar = ({ topnavColor = "#1a1a1a" }) => {
         {/* location */}
         <div className="flex items-center gap-2 bg-[#F5F5F5] p-2 rounded shadow-md">
           <LocationIcon />
-          <p>إسم الشارع, الحي, المدينة</p>
+          <p>{t("address")}</p>
         </div>
         {/* phone */}
         <div className="flex items-center gap-2 bg-[#F5F5F5] p-2 rounded shadow-md">
@@ -132,63 +135,30 @@ const Navbar = ({ topnavColor = "#1a1a1a" }) => {
           <li>
             <Link href="/" className="relative flex items-center gap-1 ">
               <HiOutlineHome className="text-main-green text-2xl" />
-              الرئيسية
+              {t("home")}
             </Link>
           </li>
           <li>
-            {/* <HoverCard>
-              <HoverCardTrigger className="cursor-pointer">
-                <p className="cursor-pointer">العقارات</p>
-              </HoverCardTrigger>
-              <HoverCardContent className={"w-fit p-6"}>
-                <ul className="flex flex-col items-center gap-4">
-                  <li>
-                    <Link
-                      href="/estats"
-                      className="cursor-pointer hover:text-main-green"
-                    >
-                      عقارات الملاك
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/estats"
-                      className="cursor-pointer hover:text-main-green"
-                    >
-                      العقارات الوكلاء
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/estats"
-                      className="cursor-pointer hover:text-main-green"
-                    >
-                      عقارات المطوريين
-                    </Link>
-                  </li>
-                </ul>
-              </HoverCardContent>
-            </HoverCard> */}
-            <Link href="/estats">العقارات</Link>
+            <Link href="/estats">{t("estates")}</Link>
           </li>
           <li>
-            <Link href="/partners">الوكلاء</Link>
+            <Link href="/partners">{t("partners")}</Link>
           </li>
 
           <li>
-            <Link href="/packages">الباقات </Link>
+            <Link href="/packages">{t("packages")}</Link>
           </li>
           <li>
-            <Link href="/blogs">المدونة</Link>
+            <Link href="/blogs">{t("blogs")}</Link>
           </li>
           <li>
-            <Link href="/deals">الصفقات</Link>
+            <Link href="/deals">{t("deals")}</Link>
           </li>
           <li>
-            <Link href="/offers">العروض</Link>
+            <Link href="/offers">{t("offers")}</Link>
           </li>
           <li>
-            <Link href="/">الإعلانات </Link>
+            <Link href="/">{t("ads")}</Link>
           </li>
         </ul>
         {/* auth fav and cart */}
@@ -241,29 +211,29 @@ const Navbar = ({ topnavColor = "#1a1a1a" }) => {
                         className="relative flex items-center gap-1 "
                       >
                         <HiOutlineHome className="text-main-green text-2xl" />
-                        الرئيسية
+                        {t("home")}
                       </Link>
                     </li>
                     <li>
-                      <Link href="/estats">العقارات</Link>
+                      <Link href="/estats">{t("estates")}</Link>
                     </li>
                     <li>
-                      <Link href="/partners">الوكلاء</Link>
+                      <Link href="/partners">{t("partners")}</Link>
                     </li>
                     <li>
-                      <Link href="/offers">العروض</Link>
+                      <Link href="/offers">{t("offers")}</Link>
                     </li>
                     <li>
-                      <Link href="/">الإعلانات</Link>
+                      <Link href="/">{t("ads")}</Link>
                     </li>
                     <li>
-                      <Link href="/packages">الباقات</Link>
+                      <Link href="/packages">{t("packages")}</Link>
                     </li>
                     <li>
-                      <Link href="/deals">الصفقات</Link>
+                      <Link href="/deals">{t("deals")}</Link>
                     </li>
                     <li>
-                      <Link href="/blogs">المدونة</Link>
+                      <Link href="/blogs">{t("blogs")}</Link>
                     </li>
                   </ul>
                   {/* auth fav and cart */}

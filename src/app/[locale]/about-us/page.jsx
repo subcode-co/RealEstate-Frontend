@@ -2,6 +2,7 @@ import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import { getData } from "@/lib/fetch-methods";
 import Image from "next/image";
 import React from "react";
+import { getTranslations } from "next-intl/server";
 
 const AboutUsPage = async () => {
   let sections = [];
@@ -15,13 +16,14 @@ const AboutUsPage = async () => {
   const firstSection = sections[0];
   // Remaining sections (alternating layout)
   const remainingSections = sections.slice(1);
+  const t = await getTranslations("breadcrumbs");
 
   return (
     <main className="space-y-12">
       {/* Header */}
       <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
-        <CustomBreadcrumbs items={[{ label: "من نحن" }]} />
-        <h1 className="text-main-navy text-2xl font-bold">من نحن</h1>
+        <CustomBreadcrumbs items={[{ label: t("about_us") }]} />
+        <h1 className="text-main-navy text-2xl font-bold">{t("about_us")}</h1>
       </div>
 
       {/* First Section - with top image */}
