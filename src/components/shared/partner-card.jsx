@@ -1,48 +1,72 @@
-import { Link } from "@/i18n/navigation"
-import Image from "next/image"
-import Markdown from "react-markdown"
-import rehypeRaw from "rehype-raw"
-
+import { Link } from "@/i18n/navigation";
+import Image from "next/image";
+import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import { MapPin, ArrowRight } from "lucide-react";
 
 const Partnercard = ({ item }) => {
   return (
-    <Link href={`/partners/${item?.id}`} className="block border-2 border-gray-200 rounded-s-2xl overflow-hidden p-5 space-y-4">
-      {/* img and info */}
-      <div className="flex items-center gap-2">
-        <Image src={item?.logoUrl} alt='partner' width={300} height={300} className='size-11 object-cover' />
-        <div className="space-y-2">
-          <h3 className="font-semibold text-xs">{item?.name}</h3>
-          <p className="text-main-green text-xs">{item?.type}</p>
-        </div>
-      </div>
-      {/* location */}
-      <div className="flex items-center gap-1 ">
-        <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 24 24" fill="none">
-          <g clipPath="url(#clip0_4418_3359)">
-            <path d="M6.94003 9.42086C6.12003 10.2009 4.83003 10.1909 4.01003 9.42086C2.89003 8.35086 1.60002 6.63086 2.07002 4.60086C2.87002 1.14086 8.08003 1.14086 8.87003 4.60086C8.99003 5.09086 9.00002 5.55086 8.94002 6.00086" stroke="#3fb38b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M15.07 16.6009C15.87 13.1409 21.11 13.1409 21.91 16.6009C22.38 18.6309 21.09 20.3509 19.96 21.4209C19.14 22.2009 17.84 22.1909 17.02 21.4209C15.89 20.3509 14.6 18.6309 15.07 16.6009Z" stroke="#3fb38b" strokeWidth="1.5" />
-            <path d="M12.0002 5H14.6802C16.5302 5 17.3902 7.29 16.0002 8.51L8.01019 15.5C6.62019 16.71 7.48019 19 9.32019 19H12.0002" stroke="#3fb38b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M12.0002 5H14.6802C16.5302 5 17.3902 7.29 16.0002 8.51L8.01019 15.5C6.62019 16.71 7.48019 19 9.32019 19H12.0002" stroke="#3fb38b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M5.48622 5.5H5.49777" stroke="#3fb38b" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M18.4862 17.5H18.4978" stroke="#3fb38b" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-          </g>
-          <defs>
-            <clipPath id="clip0_4418_3359">
-              <rect width={24} height={24} fill="white" />
-            </clipPath>
-          </defs>
-        </svg>
+    <Link
+      href={`/partners/${item?.id}`}
+      className="group block relative bg-gradient-to-br from-white to-gray-50 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-main-green/30"
+    >
+      {/* Decorative gradient overlay */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-main-green/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-        <p className="text-xs text-black ">{item?.address}</p>
-      </div>
-      {/* discription */}
-      <div className="text-xs overflow-hidden line-clamp-3">
-        <Markdown rehypePlugins={[rehypeRaw]}>
-          {item?.description}
-        </Markdown>
+      <div className="relative p-6 space-y-5">
+        {/* Header with logo and info */}
+        <div className="flex items-start gap-4">
+          {/* Logo with gradient border */}
+          <div className="relative flex-shrink-0">
+            <div className="absolute inset-0 bg-gradient-to-br from-main-green to-emerald-400 rounded-xl opacity-20 group-hover:opacity-40 transition-opacity duration-300" />
+            <div className="relative bg-white p-2 rounded-xl shadow-sm">
+              <Image
+                src={item?.logoUrl}
+                alt={item?.name || "partner"}
+                width={60}
+                height={60}
+                className="w-14 h-14 object-contain"
+              />
+            </div>
+          </div>
+
+          {/* Company info */}
+          <div className="flex-1 space-y-1.5">
+            <h3 className="font-bold text-base text-gray-900 group-hover:text-main-green transition-colors duration-300 line-clamp-1">
+              {item?.name}
+            </h3>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-main-green/10 rounded-full">
+              <div className="w-1.5 h-1.5 rounded-full bg-main-green animate-pulse" />
+              <p className="text-main-green text-xs font-medium">
+                {item?.type}
+              </p>
+            </div>
+          </div>
+
+          {/* Arrow icon */}
+          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 group-hover:bg-main-green flex items-center justify-center transition-all duration-300">
+            <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-300" />
+          </div>
+        </div>
+
+        {/* Location */}
+        <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
+            <MapPin className="w-4 h-4 text-main-green" />
+          </div>
+          <p className="text-sm line-clamp-1">{item?.address}</p>
+        </div>
+
+        {/* Description */}
+        <div className="text-sm text-gray-600 leading-relaxed overflow-hidden line-clamp-3 prose prose-sm max-w-none">
+          <Markdown rehypePlugins={[rehypeRaw]}>{item?.description}</Markdown>
+        </div>
+
+        {/* Bottom gradient line */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-main-green to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
     </Link>
-  )
-}
+  );
+};
 
-export default Partnercard
+export default Partnercard;
