@@ -1,15 +1,10 @@
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
-import { getData } from "@/lib/fetch-methods";
+import { userGuideService } from "@/features/user-guide";
 import Image from "next/image";
 import React from "react";
 
 const UserManualPage = async () => {
-  let sections = [];
-  const response = await getData({ url: "/user-guide", revalidate: 0 });
-  sections =
-    response?.code === 200 && response?.data?.success
-      ? response?.data?.data?.sections
-      : [];
+  const sections = await userGuideService.getUserGuide();
 
   // First section (with image at top)
   const firstSection = sections[0];
