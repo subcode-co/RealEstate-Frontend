@@ -11,6 +11,7 @@ import { Toaster } from "sonner";
 import UserContextProvider from "@/context/user-context";
 import { getData } from "@/lib/fetch-methods";
 import { getSettings } from "@/lib/settings-actions";
+import Providers from "../providers";
 
 const alexandria = Alexandria({
   subsets: ["latin"],
@@ -48,19 +49,21 @@ export default async function RootLayout({ children, params }) {
         className={`${alexandria.className} antialiased text-main-navy relative`}
       >
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <UserContextProvider>
-            <Toaster
-              dir={locale === "ar" ? "rtl" : "ltr"}
-              richColors
-              position="top-right"
-            />
-            <div className="fixed top-0 left-0 right-0 z-50">
-              <Navbar topnavColor={navbarColor} settings={settings} />
-            </div>
-            <div className="mt-40 min-h-screen">{children}</div>
-            <FloatingSocials />
-            <Footer settings={settings} />
-          </UserContextProvider>
+          <Providers>
+            <UserContextProvider>
+              <Toaster
+                dir={locale === "ar" ? "rtl" : "ltr"}
+                richColors
+                position="top-right"
+              />
+              <div className="fixed top-0 left-0 right-0 z-50">
+                <Navbar topnavColor={navbarColor} settings={settings} />
+              </div>
+              <div className="mt-40 min-h-screen">{children}</div>
+              <FloatingSocials />
+              <Footer settings={settings} />
+            </UserContextProvider>
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>

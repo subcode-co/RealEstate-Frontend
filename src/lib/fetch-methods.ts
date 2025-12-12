@@ -164,6 +164,65 @@ export async function postData<T = any>({
   }
 }
 
+// تحديث البيانات (PUT)
+export async function putData<T = any>({
+  url,
+  data,
+  isFormData,
+  locale,
+}: PostOptions): Promise<ApiResponse<T>> {
+  try {
+    const headers = await getHeaders(isFormData, locale);
+    const body = isFormData
+      ? getFormData(data || {})
+      : JSON.stringify(data || {});
+
+    const response = await fetch(`https://halool.tsd-education.com/api${url}`, {
+      method: "PUT",
+      headers,
+      body,
+    });
+
+    // Handle 401 Unauthorized
+    if (response.status === 401) {
+      await handle401();
+      return {
+        code: 401,
+        success: false,
+        message: "Unauthorized. Please login again.",
+        unauthorized: true,
+      };
+    }
+
+    // Check if response is JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const textResponse = await response.text();
+      console.error(
+        "Non-JSON response received:",
+        textResponse.substring(0, 500)
+      );
+      return {
+        code: response.status,
+        success: false,
+        message: `Server returned ${response.status}: Expected JSON but got ${
+          contentType || "unknown type"
+        }`,
+        rawResponse: textResponse.substring(0, 200),
+      } as ApiResponse<T>;
+    }
+
+    const resData = await response.json();
+    return { code: response.status, success: true, data: resData };
+  } catch (err: any) {
+    return {
+      code: 500,
+      success: false,
+      message: err?.message || "Unexpected error",
+    };
+  }
+}
+
 // helper لتحويل object لـ FormData
 function getFormData(data: Record<string, any>): FormData {
   const formData = new FormData();
