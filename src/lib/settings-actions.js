@@ -11,8 +11,10 @@ export async function getSettings() {
       revalidate: 3600, // Cache for 1 hour
     });
 
-    if (response?.code === 200) {
-      return response.data;
+    // getData returns { code, success, data }
+    // The actual API response is in response.data
+    if (response?.success && response?.data?.code === 200) {
+      return response.data.data; // Return the nested data object
     }
 
     return null;

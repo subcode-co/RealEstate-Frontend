@@ -1,20 +1,60 @@
-"use client"
-import { postData } from "@/lib/fetch-methods";
-import { removeToken } from "@/services";
+"use client";
+import { postData, getData } from "@/lib/fetch-methods";
+import { removeToken, getToken } from "@/services";
 import { createContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-
 export const UserContext = createContext();
-
 
 export default function UserContextProvider({ children }) {
   // Initialize state with null to avoid SSR issues
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Load user from localStorage on client-side mount
+  // Fetch user profile from API
+  async function fetchUserProfile() {
+    try {
+      const token = await getToken();
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      const response = await getData({
+        url: "/profile",
+        revalidate: 0, // Don't cache profile data
+      });
+
+      // Handle 401 - token is invalid/expired
+      if (response?.code === 401 || response?.unauthorized) {
+        setUser(null);
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
+        }
+        setLoading(false);
+        return;
+      }
+
+      if (response?.success && response?.data?.status) {
+        setUser(response.data.data);
+      } else {
+        setUser(null);
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("user");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Load user from localStorage on client-side mount and fetch fresh profile
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
         try {
@@ -24,12 +64,15 @@ export default function UserContextProvider({ children }) {
           localStorage.removeItem("user");
         }
       }
+
+      // Fetch fresh profile data from API
+      fetchUserProfile();
     }
   }, []);
 
   // Save user to localStorage whenever it changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       if (user) {
         localStorage.setItem("user", JSON.stringify(user));
       } else {
@@ -38,15 +81,13 @@ export default function UserContextProvider({ children }) {
     }
   }, [user]);
 
-
-
   async function logout() {
     const response = await postData({
-      url: "/logout"
-    })
+      url: "/logout",
+    });
     if (response.code == 200) {
       setUser(null);
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         localStorage.removeItem("user");
       }
       removeToken();
@@ -56,9 +97,10 @@ export default function UserContextProvider({ children }) {
     }
   }
   return (
-    <UserContext.Provider value={{ user, setUser, logout }}>
+    <UserContext.Provider
+      value={{ user, setUser, logout, loading, fetchUserProfile }}
+    >
       {children}
     </UserContext.Provider>
-  )
+  );
 }
-

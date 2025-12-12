@@ -37,8 +37,8 @@ const Footer = ({ settings = null }) => {
           >
             <div className="flex items-end gap-2 w-fit max-lg:mx-auto">
               <Image
-                src="/images/footer-logo.svg"
-                alt="logo"
+                src={siteInfo.siteLogo || "/images/footer-logo.svg"}
+                alt={siteInfo.siteName || "logo"}
                 width={300}
                 height={300}
                 className="size-12 object-contain"

@@ -98,6 +98,8 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
   const contactInfo = settings?.contactInfo || {};
   const siteInfo = settings?.siteInfo || {};
 
+  console.log({ siteInfo });
+
   return (
     <div className="container py-4 space-y-2 bg-white">
       {/* info */}
@@ -162,8 +164,8 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
         >
           <Link href="/">
             <Image
-              src="/images/logo.svg"
-              alt="logo"
+              src={siteInfo.siteLogo || "/images/logo.svg"}
+              alt={siteInfo.siteName || "logo"}
               width={300}
               height={300}
               className="size-16 "
@@ -191,7 +193,7 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
             { href: "/partners", label: "partners" },
             { href: "/packages", label: "packages" },
             { href: "/blogs", label: "blogs" },
-            { href: "/deals", label: "deals" },
+            ...(user ? [{ href: "/deals", label: "deals" }] : []),
             { href: "/offers", label: "offers" },
             { href: "/", label: "ads" },
           ].map((item, index) => (
@@ -226,9 +228,14 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
             <TbMessage2 className="text-white text-2xl hover:text-main-green" />
           </Link>
           {user ? (
-            <button onClick={logout}>
-              <LogInIcon className="text-white text-2xl hover:text-main-green" />
-            </button>
+            <>
+              <span className="text-white text-sm font-medium">
+                {user.name}
+              </span>
+              <button onClick={logout} title="Logout">
+                <LogInIcon className="text-white text-2xl hover:text-main-green" />
+              </button>
+            </>
           ) : (
             <Link href="/auth/sign-up">
               <TbUserPentagon className="text-white text-2xl hover:text-main-green" />
@@ -249,8 +256,8 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
                 {/* logo */}
                 <Link href="/">
                   <Image
-                    src="/images/logo.svg"
-                    alt="logo"
+                    src={siteInfo.siteLogo || "/images/logo.svg"}
+                    alt={siteInfo.siteName || "logo"}
                     width={300}
                     height={300}
                     className="size-40 mx-auto "
@@ -285,9 +292,11 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
                     <li>
                       <Link href="/packages">{t("packages")}</Link>
                     </li>
-                    <li>
-                      <Link href="/deals">{t("deals")}</Link>
-                    </li>
+                    {user && (
+                      <li>
+                        <Link href="/deals">{t("deals")}</Link>
+                      </li>
+                    )}
                     <li>
                       <Link href="/blogs">{t("blogs")}</Link>
                     </li>
@@ -301,9 +310,14 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
                       <TbMessage2 className="text-white text-2xl hover:text-main-green" />
                     </Link>
                     {user ? (
-                      <button onClick={logout}>
-                        <LogInIcon className="text-white text-2xl hover:text-main-green" />
-                      </button>
+                      <div className="flex flex-col items-center gap-2">
+                        <span className="text-white text-sm font-medium">
+                          {user.name}
+                        </span>
+                        <button onClick={logout} title="Logout">
+                          <LogInIcon className="text-white text-2xl hover:text-main-green" />
+                        </button>
+                      </div>
                     ) : (
                       <Link href="/auth/sign-up">
                         <TbUserPentagon className="text-white text-2xl hover:text-main-green" />

@@ -1,6 +1,6 @@
 "use server";
 
-import { getToken } from "@/services";
+import { getToken, removeToken } from "@/services";
 import { getLocale } from "next-intl/server";
 
 // تجهيز الهيدر
@@ -25,6 +25,17 @@ async function getHeaders(isFormData = false, locale) {
   return headers;
 }
 
+// Handle 401 Unauthorized - remove token and clear user data
+async function handle401() {
+  await removeToken();
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    // Optionally redirect to login
+    // window.location.href = '/auth/login';
+  }
+}
+
 // جلب البيانات (GET)
 export async function getData({ url, locale, revalidate }) {
   try {
@@ -33,6 +44,17 @@ export async function getData({ url, locale, revalidate }) {
       headers,
       ...(revalidate !== undefined && { next: { revalidate } }),
     });
+
+    // Handle 401 Unauthorized
+    if (response.status === 401) {
+      await handle401();
+      return {
+        code: 401,
+        success: false,
+        message: "Unauthorized. Please login again.",
+        unauthorized: true,
+      };
+    }
 
     // التحقق من نوع المحتوى المُرجع
     const contentType = response.headers.get("content-type");
@@ -73,6 +95,17 @@ export async function postData({ url, data, isFormData, locale }) {
       headers,
       body,
     });
+
+    // Handle 401 Unauthorized
+    if (response.status === 401) {
+      await handle401();
+      return {
+        code: 401,
+        success: false,
+        message: "Unauthorized. Please login again.",
+        unauthorized: true,
+      };
+    }
 
     // Check if response is JSON
     const contentType = response.headers.get("content-type");
@@ -130,6 +163,18 @@ export async function deleteData({ url, data = null, locale }) {
       `https://halool.tsd-education.com/api${url}`,
       options
     );
+
+    // Handle 401 Unauthorized
+    if (response.status === 401) {
+      await handle401();
+      return {
+        code: 401,
+        success: false,
+        message: "Unauthorized. Please login again.",
+        unauthorized: true,
+      };
+    }
+
     const resData = await response.json();
 
     return { code: response.status, success: true, data: resData };

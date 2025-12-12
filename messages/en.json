@@ -118,6 +118,7 @@
     "submit_button": "Login",
     "no_account": "Don't have an account?",
     "create_account": "Create Account",
+    "login_failed": "Login failed. Please check your credentials",
     "validation": {
       "phone_min": "Phone number must be at least 10 digits",
       "password_required": "Please enter your password"
