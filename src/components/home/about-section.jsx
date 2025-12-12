@@ -1,8 +1,10 @@
+"use client";
 import React from "react";
 import SectionHeader from "../shared/section-header";
 import { FaStar } from "react-icons/fa";
 import { FaSquareCheck } from "react-icons/fa6";
 import Image from "next/image";
+import { motion } from "motion/react";
 
 const AboutSection = ({
   sections = [],
@@ -20,7 +22,13 @@ const AboutSection = ({
   return (
     <section className="container space-y-6 py-12 flex items-center max-lg:flex-col max-lg:gap-6 ">
       {/* content */}
-      <div className="lg:w-1/2 space-y-8  self-start">
+      <motion.div
+        initial={{ opacity: 0, y: 30, rotate: -1 }}
+        whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+        viewport={{ once: true, margin: "0px 0px -20% 0px" }}
+        transition={{ duration: 0.6 }}
+        className="lg:w-1/2 space-y-8  self-start"
+      >
         <SectionHeader>من نحن</SectionHeader>
         <h3 className="lg:text-[32px]  text-3xl font-semibold lg:w-[80%] lg:leading-16 leading-12">
           {title || "نضمن تعامل موثوق وحماية عالية لبياناتك"}
@@ -29,9 +37,13 @@ const AboutSection = ({
           {content ||
             "شركة الحلول العقارية هي شريكك الأول لتحقيق أحلامك العقارية..."}
         </p>
-      </div>
+      </motion.div>
       {/* image */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 30, rotate: 1 }}
+        whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+        viewport={{ once: true, margin: "0px 0px -20% 0px" }}
+        transition={{ duration: 0.6, delay: 0.2 }}
         className="lg:w-1/2 w-full rounded-3xl relative h-[50vh] bg-cover bg-center"
         style={{
           backgroundImage: image ? `url(${image})` : 'url("/images/about.jpg")',
@@ -69,7 +81,7 @@ const AboutSection = ({
             <p className="lg:text-5xl text-3xl font-bold ">{stat2.number}</p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

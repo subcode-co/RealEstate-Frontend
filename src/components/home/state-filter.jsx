@@ -6,6 +6,7 @@ import { useLocale } from "next-intl";
 import { MdOutlineHomeWork } from "react-icons/md";
 import FilterGrid from "../shared/filter-grid";
 import Image from "next/image";
+import { motion } from "motion/react";
 
 const StateFilterSection = () => {
   const locale = useLocale();
@@ -79,14 +80,26 @@ const StateFilterSection = () => {
 
   return (
     <section className="container py-12 space-y-4">
-      <div className="triangle  bg-main-light-green lg:py-10 pt-12 pb-6 lg:w-[90%] mx-auto flex items-center justify-center flex-col lg:gap-6 gap-3">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "0px 0px -20% 0px" }}
+        transition={{ duration: 0.6 }}
+        className="triangle  bg-main-light-green lg:py-10 pt-12 pb-6 lg:w-[90%] mx-auto flex items-center justify-center flex-col lg:gap-6 gap-3"
+      >
         <SectionHeader>شركاء النجاح</SectionHeader>
         <h3 className="lg:text-4xl md:text-3xl text-xl font-semibold">
           إختر عقارك بكل سهولة
         </h3>
-      </div>
+      </motion.div>
       {/* layout  */}
-      <div className="bg-main-light-gray lg:p-10 p-5 !pb-0 rounded-xl">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "0px 0px -15% 0px" }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="bg-main-light-gray lg:p-10 p-5 !pb-0 rounded-xl"
+      >
         <Tabs
           dir={locale === "ar" ? "rtl" : "ltr"}
           defaultValue="all"
@@ -175,7 +188,7 @@ const StateFilterSection = () => {
             />
           </TabsContent>
         </Tabs>
-      </div>
+      </motion.div>
       <Image
         src={"/images/banner.svg"}
         width={200}

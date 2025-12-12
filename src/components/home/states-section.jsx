@@ -11,6 +11,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import SectionHeader from "../shared/section-header";
 import StatesCard from "../shared/state-card";
+import { motion } from "motion/react";
 
 const StatesSection = ({ properties = null }) => {
   const locale = useLocale();
@@ -25,7 +26,13 @@ const StatesSection = ({ properties = null }) => {
   return (
     <section className="container py-12 space-y-8">
       {/* title */}
-      <div className="flex items-center justify-between max-md:flex-col max-md:gap-6">
+      <motion.div
+        initial={{ opacity: 0, y: 30, rotate: -1 }}
+        whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+        viewport={{ once: true, margin: "0px 0px -20% 0px" }}
+        transition={{ duration: 0.6 }}
+        className="flex items-center justify-between max-md:flex-col max-md:gap-6"
+      >
         <div className="space-y-6">
           <SectionHeader>{t("title")}</SectionHeader>
           <h3 className="text-4xl font-semibold">{t("subtitle")}</h3>
@@ -39,32 +46,46 @@ const StatesSection = ({ properties = null }) => {
           <IoIosArrowDroprightCircle size={20} className="drop-shadow-xl" />
           <span>{t("view_all")}</span>
         </Link>
-      </div>
+      </motion.div>
 
       {/* slider */}
-      <Carousel
-        className={"space-y-8"}
-        opts={{
-          loop: true,
-          direction: locale === "ar" ? "rtl" : "ltr",
-          align: "start",
-        }}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "0px 0px -15% 0px" }}
+        transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <CarouselContent className={"p-1"}>
-          {displayItems.map((property, index) => (
-            <CarouselItem
-              key={property?.id || index}
-              className="lg:basis-1/4 md:basis-1/2 basis-[90%]"
-            >
-              <StatesCard property={property} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <div className="flex items-center justify-center gap-3 flex-row-reverse">
-          <CarouselPrevious className={"static translate-0"} />
-          <CarouselNext className={"static translate-0"} />
-        </div>
-      </Carousel>
+        <Carousel
+          className={"space-y-8"}
+          opts={{
+            loop: true,
+            direction: locale === "ar" ? "rtl" : "ltr",
+            align: "start",
+          }}
+        >
+          <CarouselContent className={"p-1"}>
+            {displayItems.map((property, index) => (
+              <CarouselItem
+                key={property?.id || index}
+                className="lg:basis-1/4 md:basis-1/2 basis-[90%]"
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "0px" }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                >
+                  <StatesCard property={property} />
+                </motion.div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="flex items-center justify-center gap-3 flex-row-reverse">
+            <CarouselPrevious className={"static translate-0"} />
+            <CarouselNext className={"static translate-0"} />
+          </div>
+        </Carousel>
+      </motion.div>
     </section>
   );
 };

@@ -5,6 +5,7 @@ import { useLocale } from "next-intl";
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import EstateFilterPanel from "@/components/estates/estates-filter";
 import EstatesGrid from "@/components/estates/estates-grid";
+import { motion } from "motion/react";
 
 const EstatsPage = () => {
   const locale = useLocale();
@@ -122,11 +123,21 @@ const EstatsPage = () => {
   return (
     <main className="space-y-12">
       {/* header */}
-      <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container"
+      >
         <CustomBreadcrumbs items={[{ label: "العقارات" }]} />
         <h1 className="text-main-navy text-2xl font-bold">العقارات</h1>
-      </div>
-      <section className="container space-y-12">
+      </motion.div>
+      <motion.section
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="container space-y-12"
+      >
         <EstateFilterPanel onSubmit={handleFilterSubmit} />
         {error && <div className="text-center py-4 text-red-500">{error}</div>}
         <EstatesGrid
@@ -137,7 +148,7 @@ const EstatsPage = () => {
           onLoadMore={handleLoadMore}
           loadingMore={loadingMore}
         />
-      </section>
+      </motion.section>
     </main>
   );
 };

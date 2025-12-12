@@ -28,6 +28,7 @@ import { useContext } from "react";
 import { UserContext } from "@/context/user-context";
 import { LogInIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { motion } from "motion/react";
 
 const LocationIcon = () => {
   return (
@@ -89,80 +90,135 @@ const LocationIcon = () => {
   );
 };
 
-const Navbar = ({ topnavColor = "#1a1a1a" }) => {
+const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
   const { user, logout } = useContext(UserContext);
   const t = useTranslations("Navbar");
+
+  // Extract settings data with fallbacks
+  const contactInfo = settings?.contactInfo || {};
+  const siteInfo = settings?.siteInfo || {};
 
   return (
     <div className="container py-4 space-y-2 bg-white">
       {/* info */}
-      <div className="text-black md:text-xs  md:flex hidden items-center gap-2">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="text-black md:text-xs  md:flex hidden items-center gap-2"
+      >
         {/* location */}
-        <div className="flex items-center gap-2 bg-[#F5F5F5] p-2 rounded shadow-md">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="flex items-center gap-2 bg-[#F5F5F5] p-2 rounded shadow-md"
+        >
           <LocationIcon />
-          <p>{t("address")}</p>
-        </div>
+          <p>{contactInfo.siteAddress || t("address")}</p>
+        </motion.div>
         {/* phone */}
-        <div className="flex items-center gap-2 bg-[#F5F5F5] p-2 rounded shadow-md">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="flex items-center gap-2 bg-[#F5F5F5] p-2 rounded shadow-md"
+        >
           <FiPhoneCall className="text-main-green" />
-          <p>+966-4552-58</p>
-        </div>
+          <p>{contactInfo.sitePhone || "+966-4552-58"}</p>
+        </motion.div>
         {/* email */}
-        <div className="flex items-center gap-2 bg-[#F5F5F5] p-2 rounded shadow-md">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="flex items-center gap-2 bg-[#F5F5F5] p-2 rounded shadow-md"
+        >
           <FiInbox className="text-main-green" />
-          <p>7lol@mail.com</p>
-        </div>
+          <p>{contactInfo.siteEmail || "7lol@mail.com"}</p>
+        </motion.div>
         {/* locale swither */}
-        <LocaleSwitcher />
-      </div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.4 }}
+        >
+          <LocaleSwitcher />
+        </motion.div>
+      </motion.div>
       {/* nav */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
         className="px-6 py-2 rounded-t-xl flex items-center justify-between"
         style={{ backgroundColor: topnavColor }}
       >
         {/* logo */}
-        <Link href="/">
-          <Image
-            src="/images/logo.svg"
-            alt="logo"
-            width={300}
-            height={300}
-            className="size-16 "
-          />
-        </Link>
+        <motion.div
+          initial={{ opacity: 0, rotate: -10 }}
+          animate={{ opacity: 1, rotate: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <Link href="/">
+            <Image
+              src="/images/logo.svg"
+              alt="logo"
+              width={300}
+              height={300}
+              className="size-16 "
+            />
+          </Link>
+        </motion.div>
         {/* links */}
-        <ul className="flex items-center gap-6 text-white text-sm max-md:hidden">
-          <li>
-            <Link href="/" className="relative flex items-center gap-1 ">
-              <HiOutlineHome className="text-main-green text-2xl" />
-              {t("home")}
-            </Link>
-          </li>
-          <li>
-            <Link href="/estats">{t("estates")}</Link>
-          </li>
-          <li>
-            <Link href="/partners">{t("partners")}</Link>
-          </li>
-
-          <li>
-            <Link href="/packages">{t("packages")}</Link>
-          </li>
-          <li>
-            <Link href="/blogs">{t("blogs")}</Link>
-          </li>
-          <li>
-            <Link href="/deals">{t("deals")}</Link>
-          </li>
-          <li>
-            <Link href="/offers">{t("offers")}</Link>
-          </li>
-          <li>
-            <Link href="/">{t("ads")}</Link>
-          </li>
-        </ul>
+        <motion.ul
+          initial="hidden"
+          animate="visible"
+          variants={{
+            visible: {
+              transition: { staggerChildren: 0.08, delayChildren: 0.6 },
+            },
+          }}
+          className="flex items-center gap-6 text-white text-sm max-md:hidden"
+        >
+          {[
+            {
+              href: "/",
+              label: "home",
+              icon: <HiOutlineHome className="text-main-green text-2xl" />,
+            },
+            { href: "/estats", label: "estates" },
+            { href: "/partners", label: "partners" },
+            { href: "/packages", label: "packages" },
+            { href: "/blogs", label: "blogs" },
+            { href: "/deals", label: "deals" },
+            { href: "/offers", label: "offers" },
+            { href: "/", label: "ads" },
+          ].map((item, index) => (
+            <motion.li
+              key={index}
+              variants={{
+                hidden: { opacity: 0, y: -10 },
+                visible: { opacity: 1, y: 0 },
+              }}
+            >
+              <Link
+                href={item.href}
+                className="relative flex items-center gap-1"
+              >
+                {item.icon}
+                {t(item.label)}
+              </Link>
+            </motion.li>
+          ))}
+        </motion.ul>
         {/* auth fav and cart */}
-        <div className="flex items-center gap-2 max-md:hidden">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+          className="flex items-center gap-2 max-md:hidden"
+        >
           <Link href="/wishlist">
             <TbBookmark className="text-white text-2xl hover:text-main-green" />
           </Link>
@@ -178,7 +234,7 @@ const Navbar = ({ topnavColor = "#1a1a1a" }) => {
               <TbUserPentagon className="text-white text-2xl hover:text-main-green" />
             </Link>
           )}
-        </div>
+        </motion.div>
         {/* sheet  */}
         <Sheet>
           <SheetTrigger className="md:hidden">
@@ -259,7 +315,7 @@ const Navbar = ({ topnavColor = "#1a1a1a" }) => {
             </SheetHeader>
           </SheetContent>
         </Sheet>
-      </div>
+      </motion.div>
     </div>
   );
 };

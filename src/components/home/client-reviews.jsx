@@ -12,6 +12,8 @@ import { useLocale } from "next-intl";
 import ClientCard from "../shared/client-card";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getData } from "@/lib/fetch-methods";
+import { AnimatedSection } from "@/components/motion/animated-section";
+import { AnimatedCarouselItem } from "@/components/motion/animated-carousel-item";
 const ClientReviews = async () => {
   const locale = await getLocale();
   const t = await getTranslations("client_reviews");
@@ -23,45 +25,48 @@ const ClientReviews = async () => {
   return (
     <section className=" space-y-6 py-12">
       {/* header */}
-      <div className="container">
+      <AnimatedSection className="container">
         <SectionHeader>{t("title")}</SectionHeader>
-      </div>
+      </AnimatedSection>
 
       {/* slider */}
-      <Carousel
-        className={"space-y-8"}
-        opts={{
-          loop: true,
-          direction: locale === "ar" ? "rtl" : "ltr",
-          align: "start",
-        }}
-      >
-        {/* title */}
-        <div className="flex items-center justify-between container">
-          <div className="space-y-6">
-            <h3 className="text-4xl font-semibold">{t("subtitle")}</h3>
-            <p className="text-xs"> {t("description")}</p>
-          </div>
-          <div
-            className={`flex items-center gap-3 ${
-              locale === "ar" ? "flex-row-reverse" : ""
-            } w-fit`}
-          >
-            <CarouselPrevious className={"static translate-0 "} />
-            <CarouselNext className={"static translate-0 "} />
-          </div>
-        </div>
-        <CarouselContent className={"lg:w-[90%] ms-auto max-lg:container"}>
-          {data?.map((item, index) => (
-            <CarouselItem
-              key={index}
-              className="lg:basis-[35%] md:basis-1/2 basis-[90%]"
+      <AnimatedSection delay={0.2}>
+        <Carousel
+          className={"space-y-8"}
+          opts={{
+            loop: true,
+            direction: locale === "ar" ? "rtl" : "ltr",
+            align: "start",
+          }}
+        >
+          {/* title */}
+          <div className="flex items-center justify-between container">
+            <div className="space-y-6">
+              <h3 className="text-4xl font-semibold">{t("subtitle")}</h3>
+              <p className="text-xs"> {t("description")}</p>
+            </div>
+            <div
+              className={`flex items-center gap-3 ${
+                locale === "ar" ? "flex-row-reverse" : ""
+              } w-fit`}
             >
-              <ClientCard item={item} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
+              <CarouselPrevious className={"static translate-0 "} />
+              <CarouselNext className={"static translate-0 "} />
+            </div>
+          </div>
+          <CarouselContent className={"lg:w-[90%] ms-auto max-lg:container"}>
+            {data?.map((item, index) => (
+              <AnimatedCarouselItem
+                key={index}
+                index={index}
+                className="lg:basis-[35%] md:basis-1/2 basis-[90%]"
+              >
+                <ClientCard item={item} />
+              </AnimatedCarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </AnimatedSection>
     </section>
   );
 };

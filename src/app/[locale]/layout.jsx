@@ -10,6 +10,7 @@ import FloatingSocials from "@/components/shared/FloatingSocials";
 import { Toaster } from "sonner";
 import UserContextProvider from "@/context/user-context";
 import { getData } from "@/lib/fetch-methods";
+import { getSettings } from "@/lib/settings-actions";
 
 const alexandria = Alexandria({
   subsets: ["latin"],
@@ -33,6 +34,9 @@ export default async function RootLayout({ children, params }) {
     navbarColor = colorResponse.data.data.topnavColor || navbarColor;
   }
 
+  // Fetch settings
+  const settings = await getSettings();
+
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
@@ -51,11 +55,11 @@ export default async function RootLayout({ children, params }) {
               position="top-right"
             />
             <div className="fixed top-0 left-0 right-0 z-50">
-              <Navbar topnavColor={navbarColor} />
+              <Navbar topnavColor={navbarColor} settings={settings} />
             </div>
             <div className="mt-40">{children}</div>
             <FloatingSocials />
-            <Footer />
+            <Footer settings={settings} />
           </UserContextProvider>
         </NextIntlClientProvider>
       </body>

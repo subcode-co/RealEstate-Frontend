@@ -10,6 +10,8 @@ import {
 import BlogCard from "../shared/blog-card";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getData } from "@/lib/fetch-methods";
+import { AnimatedSection } from "@/components/motion/animated-section";
+import { AnimatedCarouselItem } from "@/components/motion/animated-carousel-item";
 const BlogSection = async () => {
   const locale = await getLocale();
   const t = await getTranslations("blog");
@@ -20,44 +22,49 @@ const BlogSection = async () => {
   return (
     <section className="container space-y-6 py-12">
       {/* header */}
-      <SectionHeader>{t("title")}</SectionHeader>
+      <AnimatedSection>
+        <SectionHeader>{t("title")}</SectionHeader>
+      </AnimatedSection>
 
       {/* slider */}
-      <Carousel
-        className={"space-y-8"}
-        opts={{
-          loop: true,
-          direction: locale === "ar" ? "rtl" : "ltr",
-          align: "start",
-        }}
-      >
-        {/* title */}
-        <div className="flex items-center justify-between">
-          <div className="space-y-6">
-            <h3 className="text-4xl font-semibold">{t("subtitle")}</h3>
-            <p className="text-xs">{t("description")}</p>
-          </div>
+      <AnimatedSection delay={0.2}>
+        <Carousel
+          className={"space-y-8"}
+          opts={{
+            loop: true,
+            direction: locale === "ar" ? "rtl" : "ltr",
+            align: "start",
+          }}
+        >
+          {/* title */}
+          <div className="flex items-center justify-between">
+            <div className="space-y-6">
+              <h3 className="text-4xl font-semibold">{t("subtitle")}</h3>
+              <p className="text-xs">{t("description")}</p>
+            </div>
 
-          <div
-            className={`flex items-center gap-3 ${
-              locale === "ar" ? "flex-row-reverse" : "flex-row"
-            } w-fit`}
-          >
-            <CarouselPrevious className={"static translate-0 "} />
-            <CarouselNext className={"static translate-0 "} />
-          </div>
-        </div>
-        <CarouselContent className={"p-1"}>
-          {data?.map((item, index) => (
-            <CarouselItem
-              key={index}
-              className="lg:basis-1/4 md:basis-1/2 basis-[90%]"
+            <div
+              className={`flex items-center gap-3 ${
+                locale === "ar" ? "flex-row-reverse" : "flex-row"
+              } w-fit`}
             >
-              <BlogCard item={item} />
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
+              <CarouselPrevious className={"static translate-0 "} />
+              <CarouselNext className={"static translate-0 "} />
+            </div>
+          </div>
+          <CarouselContent className={"p-1"}>
+            {data?.map((item, index) => (
+              <AnimatedCarouselItem
+                key={index}
+                index={index}
+                className="lg:basis-1/4 md:basis-1/2 basis-[90%]"
+              >
+                <BlogCard item={item} />
+              </AnimatedCarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+      </AnimatedSection>
     </section>
   );
 };

@@ -2,6 +2,10 @@ import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import PlanCard from "@/components/shared/plan-card";
 import React from "react";
 import { getTranslations } from "next-intl/server";
+import {
+  AnimatedSection,
+  AnimatedItem,
+} from "@/components/motion/animated-section";
 
 const PackagesPage = async () => {
   const t = await getTranslations("packages_page");
@@ -42,16 +46,22 @@ const PackagesPage = async () => {
 
   return (
     <main className="space-y-8">
-      <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
-        <CustomBreadcrumbs items={[{ label: t("title") }]} />
-        <h1 className="text-main-navy text-2xl font-bold">{t("title")}</h1>
-      </div>
-      <div className="container">
-        <div className="grid md:grid-cols-3 gap-6">
-          {plansData.map((plan, index) => (
-            <PlanCard key={index} {...plan} />
-          ))}
+      <AnimatedSection>
+        <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
+          <CustomBreadcrumbs items={[{ label: t("title") }]} />
+          <h1 className="text-main-navy text-2xl font-bold">{t("title")}</h1>
         </div>
+      </AnimatedSection>
+      <div className="container">
+        <AnimatedSection delay={0.2}>
+          <div className="grid md:grid-cols-3 gap-6">
+            {plansData.map((plan, index) => (
+              <AnimatedItem key={index} index={index}>
+                <PlanCard {...plan} />
+              </AnimatedItem>
+            ))}
+          </div>
+        </AnimatedSection>
       </div>
     </main>
   );

@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getData } from "@/lib/fetch-methods";
+import {
+  AnimatedSection,
+  AnimatedItem,
+} from "@/components/motion/animated-section";
 
 const PartnersPage = async ({ searchParams }) => {
   const t = await getTranslations("breadcrumbs");
@@ -36,70 +40,78 @@ const PartnersPage = async ({ searchParams }) => {
 
   return (
     <main className="space-y-8">
-      <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
-        <CustomBreadcrumbs items={[{ label: t("partners") }]} />
-        <h1 className="text-main-navy text-2xl font-bold">{t("partners")}</h1>
-      </div>
+      <AnimatedSection>
+        <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
+          <CustomBreadcrumbs items={[{ label: t("partners") }]} />
+          <h1 className="text-main-navy text-2xl font-bold">{t("partners")}</h1>
+        </div>
+      </AnimatedSection>
 
       <div className="container space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {companies.length > 0 ? (
-            companies.map((company) => (
-              <PartnerCard key={company.id} item={company} />
-            ))
-          ) : (
-            <p className="col-span-full text-center text-gray-500">
-              No companies found
-            </p>
-          )}
-        </div>
+        <AnimatedSection delay={0.2}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {companies.length > 0 ? (
+              companies.map((company, index) => (
+                <AnimatedItem key={company.id} index={index}>
+                  <PartnerCard item={company} />
+                </AnimatedItem>
+              ))
+            ) : (
+              <p className="col-span-full text-center text-gray-500">
+                No companies found
+              </p>
+            )}
+          </div>
+        </AnimatedSection>
 
         {/* Dynamic Pagination */}
         {meta.last_page > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-8">
-            {/* Previous Button */}
-            {meta.current_page > 1 && (
-              <Button
-                variant="outline"
-                size="icon"
-                className="size-8 p-0"
-                asChild
-              >
-                <a href={`?page=${meta.current_page - 1}`}>
-                  <ChevronRight className="h-4 w-4 rotate-180" />
-                </a>
-              </Button>
-            )}
-
-            {/* Page Numbers */}
-            {Array.from({ length: meta.last_page }, (_, i) => i + 1).map(
-              (page) => (
+          <AnimatedSection delay={0.3}>
+            <div className="flex items-center justify-center gap-2 mt-8">
+              {/* Previous Button */}
+              {meta.current_page > 1 && (
                 <Button
-                  key={page}
-                  className={`size-8 p-0 bg-white text-black border border-gray-300 hover:bg-gray-100 ${
-                    page === meta.current_page ? "border-main-green" : ""
-                  }`}
+                  variant="outline"
+                  size="icon"
+                  className="size-8 p-0"
                   asChild
                 >
-                  <a href={`?page=${page}`}>{page}</a>
+                  <a href={`?page=${meta.current_page - 1}`}>
+                    <ChevronRight className="h-4 w-4 rotate-180" />
+                  </a>
                 </Button>
-              )
-            )}
+              )}
 
-            {/* Next Button */}
-            {meta.current_page < meta.last_page && (
-              <Button
-                variant="outline"
-                size="icon"
-                className="size-8 p-0"
-                asChild
-              >
-                <a href={`?page=${meta.current_page + 1}`}>
-                  <ChevronRight className="h-4 w-4" />
-                </a>
-              </Button>
-            )}
-          </div>
+              {/* Page Numbers */}
+              {Array.from({ length: meta.last_page }, (_, i) => i + 1).map(
+                (page) => (
+                  <Button
+                    key={page}
+                    className={`size-8 p-0 bg-white text-black border border-gray-300 hover:bg-gray-100 ${
+                      page === meta.current_page ? "border-main-green" : ""
+                    }`}
+                    asChild
+                  >
+                    <a href={`?page=${page}`}>{page}</a>
+                  </Button>
+                )
+              )}
+
+              {/* Next Button */}
+              {meta.current_page < meta.last_page && (
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="size-8 p-0"
+                  asChild
+                >
+                  <a href={`?page=${meta.current_page + 1}`}>
+                    <ChevronRight className="h-4 w-4" />
+                  </a>
+                </Button>
+              )}
+            </div>
+          </AnimatedSection>
         )}
       </div>
     </main>
