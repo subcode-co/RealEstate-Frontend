@@ -261,14 +261,14 @@ const EstatesFilter = ({ onSubmit: onSubmitCallback }) => {
           >
             {t("clear")}
           </Button>
-          <Button
+          {/* <Button
             type="submit"
             className={
               "bg-[#27A479]  gap-2 hover:gap-3 transition-all duration-500 hover:bg-[#27A479]  !p-1 h-11 rounded-none"
             }
           >
             <CiMicrophoneOn className="size-6" />
-          </Button>
+          </Button> */}
         </div>
         {/* price range slider */}
         <FormField

@@ -7,8 +7,10 @@ import { MdArrowForwardIos } from "react-icons/md";
 import { motion } from "motion/react";
 import FilterForm from "../shared/filter-form";
 
-const HeroSection = ({ video = null }) => {
-  const whatsappNumber = "201068389295"; // بدون علامة +
+const HeroSection = ({ video = null, settings = null }) => {
+  // Get phone number from settings, fallback to hardcoded value
+  const whatsappNumber =
+    settings?.contactInfo?.sitePhone?.replace(/[^0-9]/g, "") || "201068389295";
   const message = encodeURIComponent(
     "مرحباً، أنا مهتم بطلب استشارة خبير عقاري"
   );

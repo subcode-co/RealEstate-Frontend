@@ -7,6 +7,7 @@ import ServicesSection from "@/components/home/services-section";
 import StateFilterSection from "@/components/home/state-filter";
 import StatesSection from "@/components/home/states-section";
 import { getData } from "@/lib/fetch-methods";
+import { getSettings } from "@/lib/settings-actions";
 
 export default async function Home() {
   let homeData = {};
@@ -40,9 +41,12 @@ export default async function Home() {
     featuredProperties = [];
   }
 
+  // Fetch settings for phone number
+  const settings = await getSettings();
+
   return (
     <>
-      <HeroSection video={video} />
+      <HeroSection video={video} settings={settings} />
       <AboutSection
         sections={contentSections}
         platformRating={platformRating}
