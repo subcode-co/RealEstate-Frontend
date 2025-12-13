@@ -1,8 +1,11 @@
 import { Calendar, Pencil } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 const DealsTable = ({ deals = [], isLoading = false, onEdit }) => {
+  const t = useTranslations("deals_page");
+
   if (isLoading) {
     return (
       <div className="space-y-4 mt-8">
@@ -47,7 +50,9 @@ const DealsTable = ({ deals = [], isLoading = false, onEdit }) => {
   if (!deals || deals.length === 0) {
     return (
       <div className="mt-8 text-center py-12 border rounded">
-        <p className="text-gray-500">لا توجد صفقات متاحة حالياً</p>
+        <p className="text-gray-500">
+          {t("no_deals") || "لا توجد صفقات متاحة حالياً"}
+        </p>
       </div>
     );
   }
@@ -78,33 +83,33 @@ const DealsTable = ({ deals = [], isLoading = false, onEdit }) => {
 
           {/* Area Range */}
           <div className="flex flex-col gap-1">
-            <p className="text-xs text-gray-500">المساحة</p>
+            <p className="text-xs text-gray-500">{t("area")}</p>
             <p className="text-sm font-semibold">
-              {deal.minArea} - {deal.maxArea} م²
+              {deal.minArea} - {deal.maxArea} {t("sqm")}
             </p>
           </div>
 
           {/* Price Range */}
           <div className="flex flex-col gap-1">
-            <p className="text-xs text-gray-500">السعر الإجمالي</p>
+            <p className="text-xs text-gray-500">{t("total_price")}</p>
             <p className="text-sm font-semibold">
               {deal.minTotalPrice.toLocaleString()} -{" "}
-              {deal.maxTotalPrice.toLocaleString()} ر.س
+              {deal.maxTotalPrice.toLocaleString()} {t("sar")}
             </p>
           </div>
 
           {/* Price per Meter */}
           <div className="flex flex-col gap-1">
-            <p className="text-xs text-gray-500">سعر المتر</p>
+            <p className="text-xs text-gray-500">{t("price_per_meter")}</p>
             <p className="text-sm font-semibold">
               {deal.minPricePerMeter.toLocaleString()} -{" "}
-              {deal.maxPricePerMeter.toLocaleString()} ر.س
+              {deal.maxPricePerMeter.toLocaleString()} {t("sar")}
             </p>
           </div>
 
           {/* Date */}
           <div className="flex flex-col gap-1">
-            <p className="text-xs text-gray-500">تاريخ الإنشاء</p>
+            <p className="text-xs text-gray-500">{t("created_at")}</p>
             <p className="text-sm font-semibold flex items-center gap-1">
               <Calendar size={14} />
               {new Date(deal.createdAt).toLocaleDateString("ar-SA")}
@@ -119,7 +124,7 @@ const DealsTable = ({ deals = [], isLoading = false, onEdit }) => {
                 onEdit && onEdit(deal);
               }}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              title="تعديل الصفقة"
+              title={t("edit") || "تعديل الصفقة"}
             >
               <Pencil size={18} className="text-main-green" />
             </button>

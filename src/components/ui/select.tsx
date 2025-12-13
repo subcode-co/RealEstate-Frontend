@@ -20,7 +20,7 @@ function SelectValue({ ...props }) {
 }
 
 function SelectTrigger({
-  className,
+  className = "",
   size = "default",
   children,
   iconStyle = "size-4 opacity-50",
@@ -44,7 +44,12 @@ function SelectTrigger({
   );
 }
 
-function SelectContent({ className, children, position = "popper", ...props }) {
+function SelectContent({
+  className = "",
+  children,
+  position = "popper",
+  ...props
+}) {
   const isRtl = useLocale() === "ar";
   return (
     <SelectPrimitive.Portal>
@@ -76,7 +81,7 @@ function SelectContent({ className, children, position = "popper", ...props }) {
   );
 }
 
-function SelectLabel({ className, ...props }) {
+function SelectLabel({ className = "", ...props }) {
   return (
     <SelectPrimitive.Label
       data-slot="select-label"
@@ -86,7 +91,7 @@ function SelectLabel({ className, ...props }) {
   );
 }
 
-function SelectItem({ className, children, ...props }) {
+function SelectItem({ className = "", children, ...props }) {
   return (
     <SelectPrimitive.Item
       data-slot="select-item"
@@ -106,7 +111,7 @@ function SelectItem({ className, children, ...props }) {
   );
 }
 
-function SelectSeparator({ className, ...props }) {
+function SelectSeparator({ className = "", ...props }) {
   return (
     <SelectPrimitive.Separator
       data-slot="select-separator"
@@ -116,7 +121,7 @@ function SelectSeparator({ className, ...props }) {
   );
 }
 
-function SelectScrollUpButton({ className, ...props }) {
+function SelectScrollUpButton({ className = "", ...props }) {
   return (
     <SelectPrimitive.ScrollUpButton
       data-slot="select-scroll-up-button"
@@ -131,7 +136,7 @@ function SelectScrollUpButton({ className, ...props }) {
   );
 }
 
-function SelectScrollDownButton({ className, ...props }) {
+function SelectScrollDownButton({ className = "", ...props }) {
   return (
     <SelectPrimitive.ScrollDownButton
       data-slot="select-scroll-down-button"

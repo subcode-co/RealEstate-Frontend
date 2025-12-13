@@ -2,31 +2,40 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { FaWhatsapp, FaTwitter, FaSnapchatGhost, FaComments, FaPlus, FaTimes } from "react-icons/fa";
+import {
+  FaWhatsapp,
+  FaTwitter,
+  FaSnapchatGhost,
+  FaComments,
+  FaPlus,
+  FaTimes,
+} from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 export default function FloatingSocials() {
   const [open, setOpen] = useState(false);
+  const t = useTranslations("floating_socials");
 
   const socials = [
     {
       icon: <FaWhatsapp className="text-green-500" />,
       link: "https://wa.me/201234567890", // غيّر الرقم
-      label: "واتساب",
+      label: t("whatsapp"),
     },
     {
       icon: <FaTwitter className="text-sky-500" />,
       link: "https://twitter.com/",
-      label: "تويتر",
+      label: t("twitter"),
     },
     {
       icon: <FaSnapchatGhost className="text-yellow-400" />,
       link: "https://snapchat.com/",
-      label: "سناب شات",
+      label: t("snapchat"),
     },
     {
       icon: <FaComments className="text-main-green" />,
       link: "#chatbot", // هنا ممكن تخليه يفتح الشات بوت
-      label: "الشات بوت",
+      label: t("chatbot"),
     },
   ];
 

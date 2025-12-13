@@ -5,7 +5,7 @@ import ryal from "@/assets/ryal.svg";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
-const StatesCard = ({ withBorder = true, property }) => {
+const StatesCard = ({ withBorder = true, property = null }) => {
   const t = useTranslations("estate_card");
 
   // If no property data, show placeholder

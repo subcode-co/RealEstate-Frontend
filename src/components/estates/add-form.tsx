@@ -4,13 +4,10 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useLocale } from "next-intl";
-import { addProperty } from "@/lib/property-actions";
-
-import { Button } from "@/components/ui/button";
+import { useLocale, useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -18,90 +15,90 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Upload, Trash2 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Trash2, Upload } from "lucide-react";
+import { addProperty } from "@/lib/property-actions";
 
-const schema = z
-  .object({
-    title: z.string().min(1, "مطلوب"),
-    description: z.string().min(1, "مطلوب"),
-    operationType: z.string().min(1, "مطلوب"),
-    categoryId: z.string().min(1, "مطلوب"),
-    rooms: z
-      .string()
-      .min(1, "مطلوب")
-      .regex(/^\d+$/, "يجب أن يكون رقماً صحيحاً"),
-    bathrooms: z
-      .string()
-      .min(1, "مطلوب")
-      .regex(/^\d+$/, "يجب أن يكون رقماً صحيحاً"),
-    balconies: z
-      .string()
-      .optional()
-      .refine((val) => !val || /^\d+$/.test(val), {
-        message: "يجب أن يكون رقماً صحيحاً",
-      }),
-    garages: z
-      .string()
-      .optional()
-      .refine((val) => !val || /^\d+$/.test(val), {
-        message: "يجب أن يكون رقماً صحيحاً",
-      }),
-    area: z
-      .string()
-      .min(1, "مطلوب")
-      .regex(/^\d+(\.\d+)?$/, "يجب أن يكون رقماً"),
-    usableArea: z
-      .string()
-      .optional()
-      .refine((val) => !val || /^\d+(\.\d+)?$/.test(val), {
-        message: "يجب أن يكون رقماً",
-      }),
-    countryId: z.string().min(1, "مطلوب"),
-    cityId: z.string().min(1, "مطلوب"),
-    district: z.string().optional(),
-    finishingType: z.string().min(1, "مطلوب"),
-    priceMin: z
-      .string()
-      .min(1, "مطلوب")
-      .regex(/^\d+(\.\d+)?$/, "يجب أن يكون رقماً"),
-    priceMax: z
-      .string()
-      .optional()
-      .refine((val) => !val || /^\d+(\.\d+)?$/.test(val), {
-        message: "يجب أن يكون رقماً",
-      }),
-    priceHidden: z.string().optional(),
-    latitude: z
-      .string()
-      .optional()
-      .refine((val) => !val || /^-?\d+(\.\d+)?$/.test(val), {
-        message: "يجب أن يكون رقماً",
-      }),
-    longitude: z
-      .string()
-      .optional()
-      .refine((val) => !val || /^-?\d+(\.\d+)?$/.test(val), {
-        message: "يجب أن يكون رقماً",
-      }),
-  })
-  .refine(
-    (data) => {
-      // Validate that priceMax is greater than or equal to priceMin if provided
-      if (data.priceMax && data.priceMin) {
-        const min = parseFloat(data.priceMin);
-        const max = parseFloat(data.priceMax);
-        return max >= min;
+const createSchema = (t: any) =>
+  z
+    .object({
+      title: z.string().min(1, t("required")),
+      description: z.string().min(1, t("required")),
+      operationType: z.string().min(1, t("required")),
+      categoryId: z.string().min(1, t("required")),
+      rooms: z.string().min(1, t("required")).regex(/^\d+$/, t("integer_only")),
+      bathrooms: z
+        .string()
+        .min(1, t("required"))
+        .regex(/^\d+$/, t("integer_only")),
+      balconies: z
+        .string()
+        .optional()
+        .refine((val) => !val || /^\d+$/.test(val), {
+          message: t("integer_only"),
+        }),
+      garages: z
+        .string()
+        .optional()
+        .refine((val) => !val || /^\d+$/.test(val), {
+          message: t("integer_only"),
+        }),
+      area: z
+        .string()
+        .min(1, t("required"))
+        .regex(/^\d+(\.\d+)?$/, t("number_only")),
+      usableArea: z
+        .string()
+        .optional()
+        .refine((val) => !val || /^\d+(\.\d+)?$/.test(val), {
+          message: t("number_only"),
+        }),
+      countryId: z.string().min(1, t("required")),
+      cityId: z.string().min(1, t("required")),
+      district: z.string().optional(),
+      finishingType: z.string().min(1, t("required")),
+      priceMin: z
+        .string()
+        .min(1, t("required"))
+        .regex(/^\d+(\.\d+)?$/, t("number_only")),
+      priceMax: z
+        .string()
+        .optional()
+        .refine((val) => !val || /^\d+(\.\d+)?$/.test(val), {
+          message: t("number_only"),
+        }),
+      priceHidden: z.string().optional(),
+      latitude: z
+        .string()
+        .optional()
+        .refine((val) => !val || /^-?\d+(\.\d+)?$/.test(val), {
+          message: t("number_only"),
+        }),
+      longitude: z
+        .string()
+        .optional()
+        .refine((val) => !val || /^-?\d+(\.\d+)?$/.test(val), {
+          message: t("number_only"),
+        }),
+    })
+    .refine(
+      (data) => {
+        if (data.priceMax && data.priceMin) {
+          const min = parseFloat(data.priceMin);
+          const max = parseFloat(data.priceMax);
+          return max >= min;
+        }
+        return true;
+      },
+      {
+        message: t("price_range_invalid"),
+        path: ["priceMax"],
       }
-      return true;
-    },
-    {
-      message: "السعر الأقصى يجب أن يكون أكبر من أو يساوي السعر الأدنى",
-      path: ["priceMax"],
-    }
-  );
+    );
 
 export default function AddForm({ setOpen }) {
+  const t = useTranslations("validations");
   const locale = useLocale();
   const [photos, setPhotos] = useState([]);
   const [videos, setVideos] = useState([]);
@@ -119,7 +116,7 @@ export default function AddForm({ setOpen }) {
     setValue,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(createSchema(t)),
     defaultValues: {
       title: "",
       description: "",
@@ -319,8 +316,12 @@ export default function AddForm({ setOpen }) {
               <SelectValue placeholder="بيع أو إيجار" />
             </SelectTrigger>
             <SelectContent className="">
-              <SelectItem className="" value="sale">بيع</SelectItem>
-              <SelectItem className="" value="rent">إيجار</SelectItem>
+              <SelectItem className="" value="sale">
+                بيع
+              </SelectItem>
+              <SelectItem className="" value="rent">
+                إيجار
+              </SelectItem>
             </SelectContent>
           </Select>
           {errors.operationType && (
@@ -340,10 +341,18 @@ export default function AddForm({ setOpen }) {
               <SelectValue placeholder="اختر نوع العقار" />
             </SelectTrigger>
             <SelectContent className="">
-              <SelectItem className="" value="1">شقة</SelectItem>
-              <SelectItem className="" value="2">فيلا</SelectItem>
-              <SelectItem className="" value="3">برج</SelectItem>
-              <SelectItem className="" value="4">منزل</SelectItem>
+              <SelectItem className="" value="1">
+                شقة
+              </SelectItem>
+              <SelectItem className="" value="2">
+                فيلا
+              </SelectItem>
+              <SelectItem className="" value="3">
+                برج
+              </SelectItem>
+              <SelectItem className="" value="4">
+                منزل
+              </SelectItem>
             </SelectContent>
           </Select>
           {errors.categoryId && (
@@ -355,7 +364,9 @@ export default function AddForm({ setOpen }) {
           <Label className={lableStyle}>
             الوصف<span className="text-red-500">*</span>
           </Label>
-          <Textarea className="" placeholder="وصف تفصيلي للعقار"
+          <Textarea
+            className=""
+            placeholder="وصف تفصيلي للعقار"
             {...register("description")}
             rows={3}
           />
@@ -454,7 +465,11 @@ export default function AddForm({ setOpen }) {
             </SelectTrigger>
             <SelectContent className="">
               {countries.map((country) => (
-                <SelectItem className="" key={country.id} value={country.id.toString()}>
+                <SelectItem
+                  className=""
+                  key={country.id}
+                  value={country.id.toString()}
+                >
                   {country.name}
                 </SelectItem>
               ))}
@@ -475,7 +490,11 @@ export default function AddForm({ setOpen }) {
             </SelectTrigger>
             <SelectContent className="">
               {cities.map((city) => (
-                <SelectItem className="" key={city.id} value={city.id.toString()}>
+                <SelectItem
+                  className=""
+                  key={city.id}
+                  value={city.id.toString()}
+                >
                   {city.name}
                 </SelectItem>
               ))}
@@ -500,11 +519,21 @@ export default function AddForm({ setOpen }) {
               <SelectValue placeholder="اختر نوع التشطيب" />
             </SelectTrigger>
             <SelectContent className="">
-              <SelectItem className="" value="none">بدون تشطيب</SelectItem>
-              <SelectItem className="" value="basic">بسيط</SelectItem>
-              <SelectItem className="" value="good">جيد</SelectItem>
-              <SelectItem className="" value="luxury">فاخر</SelectItem>
-              <SelectItem className="" value="super_luxury">سوبر لوكس</SelectItem>
+              <SelectItem className="" value="none">
+                بدون تشطيب
+              </SelectItem>
+              <SelectItem className="" value="basic">
+                بسيط
+              </SelectItem>
+              <SelectItem className="" value="good">
+                جيد
+              </SelectItem>
+              <SelectItem className="" value="luxury">
+                فاخر
+              </SelectItem>
+              <SelectItem className="" value="super_luxury">
+                سوبر لوكس
+              </SelectItem>
             </SelectContent>
           </Select>
           {errors.finishingType && (
@@ -530,7 +559,9 @@ export default function AddForm({ setOpen }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="">
-                <SelectItem className="" value="sar">(ر.س)</SelectItem>
+                <SelectItem className="" value="sar">
+                  (ر.س)
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -555,7 +586,9 @@ export default function AddForm({ setOpen }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="">
-                <SelectItem className="" value="sar">(ر.س)</SelectItem>
+                <SelectItem className="" value="sar">
+                  (ر.س)
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -595,8 +628,12 @@ export default function AddForm({ setOpen }) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="">
-              <SelectItem className="" value="0">لا</SelectItem>
-              <SelectItem className="" value="1">نعم</SelectItem>
+              <SelectItem className="" value="0">
+                لا
+              </SelectItem>
+              <SelectItem className="" value="1">
+                نعم
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -726,5 +763,3 @@ export default function AddForm({ setOpen }) {
     </form>
   );
 }
-
-

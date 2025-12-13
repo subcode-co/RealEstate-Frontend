@@ -8,10 +8,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const FilterGrid = ({ properties = [], loading = false }) => {
   const locale = useLocale();
+  const t = useTranslations("estates_filter");
 
   // Show loading skeletons
   if (loading) {
@@ -49,7 +50,7 @@ const FilterGrid = ({ properties = [], loading = false }) => {
   if (!properties || properties.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 text-lg">لا توجد عقارات متاحة حالياً</p>
+        <p className="text-gray-500 text-lg">{t("no_properties_found")}</p>
       </div>
     );
   }

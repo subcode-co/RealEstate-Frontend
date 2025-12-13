@@ -22,6 +22,7 @@ import { z } from "zod";
 import { BsSearch } from "react-icons/bs";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const FormSchema = z.object({
   operationType: z.string().optional(),
@@ -31,6 +32,7 @@ const FormSchema = z.object({
 });
 
 export default function FilterForm() {
+  const t = useTranslations("estates_filter");
   const [operationType, setOperationType] = useState("sale");
   const router = useRouter();
 
@@ -84,7 +86,7 @@ export default function FilterForm() {
             operationType === "sale" && "text-main-green bg-[#FEFEFF]"
           }`}
         >
-          بيع
+          {t("operations.sale")}
         </button>
         <button
           onClick={() => setOperationType("rent")}
@@ -92,7 +94,7 @@ export default function FilterForm() {
             operationType === "rent" && "text-main-green bg-[#FEFEFF]"
           }`}
         >
-          ايجار
+          {t("operations.rent")}
         </button>
       </div>
       <Form {...form}>
@@ -106,20 +108,22 @@ export default function FilterForm() {
             name="type"
             render={({ field }) => (
               <FormItem className={"max-md:w-1/2"}>
-                <FormLabel>نوع العقار</FormLabel>
+                <FormLabel>{t("property_type")}</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="border-none shadow-none focus-visible:ring-0 p-0">
                       <SelectValue
-                        placeholder="اختر نوع العقار"
+                        placeholder={t("property_type")}
                         className="text-main-navy"
                       />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="apartment">شقة</SelectItem>
-                    <SelectItem value="villa">فيلا</SelectItem>
-                    <SelectItem value="land">أرض</SelectItem>
+                    <SelectItem value="apartment">
+                      {t("types.apartment")}
+                    </SelectItem>
+                    <SelectItem value="villa">{t("types.villa")}</SelectItem>
+                    <SelectItem value="land">{t("types.land")}</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -133,12 +137,12 @@ export default function FilterForm() {
             name="rooms"
             render={({ field }) => (
               <FormItem className={"max-md:w-1/2"}>
-                <FormLabel>عدد الغرف</FormLabel>
+                <FormLabel>{t("rooms")}</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="border-none shadow-none focus-visible:ring-0 p-0">
                       <SelectValue
-                        placeholder="اختر عدد الغرف"
+                        placeholder={t("rooms")}
                         className="text-main-navy"
                       />
                     </SelectTrigger>
@@ -161,20 +165,26 @@ export default function FilterForm() {
             name="finish"
             render={({ field }) => (
               <FormItem className={"max-md:w-1/2"}>
-                <FormLabel>نوع التشطيب</FormLabel>
+                <FormLabel>{t("finishing_type")}</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="border-none shadow-none focus-visible:ring-0 p-0">
                       <SelectValue
-                        placeholder="اختر نوع التشطيب"
+                        placeholder={t("finishing_type")}
                         className="text-main-navy"
                       />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="luxury">فاخر</SelectItem>
-                    <SelectItem value="good">جيد</SelectItem>
-                    <SelectItem value="basic">بسيط</SelectItem>
+                    <SelectItem value="luxury">
+                      {t("finishes.luxury")}
+                    </SelectItem>
+                    <SelectItem value="good">
+                      {t("finishes.average")}
+                    </SelectItem>
+                    <SelectItem value="basic">
+                      {t("finishes.simple")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -187,7 +197,7 @@ export default function FilterForm() {
               "bg-main-green text-white font-bold rounded-s-lg rounded-e-none  md:h-14 h-10  flex items-center gap-2 hover:gap-3 transition-all duration-500 hover:bg-main-green max-md:mx-auto"
             }
           >
-            <BsSearch size={20} /> بحث
+            <BsSearch size={20} /> {t("search")}
           </Button>
         </form>
       </Form>

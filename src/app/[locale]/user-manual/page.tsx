@@ -3,7 +3,10 @@ import { userGuideService } from "@/features/user-guide";
 import Image from "next/image";
 import React from "react";
 
+import { getTranslations } from "next-intl/server";
+
 const UserManualPage = async () => {
+  const t = await getTranslations("breadcrumbs");
   const sections = await userGuideService.getUserGuide();
 
   // First section (with image at top)
@@ -15,7 +18,7 @@ const UserManualPage = async () => {
     <main className="space-y-12">
       {/* Header */}
       <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
-        <CustomBreadcrumbs items={[{ label: "دليل المستخدم" }]} />
+        <CustomBreadcrumbs items={[{ label: t("user_manual") }]} />
         <h1 className="text-main-navy text-2xl font-bold">دليل المستخدم</h1>
       </div>
 

@@ -1,11 +1,11 @@
 import Image from "next/image";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 const ServicesCard = ({ value = null }) => {
-  const title = value?.title || "وسطاء معتمدين";
-  const description =
-    value?.description ||
-    "نسهّل وصولك للوسطاء المعتمدين من حولك لإتمام إجراءاتك الإيجارية";
+  const t = useTranslations("services_card");
+  const title = value?.title || t("title");
+  const description = value?.description || t("description");
   const icon = value?.icon;
 
   return (

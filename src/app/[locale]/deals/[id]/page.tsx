@@ -11,6 +11,7 @@ import {
   FaCalendarAlt,
   FaCheckCircle,
 } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 import {
   LineChart,
   Line,
@@ -25,6 +26,7 @@ import { toast } from "sonner";
 import { useParams } from "next/navigation";
 
 const SingleDealPage = () => {
+  const t = useTranslations("deals_page");
   const params = useParams();
   const offerId = params.id;
   const [offer, setOffer] = useState(null);
@@ -43,10 +45,10 @@ const SingleDealPage = () => {
       if (data) {
         setOffer(data);
       } else {
-        toast.error("فشل في جلب البيانات");
+        toast.error(t("error_fetch"));
       }
     } catch (error) {
-      toast.error("حدث خطأ أثناء جلب البيانات");
+      toast.error(t("error_generic"));
       console.error("Error fetching offer:", error);
     } finally {
       setIsLoading(false);
@@ -75,36 +77,38 @@ const SingleDealPage = () => {
     return (
       <main className="space-y-6">
         <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
-          <CustomBreadcrumbs items={[{ label: "الصفقات", href: "/deals" }]} />
+          <CustomBreadcrumbs items={[{ label: t("title"), href: "/deals" }]} />
           <h1 className="text-main-navy text-2xl font-bold">
-            الصفقة غير موجودة
+            {t("not_found")}
           </h1>
         </div>
         <div className="container border border-gray-300 p-10">
-          <p className="text-center text-gray-500">
-            لم يتم العثور على الصفقة المطلوبة
-          </p>
+          <p className="text-center text-gray-500">{t("not_found_desc")}</p>
         </div>
       </main>
     );
   }
 
   const stats = [
-    { icon: <FaTag />, label: "السعر", value: `${offer.price} ر.س` },
+    {
+      icon: <FaTag />,
+      label: t("price"),
+      value: `${offer.price} ${t("currency") || "SAR"}`,
+    },
     {
       icon: <FaCalendarAlt />,
-      label: "مدة الصلاحية",
-      value: `${offer.validityDays} يوم`,
+      label: t("validity"),
+      value: `${offer.validityDays} ${t("days") || "Days"}`,
     },
     {
       icon: <FaCheckCircle />,
-      label: "عدد المميزات",
+      label: t("features_count"),
       value: offer.features?.length || 0,
     },
     {
       icon: <FaBuilding />,
-      label: "الحالة",
-      value: offer.isActive ? "نشط" : "غير نشط",
+      label: t("status"),
+      value: offer.isActive ? t("active") : t("inactive"),
     },
   ];
 
@@ -120,7 +124,7 @@ const SingleDealPage = () => {
     <main className="space-y-6">
       <div className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container">
         <CustomBreadcrumbs
-          items={[{ label: "الصفقات", href: "/deals" }, { label: offer.name }]}
+          items={[{ label: t("title"), href: "/deals" }, { label: offer.name }]}
         />
         <h1 className="text-main-navy text-2xl font-bold">{offer.name}</h1>
         <p className="text-gray-600">{offer.description}</p>
@@ -150,7 +154,7 @@ const SingleDealPage = () => {
         {offer.features && offer.features.length > 0 && (
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4 text-main-navy">
-              المميزات
+              {t("features")}
             </h3>
             <ul className="grid sm:grid-cols-2 gap-3">
               {offer.features.map((feature, index) => (
@@ -168,7 +172,9 @@ const SingleDealPage = () => {
 
         {/* Chart */}
         <Card className="p-4 lg:w-1/2 mx-auto">
-          <h3 className="text-center font-semibold mb-4">تغير الأسعار</h3>
+          <h3 className="text-center font-semibold mb-4">
+            {t("price_change")}
+          </h3>
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={data}>
               <XAxis dataKey="name" />
@@ -179,20 +185,20 @@ const SingleDealPage = () => {
                 dataKey="high"
                 stroke="#16a34a"
                 strokeWidth={2}
-                name="الأعلى"
+                name={t("high")}
               />
               <Line
                 type="monotone"
                 dataKey="avg"
                 stroke="#86efac"
                 strokeDasharray="5 5"
-                name="المتوسط"
+                name={t("avg")}
               />
               <Line
                 type="monotone"
                 dataKey="low"
                 stroke="#a3a3a3"
-                name="الأقل"
+                name={t("low")}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -201,17 +207,17 @@ const SingleDealPage = () => {
         {/* Additional Info */}
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-4 text-main-navy">
-            معلومات إضافية
+            {t("additional_info")}
           </h3>
           <div className="grid sm:grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="text-gray-500">تاريخ الإنشاء: </span>
+              <span className="text-gray-500">{t("created_at")}: </span>
               <span className="font-semibold">
                 {new Date(offer.createdAt).toLocaleDateString("ar-SA")}
               </span>
             </div>
             <div>
-              <span className="text-gray-500">آخر تحديث: </span>
+              <span className="text-gray-500">{t("updated_at")}: </span>
               <span className="font-semibold">
                 {new Date(offer.updatedAt).toLocaleDateString("ar-SA")}
               </span>

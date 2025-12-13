@@ -9,7 +9,7 @@ const ProfileTabs = ({ isEditing }: { isEditing?: boolean }) => {
   return (
     <div className="min-h-[500px]">
       <Tabs defaultValue="my-data" className="w-full">
-        <div className="flex justify-end mb-6">
+        <div className="flex justify-start mb-6">
           <TabsList className="bg-transparent gap-4 p-0 h-auto w-auto flex-nowrap">
             <TabsTrigger
               value="my-properties"

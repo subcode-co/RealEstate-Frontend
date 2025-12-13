@@ -244,7 +244,48 @@
     "previous": "Previous",
     "next": "Next",
     "error_fetch": "Failed to fetch data",
-    "error_generic": "An error occurred while fetching data"
+    "error_generic": "An error occurred while fetching data",
+    "not_found": "Deal Not Found",
+    "not_found_desc": "The requested deal was not found",
+    "price": "Price",
+    "validity": "Validity",
+    "features_count": "Features Count",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "features": "Features",
+    "price_change": "Price Change",
+    "high": "High",
+    "avg": "Average",
+    "low": "Low",
+    "additional_info": "Additional Info",
+    "created_at": "Created At",
+    "updated_at": "Updated At",
+    "area": "Area",
+    "total_price": "Total Price",
+    "price_per_meter": "Price Per Meter",
+    "min_area": "Min Area",
+    "max_area": "Max Area",
+    "min_total_price": "Min Total Price",
+    "max_total_price": "Max Total Price",
+    "min_price_per_meter": "Min Price Per Meter",
+    "max_price_per_meter": "Max Price Per Meter",
+    "sar": "SAR",
+    "sqm": "m²"
+  },
+  "services_card": {
+    "title": "Certified Brokers",
+    "description": "We facilitate your access to certified brokers around you to complete your rental procedures"
+  },
+  "floating_socials": {
+    "whatsapp": "WhatsApp",
+    "twitter": "Twitter",
+    "snapchat": "Snapchat",
+    "chatbot": "Chatbot"
+  },
+  "Metadata": {
+    "title": "Real Estate Solutions",
+    "description": "Integrated Real Estate Platform"
   },
   "property_details": {
     "views": "Views",
@@ -354,7 +395,9 @@
     "name_min": "Name must be at least 2 characters",
     "code_length": "Code must be 4 digits",
     "role_required": "Please select account type",
-    "price_range_invalid": "Invalid price range"
+    "price_range_invalid": "Invalid price range",
+    "integer_only": "Must be an integer",
+    "number_only": "Must be a number"
   },
   "toasts": {
     "success": "Operation completed successfully",
@@ -381,6 +424,7 @@
     "price_range": "Price Range",
     "search": "Search",
     "clear": "Clear",
+    "no_properties_found": "No properties available currently",
     "customize_property": "Customize Your Property",
     "customize_description": "Search for the property you want",
     "from": "From",

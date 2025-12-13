@@ -244,7 +244,48 @@
     "previous": "السابق",
     "next": "التالي",
     "error_fetch": "فشل في جلب البيانات",
-    "error_generic": "حدث خطأ أثناء جلب البيانات"
+    "error_generic": "حدث خطأ أثناء جلب البيانات",
+    "not_found": "الصفقة غير موجودة",
+    "not_found_desc": "لم يتم العثور على الصفقة المطلوبة",
+    "price": "السعر",
+    "validity": "مدة الصلاحية",
+    "features_count": "عدد المميزات",
+    "status": "الحالة",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "features": "المميزات",
+    "price_change": "تغير الأسعار",
+    "high": "الأعلى",
+    "avg": "المتوسط",
+    "low": "الأقل",
+    "additional_info": "معلومات إضافية",
+    "created_at": "تاريخ الإنشاء",
+    "updated_at": "آخر تحديث",
+    "area": "المساحة",
+    "total_price": "السعر الإجمالي",
+    "price_per_meter": "سعر المتر",
+    "min_area": "أقل مساحة",
+    "max_area": "أكبر مساحة",
+    "min_total_price": "أقل سعر إجمالي",
+    "max_total_price": "أكبر سعر إجمالي",
+    "min_price_per_meter": "أقل سعر للمتر",
+    "max_price_per_meter": "أكبر سعر للمتر",
+    "sar": "ر.س",
+    "sqm": "م²"
+  },
+  "services_card": {
+    "title": "وسطاء معتمدين",
+    "description": "نسهّل وصولك للوسطاء المعتمدين من حولك لإتمام إجراءاتك الإيجارية"
+  },
+  "floating_socials": {
+    "whatsapp": "واتساب",
+    "twitter": "تويتر",
+    "snapchat": "سناب شات",
+    "chatbot": "الشات بوت"
+  },
+  "Metadata": {
+    "title": "حلول العقارية",
+    "description": "منصة عقارية متكاملة"
   },
   "property_details": {
     "views": "مشاهدات",
@@ -381,6 +422,7 @@
     "price_range": "نطاق السعر",
     "search": "بحث",
     "clear": "مسح",
+    "no_properties_found": "لا توجد عقارات متاحة حالياً",
     "customize_property": "خصص عقارك",
     "customize_description": "ابحث عن العقار الذي تريده",
     "from": "من",

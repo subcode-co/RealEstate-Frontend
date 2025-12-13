@@ -13,10 +13,12 @@ import { toast } from "sonner";
 import { UpdateProfileRequest } from "../types/profile.types";
 import SectionHeader from "@/components/shared/section-header";
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
+import { useRouter } from "next/navigation";
 
 const ProfileLayout = () => {
   const t = useTranslations("Profile");
   const { user, setUser, fetchUserProfile } = useContext(UserContext);
+  const router = useRouter();
 
   const formSchema = z.object({
     name: z.string().min(2, t("validation_name")),
@@ -65,16 +67,30 @@ const ProfileLayout = () => {
   return (
     <div className="container py-8 space-y-8">
       {/* Header */}
-      <div className="flex flex-col gap-4">
-        <CustomBreadcrumbs items={[{ label: t("my_account") }]} />
-        <div className="flex justify-between items-center">
+      {/* Header Container */}
+      <div className="bg-gray-50 rounded-xl p-6 md:p-8 flex justify-between items-start md:items-center">
+        <div className="space-y-2">
+          {/* Breadcrumb - Align Start */}
+          <div className="flex justify-start">
+            <CustomBreadcrumbs
+              items={[{ label: t("my_account") }]}
+              className="!p-0 !bg-transparent shadow-none"
+            />
+          </div>
           <h1 className="text-3xl font-bold text-main-navy">
             {t("my_account")}
           </h1>
-          <button className="flex items-center gap-2 text-main-green text-sm hover:underline">
-            <span>← {t("back")}</span>
-          </button>
         </div>
+
+        {/* Back Button */}
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="flex items-center gap-2 text-main-green font-medium hover:underline transition-all mt-2 md:mt-0"
+        >
+          <span className="text-sm">{t("back")}</span>
+          <span className="text-lg">‹</span>
+        </button>
       </div>
 
       <FormProvider {...methods}>
@@ -83,27 +99,7 @@ const ProfileLayout = () => {
           onSubmit={methods.handleSubmit(onSubmit)}
           className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
         >
-          {/* Main Content (Tabs) - Left Side in LTR (Col Span 3) */}
-          {/* But design has sidebar on Right in RTL.
-                    So: 
-                    RTL: Sidebar (Right) | Content (Left)
-                    LTR: Content (Left) | Sidebar (Right) ?? 
-                    Usually "start" is sidebar.
-                    Let's check the design again. The design is RTL. Sidebar is Right. Content is Left.
-                    In CSS Grid (RTL): 
-                    Col 1 (Right): Sidebar
-                    Col 2-4 (Left): Content
-                */}
-
-          {/* Since we use direction-aware classes or just logical flow:
-                    If we put Sidebar first in DOM:
-                    RTL: It appears on Right.
-                    LTR: It appears on Left.
-                    
-                    If design shows Sidebar on Right in RTL...
-                    That is standard flow.
-                */}
-
+          {/* Sidebar - spans 4 columns (1/3 width) */}
           <div className="lg:col-span-4 order-1">
             <ProfileSidebar
               user={user}
@@ -113,6 +109,7 @@ const ProfileLayout = () => {
             />
           </div>
 
+          {/* Main Content - spans 8 columns (2/3 width) */}
           <div className="lg:col-span-8 order-2">
             <ProfileTabs isEditing={isEditing} />
           </div>

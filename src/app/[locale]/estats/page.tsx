@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import EstateFilterPanel from "@/components/estates/estates-filter";
 import EstatesGrid from "@/components/estates/estates-grid";
@@ -15,6 +15,7 @@ interface PaginationMeta {
 }
 
 const EstatsPage = () => {
+  const t = useTranslations("breadcrumbs");
   const locale = useLocale();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -136,7 +137,7 @@ const EstatsPage = () => {
         transition={{ duration: 0.6 }}
         className="bg-main-light-gray p-4 pb-12 space-y-4 rounded-b-xl container"
       >
-        <CustomBreadcrumbs items={[{ label: "العقارات" }]} />
+        <CustomBreadcrumbs items={[{ label: t("properties") }]} />
         <h1 className="text-main-navy text-2xl font-bold">العقارات</h1>
       </motion.div>
       <motion.section

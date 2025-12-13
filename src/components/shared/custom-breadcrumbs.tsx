@@ -1,6 +1,6 @@
-import React from 'react'
-import { Link } from '@/i18n/navigation'
-import { Home } from 'lucide-react'
+import React from "react";
+import { Link } from "@/i18n/navigation";
+import { Home } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -8,21 +8,16 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "@/components/ui/breadcrumb";
 
-
-const CustomBreadcrumbs = ({ 
-  items = [], 
-  homeHref = '/',
-  className = ''
-}) => {
+const CustomBreadcrumbs = ({ items = [], homeHref = "/", className = "" }) => {
   return (
-    <Breadcrumb className={`${className} bg-white p-2 w-fit rounded `}>
+    <Breadcrumb className={`w-fit rounded ${className}`}>
       <BreadcrumbList className="text-xs gap-0.5">
         {/* Home Icon Link */}
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link 
+            <Link
               href={homeHref}
               className="flex items-center text-main-green hover:text-main-green/80"
               aria-label="Home"
@@ -34,16 +29,16 @@ const CustomBreadcrumbs = ({
 
         {/* Breadcrumb Items */}
         {items.map((item, index) => {
-          const isLast = index === items.length - 1
+          const isLast = index === items.length - 1;
 
           return (
             <React.Fragment key={index}>
               <BreadcrumbSeparator />
-              
+
               <BreadcrumbItem>
                 {item.href && !isLast ? (
                   <BreadcrumbLink asChild>
-                    <Link 
+                    <Link
                       href={item.href}
                       className="text-main-green hover:text-main-green/80"
                     >
@@ -57,11 +52,11 @@ const CustomBreadcrumbs = ({
                 )}
               </BreadcrumbItem>
             </React.Fragment>
-          )
+          );
         })}
       </BreadcrumbList>
     </Breadcrumb>
-  )
-}
+  );
+};
 
-export default CustomBreadcrumbs
+export default CustomBreadcrumbs;
