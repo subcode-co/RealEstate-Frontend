@@ -7,7 +7,23 @@ import { MdArrowForwardIos } from "react-icons/md";
 import { motion } from "motion/react";
 import FilterForm from "../shared/filter-form";
 
-const HeroSection = ({ video = null, settings = null }) => {
+interface HeroContentSection {
+  title?: string;
+  content?: string;
+  image?: string | null;
+}
+
+interface HeroSectionProps {
+  video?: string | null;
+  settings?: any;
+  heroContent?: HeroContentSection | null;
+}
+
+const HeroSection = ({
+  video = null,
+  settings = null,
+  heroContent = null,
+}: HeroSectionProps) => {
   // Get phone number from settings, fallback to hardcoded value
   const whatsappNumber =
     settings?.contactInfo?.sitePhone?.replace(/[^0-9]/g, "") || "201068389295";
@@ -20,6 +36,12 @@ const HeroSection = ({ video = null, settings = null }) => {
   };
 
   const videoSrc = video || "/images/hero.mp4";
+
+  // Dynamic content from API, with fallbacks
+  const title = heroContent?.title || "حلول عقارية ميسرة";
+  const description =
+    heroContent?.content ||
+    "شركة الحلول العقارية هي شريكك الأول لتحقيق أحلامك العقارية بكل ثقة واطمئنان. نقدم لك مجموعة متكاملة من الخدمات تشمل البيع والشراء والتأجير وإدارة الأملاك،";
 
   return (
     <section className="container  pt-12 p-6  bg-main-light-gray rounded-b-[3rem]  space-y-12">
@@ -38,9 +60,15 @@ const HeroSection = ({ video = null, settings = null }) => {
             alt="vector"
             className="max-md:hidden absolute -bottom-[30%] end-[20%]"
           />
-          <h1 className=" md:text-5xl text-4xl  font-bold leading-[1.2]">
-            حلول عقارية <span className="text-main-green">ميسرة</span>
-          </h1>
+          <h1
+            className=" md:text-5xl text-4xl  font-bold leading-[1.2]"
+            dangerouslySetInnerHTML={{
+              __html: title.replace(
+                /(ميسرة|العقارية)/g,
+                '<span class="text-main-green">$1</span>'
+              ),
+            }}
+          />
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 40, rotate: 2 }}
@@ -48,11 +76,7 @@ const HeroSection = ({ video = null, settings = null }) => {
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
           className="md:w-1/2 w-full space-y-4  "
         >
-          <p className=" lg:w-[85%] lg:text-base text-xs">
-            شركة الحلول العقارية هي شريكك الأول لتحقيق أحلامك العقارية بكل ثقة
-            واطمئنان. نقدم لك مجموعة متكاملة من الخدمات تشمل البيع والشراء
-            والتأجير وإدارة الأملاك،
-          </p>
+          <p className=" lg:w-[85%] lg:text-base text-xs">{description}</p>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

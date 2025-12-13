@@ -38,7 +38,11 @@ export default async function Home() {
 
   return (
     <>
-      <HeroSection video={video} settings={settings} />
+      <HeroSection
+        video={video}
+        settings={settings}
+        heroContent={contentSections[0]}
+      />
       <AboutSection
         sections={contentSections}
         platformRating={platformRating}
