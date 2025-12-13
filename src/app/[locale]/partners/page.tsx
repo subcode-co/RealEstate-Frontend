@@ -1,9 +1,9 @@
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
-import PartnerCard from "@/components/shared/partner-card";
+import FeaturedUserCard from "@/components/shared/featured-user-card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { partnersService } from "@/features/partners";
+import { featuredUsersService } from "@/features/featured-users";
 import {
   AnimatedSection,
   AnimatedItem,
@@ -15,16 +15,18 @@ const PartnersPage = async ({ searchParams }) => {
   // Get current page from search params, default to 1
   const currentPage = searchParams?.page ? parseInt(searchParams.page) : 1;
 
-  // Fetch companies data
-  const companies = await partnersService.getPartners(currentPage, 12);
+  // Fetch featured users data
+  const featuredUsers = await featuredUsersService.getFeaturedUsers(
+    currentPage,
+    12
+  );
 
-  // For pagination, we'll need to adjust the service to return meta
-  // For now, using simple pagination
+  // For pagination
   const meta = {
     current_page: currentPage,
-    last_page: Math.ceil(companies.length / 12),
+    last_page: Math.ceil(featuredUsers.length / 12) || 1,
     per_page: 12,
-    total: companies.length,
+    total: featuredUsers.length,
   };
 
   return (
@@ -39,15 +41,15 @@ const PartnersPage = async ({ searchParams }) => {
       <div className="container space-y-8">
         <AnimatedSection delay={0.2}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {companies.length > 0 ? (
-              companies.map((company, index) => (
-                <AnimatedItem key={company.id} index={index}>
-                  <PartnerCard item={company} />
+            {featuredUsers.length > 0 ? (
+              featuredUsers.map((user, index) => (
+                <AnimatedItem key={user.id} index={index}>
+                  <FeaturedUserCard user={user} />
                 </AnimatedItem>
               ))
             ) : (
               <p className="col-span-full text-center text-gray-500">
-                No companies found
+                No featured users found
               </p>
             )}
           </div>

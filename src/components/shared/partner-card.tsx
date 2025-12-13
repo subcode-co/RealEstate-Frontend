@@ -6,8 +6,8 @@ import { MapPin, ArrowRight } from "lucide-react";
 
 const Partnercard = ({ item }) => {
   return (
-    <Link
-      href={`/partners/${item?.id}`}
+    <div
+      // href={`/partners/${item?.id}`}
       className="group block relative bg-gradient-to-br from-white to-gray-50 rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-main-green/30"
     >
       {/* Decorative gradient overlay */}
@@ -65,7 +65,7 @@ const Partnercard = ({ item }) => {
         {/* Bottom gradient line */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-main-green to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
-    </Link>
+    </div>
   );
 };
 
