@@ -2,29 +2,21 @@ import Image from "next/image";
 import React from "react";
 import { FaStar } from "react-icons/fa";
 
-interface Review {
-  id: number;
+interface Testimonial {
+  name: string;
   comment: string;
-  propertyRating: number;
-  agentRating: number;
-  reviewerName: string;
-  reviewerRole: string;
-  createdAt: string;
-  user?: {
-    name: string;
-    email?: string;
-  };
+  image?: string;
+  rating: string | number;
 }
 
 interface ClientCardProps {
-  review: Review;
+  item: Testimonial;
 }
 
-const ClientCard = ({ review }: ClientCardProps) => {
-  // Use reviewer name from the review data
-  const reviewerName = review?.reviewerName || review?.user?.name || "مستخدم";
-  // Calculate average rating from propertyRating and agentRating
-  const rating = review?.propertyRating || 0;
+const ClientCard = ({ item }: ClientCardProps) => {
+  const reviewerName = item?.name || "مستخدم";
+  const rating = parseFloat(String(item?.rating)) || 0;
+  const image = item?.image;
 
   return (
     <div className="border-2 border-gray-200 rounded-s-2xl p-6 space-y-6">
@@ -76,19 +68,29 @@ const ClientCard = ({ review }: ClientCardProps) => {
       <div className="space-y-6">
         <div
           className="font-light leading-8"
-          dangerouslySetInnerHTML={{ __html: review?.comment || "" }}
+          dangerouslySetInnerHTML={{ __html: item?.comment || "" }}
         />
       </div>
       {/* author */}
       <div className="flex items-center gap-2">
-        <div className="size-12 rounded-md bg-main-green/20 flex items-center justify-center text-main-green font-bold text-lg">
-          {reviewerName?.charAt(0)?.toUpperCase()}
-        </div>
+        {image ? (
+          <Image
+            src={image}
+            alt={reviewerName}
+            width={48}
+            height={48}
+            className="size-12 rounded-md object-cover"
+          />
+        ) : (
+          <div className="size-12 rounded-md bg-main-green/20 flex items-center justify-center text-main-green font-bold text-lg">
+            {reviewerName?.charAt(0)?.toUpperCase()}
+          </div>
+        )}
         <div className="space-y-1 text-xs">
           <h3 className="font-bold">{reviewerName}</h3>
           <p className="text-gray-400 flex items-center gap-1">
             <FaStar className="text-yellow-400" />
-            {rating}
+            {rating.toFixed(1)}
           </p>
         </div>
       </div>

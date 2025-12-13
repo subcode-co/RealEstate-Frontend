@@ -3,23 +3,33 @@ import SectionHeader from "../shared/section-header";
 import {
   Carousel,
   CarouselContent,
-  CarouselItem,
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import BlogCard from "../shared/blog-card";
-import { useLocale } from "next-intl";
 import ClientCard from "../shared/client-card";
 import { getLocale, getTranslations } from "next-intl/server";
 import { reviewsService } from "@/features/reviews";
 import { AnimatedSection } from "@/components/motion/animated-section";
 import { AnimatedCarouselItem } from "@/components/motion/animated-carousel-item";
+
 const ClientReviews = async () => {
   const locale = await getLocale();
   const t = await getTranslations("client_reviews");
-  const data = await reviewsService.getReviews();
+
+  let data = [];
+  try {
+    data = await reviewsService.getReviews();
+  } catch (error) {
+    console.error("Failed to fetch client reviews:", error);
+  }
+
+  // Don't render the section if there's no data
+  if (!data || data.length === 0) {
+    return null;
+  }
+
   return (
-    <section className=" space-y-6 py-12">
+    <section className="space-y-6 py-12">
       {/* header */}
       <AnimatedSection className="container">
         <SectionHeader>{t("title")}</SectionHeader>
@@ -51,7 +61,7 @@ const ClientReviews = async () => {
             </div>
           </div>
           <CarouselContent className={"lg:w-[90%] ms-auto max-lg:container"}>
-            {data?.map((item, index) => (
+            {data.map((item, index) => (
               <AnimatedCarouselItem
                 key={index}
                 index={index}

@@ -7,27 +7,47 @@ class ReviewsService extends CrudBase<Review> {
   }
 
   async getReviews(): Promise<Review[]> {
-    const response = await this.getAll();
-    if (!response?.success || !response?.data) return [];
+    try {
+      // Use revalidate: 0 to ensure fresh data on every request
+      const response = await this.getAll({ revalidate: 0 });
 
-    const data = response.data;
-    // Handle extra nesting for testimonials endpoint
-    // Structure seems to be: response.data.data.data
-    if (!Array.isArray(data)) {
-      const nestedData = (data as any).data;
-      if (
-        nestedData &&
-        !Array.isArray(nestedData) &&
-        (nestedData as any).data
-      ) {
-        return Array.isArray((nestedData as any).data)
-          ? (nestedData as any).data
-          : [];
+      if (!response?.success || !response?.data) {
+        console.log("Reviews API response unsuccessful:", response);
+        return [];
       }
-      return Array.isArray(nestedData) ? nestedData : [];
-    }
 
-    return data;
+      // The structure is:
+      // getData returns: { code: 200, success: true, data: <API response> }
+      // API response is: { status: true, message: "...", data: { current_page: 1, data: [...testimonials] } }
+      //
+      // So the path is: response.data.data.data to get the testimonials array
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const apiResponse = response.data as any;
+
+      // apiResponse = { status: true, message: "...", data: { current_page: 1, data: [...] } }
+      const paginatedData = apiResponse?.data;
+
+      // paginatedData = { current_page: 1, data: [...] }
+      if (paginatedData?.data && Array.isArray(paginatedData.data)) {
+        return paginatedData.data;
+      }
+
+      // Fallback: maybe it's directly an array
+      if (Array.isArray(apiResponse)) {
+        return apiResponse;
+      }
+
+      // Another fallback: maybe it's { data: [...] } directly
+      if (apiResponse?.data && Array.isArray(apiResponse.data)) {
+        return apiResponse.data;
+      }
+
+      console.log("Unexpected reviews data structure:", apiResponse);
+      return [];
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      return [];
+    }
   }
 }
 
