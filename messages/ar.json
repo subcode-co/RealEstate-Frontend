@@ -143,6 +143,30 @@
       "passwords_not_match": "كلمتا المرور غير متطابقتين"
     }
   },
+  "Profile": {
+    "my_account": "حسابي",
+    "points_count": "عدد النقاط",
+    "total_points": "العدد الإجمالي للنقاط",
+    "featured_client": "عميل مميز",
+    "join_date": "تاريخ الانضمام",
+    "active_status": "نشط منذ 5 دقائق",
+    "personal_data": "البيانات الشخصية",
+    "save_data": "حفظ البيانات",
+    "name_label": "الاسم",
+    "name_placeholder": "عادل سميد",
+    "email_label": "البريد الإلكتروني",
+    "email_placeholder": "NAME@mail.com",
+    "phone_label": "رقم الهاتف",
+    "my_data": "بياناتي",
+    "my_properties": "عقاراتي",
+    "no_properties": "لا توجد عقارات",
+    "save_success": "تم تحديث الملف الشخصي بنجاح",
+    "save_error": "فشل تحديث الملف الشخصي",
+    "validation_name": "الاسم قصير جداً",
+    "validation_email": "البريد غير صالح",
+    "validation_phone": "رقم الهاتف غير صالح",
+    "back": "رجوع"
+  },
   "Navbar": {
     "address": "العنوان الرئيسي - الرياض",
     "home": "الرئيسية",

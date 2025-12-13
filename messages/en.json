@@ -143,6 +143,30 @@
       "passwords_not_match": "Passwords do not match"
     }
   },
+  "Profile": {
+    "my_account": "My Account",
+    "points_count": "Points Count",
+    "total_points": "Total Points",
+    "featured_client": "Featured Client",
+    "join_date": "Join Date",
+    "active_status": "Active since 5 minutes",
+    "personal_data": "Personal Data",
+    "save_data": "Save Data",
+    "name_label": "Name",
+    "name_placeholder": "Enter your name",
+    "email_label": "Email",
+    "email_placeholder": "Enter your email",
+    "phone_label": "Phone Number",
+    "my_data": "My Data",
+    "my_properties": "My Properties",
+    "no_properties": "No properties found",
+    "save_success": "Profile updated successfully",
+    "save_error": "Failed to update profile",
+    "validation_name": "Name is too short",
+    "validation_email": "Invalid email",
+    "validation_phone": "Invalid phone",
+    "back": "Back"
+  },
   "Navbar": {
     "address": "Main Address - Riyadh",
     "home": "Home",
