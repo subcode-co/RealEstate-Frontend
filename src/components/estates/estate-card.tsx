@@ -1,11 +1,9 @@
 "use client";
 
-import Image from "next/image";
-import React from "react";
-import { BsBookmarkDash } from "react-icons/bs";
-import ryal from "@/assets/ryal.svg";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { BsBookmarkDash } from "react-icons/bs";
 
 interface EstateCardProps {
   withBorder?: boolean;
@@ -162,7 +160,7 @@ const EstateCard = ({
                   {displayData.formattedPrice?.replace(" ريال", "")}
                 </p>
                 <Image
-                  src={ryal}
+                  src={"/images/ryal.svg"}
                   alt="ryal"
                   width={20}
                   height={20}

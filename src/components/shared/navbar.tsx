@@ -19,6 +19,8 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { HiOutlineHome } from "react-icons/hi2";
 import { TbBookmark, TbMessage2, TbUserPentagon } from "react-icons/tb";
 import LocaleSwitcher from "./locale-switcher";
+import CountrySelector from "./country-selector";
+import CurrencySelector from "./currency-selector";
 
 const LocationIcon = () => {
   return (
@@ -202,6 +204,18 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
             </motion.li>
           ))}
         </motion.ul>
+
+        {/* Country Selector */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.7 }}
+          className="max-md:hidden flex items-center gap-2"
+        >
+          <CountrySelector />
+          <CurrencySelector />
+        </motion.div>
+
         {/* auth fav and cart */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
@@ -292,6 +306,11 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
                       <Link href="/blogs">{t("blogs")}</Link>
                     </li>
                   </ul>
+                  {/* Country Selector for Mobile */}
+                  <div className="flex justify-center gap-2 mt-4">
+                    <CountrySelector />
+                    <CurrencySelector />
+                  </div>
                   {/* auth fav and cart */}
                   <div className="flex items-center justify-center gap-4 mt-8 ">
                     <Link href="/wishlist">

@@ -1,7 +1,6 @@
 import Image from "next/image";
 import React from "react";
 import { BsBookmarkDash } from "react-icons/bs";
-import ryal from "@/assets/ryal.svg";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
@@ -88,7 +87,7 @@ const StatesCard = ({ withBorder = true, property = null }) => {
             </p>
             {!property.priceHidden && (
               <Image
-                src={ryal}
+                src={"/images/ryal.svg"}
                 alt="ryal"
                 width={20}
                 height={20}

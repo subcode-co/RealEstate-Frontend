@@ -1,4 +1,5 @@
 import { CrudBase } from "@/shared/lib/crud-base";
+import { getData } from "@/shared/lib/fetch-methods";
 import { Settings } from "../types/settings.types";
 
 class SettingsService extends CrudBase<Settings> {
@@ -21,12 +22,15 @@ class SettingsService extends CrudBase<Settings> {
    * @returns Color string or default
    */
   async getTopnavColor(): Promise<string> {
-    const response = await this.custom("/topnav-color", "GET", {
+    // Call /topnav-color directly (not under /settings)
+    const response = await getData<any>({
+      url: "/topnav-color",
       revalidate: 0,
     });
-    return response?.success && response?.data?.color
-      ? response.data.color
-      : "#000000";
+    // The API response structure is: { success, data: { success, data: { topnavColor: "#xxx" } } }
+    return response?.success && response?.data?.data?.topnavColor
+      ? response.data.data.topnavColor
+      : "#1a1a1a";
   }
 }
 

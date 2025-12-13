@@ -1,12 +1,18 @@
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import OfferCard from "@/components/shared/offer-card";
 import { offersService } from "@/features/offers";
+import { getSettings } from "@/lib/settings-actions";
 import React from "react";
 import { getTranslations } from "next-intl/server";
 
 const OffersPage = async () => {
   const t = await getTranslations("offers_page");
   const offers = await offersService.getOffers();
+  const settings = await getSettings();
+
+  // Get WhatsApp number from settings
+  const whatsappNumber =
+    settings?.contactInfo?.sitePhone?.replace(/[^0-9]/g, "") || "966";
 
   return (
     <main className="space-y-6">
@@ -30,6 +36,7 @@ const OffersPage = async () => {
                 price={offer.price}
                 validityDays={offer.validityDays}
                 features={offer.features}
+                whatsappNumber={whatsappNumber}
               />
             ))}
           </div>

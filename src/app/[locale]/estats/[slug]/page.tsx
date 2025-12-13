@@ -1,4 +1,3 @@
-import ryal from "@/assets/ryal.svg";
 import PropertyActions from "@/components/estates/property-actions";
 import PropertyChat from "@/components/estates/property-chat";
 import PropertyGallery from "@/components/estates/property-gallery";
@@ -91,7 +90,7 @@ export default async function EstateSinglePage({ params }) {
                     {property.formattedPrice?.replace(" ريال", "")}
                   </p>
                   <Image
-                    src={ryal}
+                    src={"/images/ryal.svg"}
                     alt="ryal"
                     width={20}
                     height={20}

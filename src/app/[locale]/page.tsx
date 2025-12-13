@@ -43,12 +43,13 @@ export default async function Home() {
         settings={settings}
         heroContent={contentSections[0]}
       />
+      <ServicesSection coreValues={coreValues} />
+
       <AboutSection
         sections={contentSections}
         platformRating={platformRating}
         statistics={statistics}
       />
-      <ServicesSection coreValues={coreValues} />
       <StateFilterSection />
       <StatesSection properties={featuredProperties} />
       <ClientReviews />

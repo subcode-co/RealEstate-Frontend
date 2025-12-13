@@ -28,8 +28,10 @@ import { toast } from "sonner";
 export function LoginForm() {
   const locale = useLocale();
   const t = useTranslations("login");
+  const tSignUp = useTranslations("sign_up");
   const tv = useTranslations("login.validation");
   const [showPassword, setShowPassword] = useState(false);
+  const [activeTab, setActiveTab] = useState<"seeker" | "owner">("seeker");
   const inputStyle = "!h-14 rounded-none rounded-s-lg";
   const router = useRouter();
   const { setUser } = useContext(UserContext);
@@ -70,103 +72,133 @@ export function LoginForm() {
     }
   }
 
+  const activeStyle =
+    "bg-white text-main-green border border-main-green shadow-xl scale-105";
+
   return (
-    <div className="lg:p-10 p-8 border border-main-gray rounded-lg ">
-      <Form {...form}>
-        <form
-          dir={locale === "ar" ? "rtl" : "ltr"}
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 w-full "
+    <>
+      {/* Decorative User/Agent Tabs */}
+      <div className="flex items-center justify-center gap-4 mb-6">
+        <button
+          type="button"
+          onClick={() => setActiveTab("seeker")}
+          className={`px-8 py-3 rounded-lg font-semibold transition-all duration-300 ${
+            activeTab === "seeker"
+              ? activeStyle
+              : "bg-main-light-gray text-gray-600 hover:bg-gray-200"
+          }`}
         >
-          <FormField
-            control={form.control}
-            name="mobile"
-            render={({ field }) => (
-              <FormItem className="">
-                <FormLabel className="">{t("phone_number")}</FormLabel>
-                <FormControl>
-                  <PhoneInput
-                    {...field}
-                    defaultCountry="sa"
-                    withFlagShown
-                    withFullNumber
-                    inputClassName={`${inputStyle} w-full`}
-                    containerClassName={`${inputStyle} w-full`}
-                    inputComponent={Input}
-                  />
-                </FormControl>
-                <FormMessage className="text-xs" />
-              </FormItem>
-            )}
-          />
+          {tSignUp("seeker")}
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("owner")}
+          className={`px-8 py-3 rounded-lg font-semibold transition-all duration-300 ${
+            activeTab === "owner"
+              ? activeStyle
+              : "bg-main-light-gray text-gray-600 hover:bg-gray-200"
+          }`}
+        >
+          {tSignUp("owner")}
+        </button>
+      </div>
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem className="">
-                <FormLabel className="">{t("password")}</FormLabel>
-                <div className="relative">
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    placeholder={t("password_placeholder")}
-                    {...field}
-                    className={`${inputStyle} pr-10`}
-                  />
-                  <button
-                    type="button"
-                    className="absolute end-3 top-1/2 -translate-y-1/2 text-main-green"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <FaEyeSlash size={20} />
-                    ) : (
-                      <FaEye size={20} />
-                    )}
-                  </button>
-                </div>
-                <FormMessage className="text-xs" />
-              </FormItem>
-            )}
-          />
-
-          <div>
-            <Link
-              href="/auth/forgot-password"
-              className="text-gray-400 underline text-sm hover:text-main-green"
-            >
-              {t("forgot_password")}
-            </Link>
-          </div>
-
-          <div className="w-full flex items-center justify-between">
-            <Button
-              disabled={isSubmitting}
-              type="submit"
-              className="rounded-none h-12 bg-main-green text-white lg:py-4 lg:!px-8 p-3 rounded-tr-2xl max-lg:text-xs font-semibold flex items-center gap-2 w-fit"
-            >
-              {isSubmitting ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <FaLongArrowAltRight size={20} />
+      <div className="lg:p-10 p-8 border border-main-gray rounded-lg ">
+        <Form {...form}>
+          <form
+            dir={locale === "ar" ? "rtl" : "ltr"}
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 w-full "
+          >
+            <FormField
+              control={form.control}
+              name="mobile"
+              render={({ field }) => (
+                <FormItem className="">
+                  <FormLabel className="">{t("phone_number")}</FormLabel>
+                  <FormControl>
+                    <PhoneInput
+                      {...field}
+                      defaultCountry="sa"
+                      withFlagShown
+                      withFullNumber
+                      inputClassName={`${inputStyle} w-full`}
+                      containerClassName={`${inputStyle} w-full`}
+                      inputComponent={Input}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
               )}
-              <p>{t("submit_button")}</p>
-            </Button>
-            <div className="text-main-navy text-sm flex items-center gap-1">
-              <p>{t("no_account")}</p>
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem className="">
+                  <FormLabel className="">{t("password")}</FormLabel>
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder={t("password_placeholder")}
+                      {...field}
+                      className={`${inputStyle} pr-10`}
+                    />
+                    <button
+                      type="button"
+                      className="absolute end-3 top-1/2 -translate-y-1/2 text-main-green"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <FaEyeSlash size={20} />
+                      ) : (
+                        <FaEye size={20} />
+                      )}
+                    </button>
+                  </div>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+
+            <div>
               <Link
-                href={"/auth/sign-up"}
-                className="text-main-green font-semibold hover:underline"
+                href="/auth/forgot-password"
+                className="text-gray-400 underline text-sm hover:text-main-green"
               >
-                <p>{t("create_account")}</p>
+                {t("forgot_password")}
               </Link>
             </div>
-          </div>
-        </form>
-      </Form>
-    </div>
+
+            <div className="w-full flex items-center justify-between">
+              <Button
+                disabled={isSubmitting}
+                type="submit"
+                className="rounded-none h-12 bg-main-green text-white lg:py-4 lg:!px-8 p-3 rounded-tr-2xl max-lg:text-xs font-semibold flex items-center gap-2 w-fit"
+              >
+                {isSubmitting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <FaLongArrowAltRight size={20} />
+                )}
+                <p>{t("submit_button")}</p>
+              </Button>
+              <div className="text-main-navy text-sm flex items-center gap-1">
+                <p>{t("no_account")}</p>
+                <Link
+                  href={"/auth/sign-up"}
+                  className="text-main-green font-semibold hover:underline"
+                >
+                  <p>{t("create_account")}</p>
+                </Link>
+              </div>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </>
   );
 }
 
 export default LoginForm;
-
