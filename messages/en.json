@@ -7,6 +7,7 @@
       "view_all": "View All"
     }
   },
+
   "about": "about",
   "contact": "contact",
   "Complaints": {
@@ -178,7 +179,8 @@
     "blogs": "Blogs",
     "deals": "Deals",
     "offers": "Offers",
-    "ads": "Ads"
+    "ads": "Ads",
+    "aboutus": "About Us"
   },
   "breadcrumbs": {
     "home": "Home",

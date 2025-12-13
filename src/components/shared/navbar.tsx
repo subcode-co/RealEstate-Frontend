@@ -195,7 +195,7 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
             { href: "/blogs", label: "blogs" },
             ...(user ? [{ href: "/deals", label: "deals" }] : []),
             { href: "/offers", label: "offers" },
-            { href: "/", label: "ads" },
+            { href: "/about-us", label: "aboutus" },
           ].map((item, index) => (
             <motion.li
               key={index}
@@ -237,7 +237,7 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
               </button>
             </>
           ) : (
-            <Link href="/auth/sign-up">
+            <Link href="/auth/login">
               <TbUserPentagon className="text-white text-2xl hover:text-main-green" />
             </Link>
           )}
@@ -287,7 +287,7 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
                       <Link href="/offers">{t("offers")}</Link>
                     </li>
                     <li>
-                      <Link href="/">{t("ads")}</Link>
+                      <Link href="/about-us">{t("aboutus")}</Link>
                     </li>
                     <li>
                       <Link href="/packages">{t("packages")}</Link>
@@ -319,7 +319,7 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
                         </button>
                       </div>
                     ) : (
-                      <Link href="/auth/sign-up">
+                      <Link href="/auth/login">
                         <TbUserPentagon className="text-white text-2xl hover:text-main-green" />
                       </Link>
                     )}

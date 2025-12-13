@@ -22,9 +22,9 @@ function useCarousel() {
 function Carousel({
   orientation = "horizontal",
   opts,
-  setApi = null,
-  plugins = null,
-  className = "",
+  setApi,
+  plugins,
+  className,
   children,
   ...props
 }) {

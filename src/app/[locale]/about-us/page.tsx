@@ -5,6 +5,7 @@ import React from "react";
 import { getTranslations } from "next-intl/server";
 
 const AboutUsPage = async () => {
+  const t = await getTranslations("breadcrumbs");
   const data = await aboutService.getAboutData();
   const sections = data?.sections || [];
 
@@ -12,7 +13,6 @@ const AboutUsPage = async () => {
   const firstSection = sections[0];
   // Remaining sections (alternating layout)
   const remainingSections = sections.slice(1);
-  const t = await getTranslations("breadcrumbs");
 
   return (
     <main className="space-y-12">
