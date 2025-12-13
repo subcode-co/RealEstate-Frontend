@@ -40,7 +40,7 @@ export default function PropertiesCarousel({
           </CarouselItem>
         ))}
       </CarouselContent>
-      <div className="flex items-center justify-center gap-3 mt-4">
+      <div className="flex items-center justify-center gap-3 mt-4" dir={"ltr"}>
         <CarouselPrevious className="static translate-0" />
         <CarouselNext className="static translate-0" />
       </div>

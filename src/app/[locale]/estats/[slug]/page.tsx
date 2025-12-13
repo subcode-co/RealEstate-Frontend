@@ -33,6 +33,7 @@ export default async function EstateSinglePage({ params }) {
 
   // Fetch property data
   const propertyResponse = await getPropertyBySlug(slug);
+  console.log({ propertyResponse });
 
   if (!propertyResponse.success || !propertyResponse.data) {
     notFound();
@@ -241,25 +242,27 @@ export default async function EstateSinglePage({ params }) {
         </div>
 
         <div className="lg:w-1/2 w-full space-y-6">
-          {/* reviews */}
-          <div className="rounded-xl border">
-            <div className="p-6 border-b">
-              <h2 className="font-bold">
-                {t("reviews_title")}
-                {property.totalReviews > 0 && (
-                  <span className="text-sm text-gray-500 mr-2 ltr:ml-2">
-                    {t("reviews_subtitle", {
-                      count: property.totalReviews,
-                      rating: property.averageRating,
-                    })}
-                  </span>
-                )}
-              </h2>
+          {/* reviews - hide if empty */}
+          {property.reviews && property.reviews.length > 0 && (
+            <div className="rounded-xl border">
+              <div className="p-6 border-b">
+                <h2 className="font-bold">
+                  {t("reviews_title")}
+                  {property.totalReviews > 0 && (
+                    <span className="text-sm text-gray-500 mr-2 ltr:ml-2">
+                      {t("reviews_subtitle", {
+                        count: property.totalReviews,
+                        rating: property.averageRating,
+                      })}
+                    </span>
+                  )}
+                </h2>
+              </div>
+              <div className="p-6">
+                <PropertyReviews reviews={property.reviews} locale={locale} />
+              </div>
             </div>
-            <div className="p-6">
-              <PropertyReviews reviews={property.reviews} locale={locale} />
-            </div>
-          </div>
+          )}
 
           {/* payment */}
           <div className="rounded-xl border">
