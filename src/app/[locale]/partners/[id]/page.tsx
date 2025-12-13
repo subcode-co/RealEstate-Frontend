@@ -1,9 +1,8 @@
-import EstateCard from "@/components/estates/estate-card";
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
+import PropertiesCarousel from "@/components/shared/properties-carousel";
 import { partnersService } from "@/features/partners";
-import { getCompanyProperties } from "@/lib/companies-actions"; // Import the new action
-import { Property } from "@/types";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getCompanyProperties } from "@/lib/companies-actions";
+import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Markdown from "react-markdown";
@@ -26,10 +25,10 @@ const SinglePartner = async ({ params }) => {
   const properties = propertiesResponse.success ? propertiesResponse.data : [];
 
   return (
-    <main className="space-y-12 bg-[#F9FAFB] min-h-screen pb-12">
+    <main className="space-y-12 min-h-screen pb-12 container mx-auto px-4">
       {/* Header */}
       <div className="bg-white p-4 pb-8 shadow-sm">
-        <div className="container space-y-4">
+        <div className="space-y-4">
           <CustomBreadcrumbs
             items={[
               { label: t("partners"), href: "/partners" },
@@ -105,15 +104,7 @@ const SinglePartner = async ({ params }) => {
 
           {/* Properties Grid */}
           {properties && properties.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {properties.map((property: Property) => (
-                <EstateCard
-                  key={property.id}
-                  property={property}
-                  withBorder={true}
-                />
-              ))}
-            </div>
+            <PropertiesCarousel properties={properties} />
           ) : (
             <div className="bg-white p-8 rounded-xl text-center border border-gray-100">
               <p className="text-gray-500">
@@ -123,31 +114,6 @@ const SinglePartner = async ({ params }) => {
           )}
         </div>
 
-        {/* Logo Card - Takes less width, on the right in RTL (so order 1 visually if LTR, but Design shows Logo on Right? No, User said: "here is the look i want ... ATS logo on right" (in image it's on right).
-             Wait, the provided image `uploaded_image_1765589931269.png` shows:
-             - Header: "Clients we trust"
-             - Main Content Area:
-               - Right side: Info (Name, Type, Address, Desc)
-               - Left side: Logo (Big Green Box with ATS)
-             
-             In RTL (Arabic): 
-             - Right side is "Start". 
-             - Left side is "End".
-             
-             So:
-             - Info at Start (Right).
-             - Logo at End (Left).
-
-             My Grid:
-             - Info: `lg:col-span-8`
-             - Logo: `lg:col-span-4`
-             
-             If I want Info on Right (Start) and Logo on Left (End):
-             - Just standard flow in RTL.
-             - Info first in DOM?
-             - If RTL: First element is Right.
-             - So Info first, Logo second.
-        */}
         <div className="lg:col-span-4 order-1 lg:order-2">
           <div className="bg-main-green/90 rounded-xl p-8 flex items-center justify-center aspect-square shadow-sm sticky top-24">
             <div className="relative w-full h-full">
@@ -155,19 +121,7 @@ const SinglePartner = async ({ params }) => {
                 src={company.logoUrl}
                 alt={company.name}
                 fill
-                className="object-contain filter brightness-0 invert" // Make logo white like the ATS example if it's a solid logo, or just contain if it's colored
-                // Actually the user image shows white text "ATS". The logoUrl fetches a PNG.
-                // If the user logo is colored, maybe we shouldn't invert.
-                // But the design shows a green card.
-                // Let's keep it clean: simple object-contain.
-                // If it looks bad on green, we might need a white container.
-                // The design shows the logo integrated into the green background.
-                // Let's assume the logo matches or we wrap it in a white box if needed.
-                // Re-checking design: It's a GREEN BOX with WHITE TEXT "ATS".
-                // If the API returns a colored logo, putting it on green might clash.
-                // Safer bet: White card with the logo inside it?
-                // OR: Just display the image as is.
-                // Let's try to match the "Green Card" look but maybe put the image inside nicely.
+                className="object-contain filter brightness-0 invert"
               />
             </div>
           </div>

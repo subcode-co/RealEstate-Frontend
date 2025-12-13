@@ -204,7 +204,9 @@
     "notifications": "Notifications",
     "deals": "Deals",
     "complaints": "Complaints",
-    "details": "Property Details"
+    "details": "Property Details",
+    "properties": "Properties",
+    "no_properties": "No properties found for this partner."
   },
   "offers_page": {
     "title": "Offers",

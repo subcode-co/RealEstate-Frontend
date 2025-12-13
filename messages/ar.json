@@ -204,7 +204,9 @@
     "notifications": "الإشعارات",
     "deals": "الصفقات",
     "complaints": "الشكاوى",
-    "details": "تفاصيل العقار"
+    "details": "تفاصيل العقار",
+    "properties": "العقارات",
+    "no_properties": "لا توجد عقارات لهذا الشريك"
   },
   "offers_page": {
     "title": "العروض",
