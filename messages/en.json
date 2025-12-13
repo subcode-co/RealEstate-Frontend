@@ -165,7 +165,9 @@
     "validation_name": "Name is too short",
     "validation_email": "Invalid email",
     "validation_phone": "Invalid phone",
-    "back": "Back"
+    "back": "Back",
+    "edit_data": "Edit Data",
+    "cancel": "Cancel"
   },
   "Navbar": {
     "address": "Main Address - Riyadh",

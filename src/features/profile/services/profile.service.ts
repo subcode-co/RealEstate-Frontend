@@ -10,12 +10,13 @@ class ProfileService extends CrudBase<ProfileData> {
   // Override to match specific profile response structure if needed, or use generic
   async getProfile(): Promise<ProfileData | null> {
     const response = await this.custom("", "GET");
-    if (response?.success && response?.data) {
-      // The API likely returns { data: { user: ... } } or just { data: ... }
-      // Based on user-context, it returns { data: { status: true, data: User } }
-      // We need to be careful with the structure.
-      // Let's assume for now it matches the documented ApiResponse pattern
-      return (response.data as any)?.data || response.data;
+    if (response?.status && response?.data) {
+      const apiData = response.data as any; // The 'data' field in the JSON response
+      return {
+        ...apiData,
+        phone: apiData.mobile || apiData.phone, // Map mobile to phone for consistency
+        points: apiData.pointsBalance,
+      };
     }
     return null;
   }
@@ -36,7 +37,8 @@ class ProfileService extends CrudBase<ProfileData> {
       isFormData = true;
     }
 
-    const response = await this.custom("/update", "POST", payload, {
+    const response = await this.custom("", "POST", {
+      data: payload,
       isFormData,
     });
 

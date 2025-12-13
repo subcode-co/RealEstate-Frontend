@@ -165,7 +165,9 @@
     "validation_name": "الاسم قصير جداً",
     "validation_email": "البريد غير صالح",
     "validation_phone": "رقم الهاتف غير صالح",
-    "back": "رجوع"
+    "back": "رجوع",
+    "edit_data": "تعديل البيانات",
+    "cancel": "إلغاء"
   },
   "Navbar": {
     "address": "العنوان الرئيسي - الرياض",

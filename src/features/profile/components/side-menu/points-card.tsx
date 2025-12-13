@@ -9,16 +9,40 @@ const PointsCard = ({ points = 0 }: PointsCardProps) => {
   const t = useTranslations("Profile");
 
   return (
-    <Card className="shadow-sm border-gray-100">
-      <CardContent className="p-6 flex flex-col items-center justify-center gap-4">
-        <div className="text-center space-y-1">
-          <h3 className="font-bold text-main-navy">{t("points_count")}</h3>
-          <p className="text-xs text-gray-500">{t("total_points")}</p>
+    <Card className="shadow-lg border-none rounded-xl bg-white overflow-hidden">
+      <CardContent className="p-6 flex items-center justify-between">
+        <div className="space-y-1 text-right">
+          <h3 className="font-bold text-lg text-main-navy">
+            {t("points_count")}
+          </h3>
+          <p className="text-sm text-gray-500">{t("total_points")}</p>
         </div>
 
-        <div className="relative size-20 flex items-center justify-center rounded-full border-4 border-main-green/30 text-main-green font-bold text-xl">
-          <span className="absolute inset-0 rounded-full border-4 border-main-green border-t-transparent -rotate-45"></span>
-          {points}
+        <div className="relative size-16 flex items-center justify-center">
+          {/* Simple SVG Circle */}
+          <svg className="size-full -rotate-90" viewBox="0 0 36 36">
+            {/* Background Circle */}
+            <path
+              className="text-gray-100"
+              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+            />
+            {/* Progress Circle (e.g. 75%) */}
+            <path
+              className="text-main-green"
+              strokeDasharray="75, 100"
+              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+          </svg>
+          <span className="absolute text-sm font-bold text-main-green">
+            {points}
+          </span>
         </div>
       </CardContent>
     </Card>

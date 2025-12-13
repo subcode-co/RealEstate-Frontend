@@ -54,8 +54,19 @@ export default function UserContextProvider({
         return;
       }
 
-      if (response?.success && response?.data?.status) {
-        setUser(response.data.data);
+      if (response?.success && response?.data) {
+        // The API returns { status: true, message: "...", data: User }
+        // Our getData wrapper might unwrap some layers?
+        // Let's inspect the types. getData returns ApiResponse<T>.
+        // The T here is { data: User, status: boolean }.
+        // So response.data is the wrapper, and response.data.data is the User.
+        const apiUser = response.data.data as any;
+        const mappedUser: User = {
+          ...apiUser,
+          phone: apiUser.mobile || apiUser.phone, // Map mobile to phone
+          points: apiUser.pointsBalance,
+        };
+        setUser(mappedUser);
       } else {
         setUser(null);
         if (typeof window !== "undefined") {

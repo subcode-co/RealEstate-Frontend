@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "@/context/user-context";
 import ProfileSidebar from "./side-menu/profile-sidebar";
 import ProfileTabs from "./tabs/profile-tabs";
@@ -39,6 +39,8 @@ const ProfileLayout = () => {
     },
   });
 
+  const [isEditing, setIsEditing] = useState(false);
+
   const onSubmit = async (values: UpdateProfileRequest) => {
     // Optimistic UI or wait for response? Wait is safer.
     try {
@@ -46,6 +48,7 @@ const ProfileLayout = () => {
       if (success) {
         toast.success(t("save_success"));
         await fetchUserProfile(); // Refresh data
+        setIsEditing(false); // Exit edit mode on success
       } else {
         toast.error(t("save_error"));
       }
@@ -78,7 +81,7 @@ const ProfileLayout = () => {
         <form
           id="profile-form"
           onSubmit={methods.handleSubmit(onSubmit)}
-          className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
         >
           {/* Main Content (Tabs) - Left Side in LTR (Col Span 3) */}
           {/* But design has sidebar on Right in RTL.
@@ -101,15 +104,17 @@ const ProfileLayout = () => {
                     That is standard flow.
                 */}
 
-          <div className="lg:col-span-1 order-1">
+          <div className="lg:col-span-4 order-1">
             <ProfileSidebar
               user={user}
               isSubmitting={methods.formState.isSubmitting}
+              isEditing={isEditing}
+              onEditToggle={() => setIsEditing(!isEditing)}
             />
           </div>
 
-          <div className="lg:col-span-3 order-2">
-            <ProfileTabs />
+          <div className="lg:col-span-8 order-2">
+            <ProfileTabs isEditing={isEditing} />
           </div>
         </form>
       </FormProvider>

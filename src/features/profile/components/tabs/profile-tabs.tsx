@@ -3,32 +3,32 @@ import { useTranslations } from "next-intl";
 import MyDataForm from "./my-data-form";
 import { Card } from "@/components/ui/card";
 
-const ProfileTabs = () => {
+const ProfileTabs = ({ isEditing }: { isEditing?: boolean }) => {
   const t = useTranslations("Profile");
 
   return (
-    <Card className="shadow-sm border-gray-100 min-h-[500px]">
+    <div className="min-h-[500px]">
       <Tabs defaultValue="my-data" className="w-full">
-        <div className="p-6 pb-0 border-b border-gray-100">
-          <TabsList className="bg-transparent gap-8 p-0 h-auto justify-start w-full">
-            <TabsTrigger
-              value="my-data"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-main-green data-[state=active]:text-main-green data-[state=active]:shadow-none pb-4 text-base px-0"
-            >
-              {t("my_data")}
-            </TabsTrigger>
+        <div className="flex justify-end mb-6">
+          <TabsList className="bg-transparent gap-4 p-0 h-auto w-auto flex-nowrap">
             <TabsTrigger
               value="my-properties"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-main-green data-[state=active]:text-main-green data-[state=active]:shadow-none pb-4 text-base px-0"
+              className="bg-white border border-gray-200 text-gray-600 rounded-lg px-8 py-3 h-12 min-w-[120px] data-[state=active]:bg-white data-[state=active]:text-main-navy data-[state=active]:shadow-sm data-[state=active]:border-gray-200"
             >
               {t("my_properties")}
+            </TabsTrigger>
+            <TabsTrigger
+              value="my-data"
+              className="bg-white border border-gray-200 text-gray-600 rounded-lg px-8 py-3 h-12 min-w-[120px] data-[state=active]:bg-main-green/10 data-[state=active]:text-main-green data-[state=active]:border-main-green data-[state=active]:shadow-sm data-[state=active]:font-bold"
+            >
+              {t("my_data")}
             </TabsTrigger>
           </TabsList>
         </div>
 
         <div className="p-6">
           <TabsContent value="my-data" className="mt-0">
-            <MyDataForm />
+            <MyDataForm isEditing={isEditing} />
           </TabsContent>
           <TabsContent value="my-properties" className="mt-0">
             <div className="py-12 text-center text-gray-500">
@@ -37,7 +37,7 @@ const ProfileTabs = () => {
           </TabsContent>
         </div>
       </Tabs>
-    </Card>
+    </div>
   );
 };
 

@@ -4,9 +4,20 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  mobile?: string;
   phone?: string;
   avatar?: string;
   role?: string;
+  pointsBalance?: number;
+  totalPointsEarned?: number;
+  totalPointsUsed?: number;
+  verificationCode?: string | null;
+  mobileVerified?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  // Computed/Mapped fields for UI
+  rating?: number;
+  reviews_count?: number;
   [key: string]: any;
 }
 
