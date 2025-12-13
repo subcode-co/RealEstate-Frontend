@@ -1,20 +1,4 @@
 "use client";
-import { Link } from "@/i18n/navigation";
-import Image from "next/image";
-import { FiInbox, FiPhoneCall } from "react-icons/fi";
-import {
-  TbBookmark,
-  TbFlag3,
-  TbMessage2,
-  TbUserPentagon,
-} from "react-icons/tb";
-import { HiOutlineHome } from "react-icons/hi2";
-import { GiHamburgerMenu } from "react-icons/gi";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import {
   Sheet,
   SheetContent,
@@ -23,12 +7,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import LocaleSwitcher from "./locale-switcher";
-import { useContext } from "react";
 import { UserContext } from "@/context/user-context";
+import { Link } from "@/i18n/navigation";
 import { LogInIcon } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { motion } from "motion/react";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { useContext } from "react";
+import { FiInbox, FiPhoneCall } from "react-icons/fi";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { HiOutlineHome } from "react-icons/hi2";
+import { TbBookmark, TbMessage2, TbUserPentagon } from "react-icons/tb";
+import LocaleSwitcher from "./locale-switcher";
 
 const LocationIcon = () => {
   return (
@@ -97,8 +87,6 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
   // Extract settings data with fallbacks
   const contactInfo = settings?.contactInfo || {};
   const siteInfo = settings?.siteInfo || {};
-
-  console.log({ siteInfo });
 
   return (
     <div className="container py-4 space-y-2 bg-white">
@@ -229,9 +217,12 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
           </Link>
           {user ? (
             <>
-              <span className="text-white text-sm font-medium">
+              <Link
+                href="/profile"
+                className="text-white text-sm font-medium hover:text-main-green transition-colors"
+              >
                 {user.name}
-              </span>
+              </Link>
               <button onClick={logout} title="Logout">
                 <LogInIcon className="text-white text-2xl hover:text-main-green" />
               </button>

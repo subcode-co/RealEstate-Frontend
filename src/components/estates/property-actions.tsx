@@ -54,8 +54,11 @@ export default function PropertyActions({ property, showFooter = false }) {
   // Header Actions
   return (
     <div className="flex flex-col gap-2 max-md:flex-row">
-      <button className="w-36 h-12 border border-main-navy text-xs font-medium text-main-navy hover:bg-main-navy hover:text-white px-4 py-2 rounded-s-lg flex items-center gap-2 transition-all duration-300">
-        <LuBellRing className="size-4 text-main-green" /> {t("show_more")}
+      <button
+        onClick={handleWhatsApp}
+        className="w-36 h-12 border border-main-navy text-xs font-medium text-main-navy hover:bg-main-navy hover:text-white px-4 py-2 rounded-s-lg flex items-center gap-2 transition-all duration-300"
+      >
+        <FaWhatsapp className="size-4 text-main-green" /> {t("call_us")}
       </button>
       <button
         onClick={handleWhatsApp}

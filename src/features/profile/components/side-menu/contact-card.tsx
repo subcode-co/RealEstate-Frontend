@@ -98,7 +98,7 @@ const ContactCard = ({
                   But the user wants to Toggle edit.
                   I will stick to "Edit Data" (or a suitable label) for View Mode, but style it GREEN as per design. 
                   Actually, let's use the translation key but style it green. 
-              */}
+              */}{" "}
               {t("edit_data")}
             </Button>
           )}

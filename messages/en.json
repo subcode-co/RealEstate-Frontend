@@ -8,6 +8,13 @@
     }
   },
 
+  "featured_users": {
+    "title": "Trusted Customers",
+    "search_placeholder": "Search",
+    "no_users": "No users found",
+    "transfer_company": "Transfer Company"
+  },
+
   "about": "about",
   "contact": "contact",
   "Complaints": {
@@ -206,7 +213,8 @@
     "complaints": "Complaints",
     "details": "Property Details",
     "properties": "Properties",
-    "no_properties": "No properties found for this partner."
+    "no_properties": "No properties found for this partner.",
+    "featured_users": "Trusted Customers"
   },
   "offers_page": {
     "title": "Offers",

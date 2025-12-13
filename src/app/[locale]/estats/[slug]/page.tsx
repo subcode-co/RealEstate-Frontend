@@ -1,28 +1,23 @@
-import React from "react";
-import { notFound } from "next/navigation";
-import { getLocale, getTranslations } from "next-intl/server";
-import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
-import { PiBathtub, PiPhoneCallLight } from "react-icons/pi";
-import {
-  MdOutlineBed,
-  MdOutlineMoveToInbox,
-  MdOutlineTsunami,
-} from "react-icons/md";
 import ryal from "@/assets/ryal.svg";
-import Image from "next/image";
-import { TiHomeOutline } from "react-icons/ti";
-import { IoIosCheckmarkCircle } from "react-icons/io";
-import { BsBank } from "react-icons/bs";
-import { FaMoneyBillWave } from "react-icons/fa";
-import StatesSection from "@/components/home/states-section";
-import PropertyGallery from "@/components/estates/property-gallery";
 import PropertyActions from "@/components/estates/property-actions";
-import PropertyReviews from "@/components/estates/property-reviews";
 import PropertyChat from "@/components/estates/property-chat";
+import PropertyGallery from "@/components/estates/property-gallery";
+import PropertyReviews from "@/components/estates/property-reviews";
+import StatesSection from "@/components/home/states-section";
+import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import {
   getPropertyBySlug,
   getSimilarProperties,
 } from "@/lib/property-actions";
+import { getLocale, getTranslations } from "next-intl/server";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { BsBank } from "react-icons/bs";
+import { FaMoneyBillWave } from "react-icons/fa";
+import { IoIosCheckmarkCircle } from "react-icons/io";
+import { MdOutlineBed } from "react-icons/md";
+import { PiBathtub, PiPhoneCallLight } from "react-icons/pi";
+import { TiHomeOutline } from "react-icons/ti";
 
 export default async function EstateSinglePage({ params }) {
   // In Next.js 15, params is a Promise and must be awaited
@@ -34,7 +29,6 @@ export default async function EstateSinglePage({ params }) {
 
   // Fetch property data
   const propertyResponse = await getPropertyBySlug(slug);
-  console.log({ propertyResponse });
 
   if (!propertyResponse.success || !propertyResponse.data) {
     notFound();

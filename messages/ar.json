@@ -8,6 +8,13 @@
     }
   },
 
+  "featured_users": {
+    "title": "عملاء نثق بهم",
+    "search_placeholder": "بحث",
+    "no_users": "لا يوجد عملاء",
+    "transfer_company": "شركة نقل"
+  },
+
   "about": "عن",
   "contact": "اتصل بنا",
   "Complaints": {
@@ -206,7 +213,8 @@
     "complaints": "الشكاوى",
     "details": "تفاصيل العقار",
     "properties": "العقارات",
-    "no_properties": "لا توجد عقارات لهذا الشريك"
+    "no_properties": "لا توجد عقارات لهذا الشريك",
+    "featured_users": "عملاء نثق بهم"
   },
   "offers_page": {
     "title": "العروض",

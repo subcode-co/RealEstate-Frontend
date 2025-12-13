@@ -1,19 +1,18 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { useForm, FormProvider } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useContext, useState } from "react";
+import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import { UserContext } from "@/context/user-context";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useContext, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import * as z from "zod";
+import { profileService } from "../services/profile.service";
+import { UpdateProfileRequest } from "../types/profile.types";
 import ProfileSidebar from "./side-menu/profile-sidebar";
 import ProfileTabs from "./tabs/profile-tabs";
-import { profileService } from "../services/profile.service";
-import { toast } from "sonner";
-import { UpdateProfileRequest } from "../types/profile.types";
-import SectionHeader from "@/components/shared/section-header";
-import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
-import { useRouter } from "next/navigation";
 
 const ProfileLayout = () => {
   const t = useTranslations("Profile");
