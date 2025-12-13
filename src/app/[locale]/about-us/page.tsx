@@ -1,5 +1,7 @@
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
+import FAQSection from "@/components/shared/faq-section";
 import { aboutService } from "@/features/about";
+import { getFaqs } from "@/lib/faq-actions";
 import Image from "next/image";
 import React from "react";
 import { getTranslations } from "next-intl/server";
@@ -8,6 +10,9 @@ const AboutUsPage = async () => {
   const t = await getTranslations("breadcrumbs");
   const data = await aboutService.getAboutData();
   const sections = data?.sections || [];
+
+  // Fetch FAQs
+  const faqs = await getFaqs();
 
   // First section (with image at top)
   const firstSection = sections[0];
@@ -118,6 +123,9 @@ const AboutUsPage = async () => {
           })}
         </div>
       )}
+
+      {/* FAQ Section */}
+      <FAQSection faqs={faqs} />
     </main>
   );
 };

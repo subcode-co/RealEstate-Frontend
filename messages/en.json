@@ -466,5 +466,9 @@
       "sale": "Sale",
       "rent": "Rent"
     }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "brand": "Halool Real Estate"
   }
 }
