@@ -26,7 +26,11 @@ class PartnersService extends CrudBase<Partner> {
    */
   async getPartnerById(id: string | number): Promise<Partner | null> {
     const response = await this.getById(id);
-    return response?.success && response?.data ? response.data : null;
+    // The API response is wrapped by getData: { code, success, data: { success, data: {...} } }
+    // So we need to access response.data.data to get the actual company data
+    return response?.success && response?.data?.data
+      ? response.data.data
+      : null;
   }
 }
 

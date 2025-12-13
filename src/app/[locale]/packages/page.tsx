@@ -6,45 +6,21 @@ import {
   AnimatedSection,
   AnimatedItem,
 } from "@/components/motion/animated-section";
+import { packagesService } from "@/features/packages";
 
 const PackagesPage = async () => {
   const t = await getTranslations("packages_page");
-  const tBread = await getTranslations("breadcrumbs");
 
-  const plansData = [
-    {
-      title: t("basic_plan"),
-      price: "99",
-      popular: false,
-      features: [
-        t("features.publish_5"),
-        t("features.support_working_hours"),
-        t("features.limited_visibility"),
-      ],
-    },
-    {
-      title: t("premium_plan"),
-      price: "199",
-      popular: true,
-      features: [
-        t("features.publish_15"),
-        t("features.support_24"),
-        t("features.top_visibility"),
-        t("features.featured_ads"),
-      ],
-    },
-    {
-      title: t("golden_plan"),
-      price: "299",
-      popular: false,
-      features: [
-        t("features.unlimited_publish"),
-        t("features.support_vip"),
-        t("features.home_ads"),
-        t("features.analytics"),
-      ],
-    },
-  ];
+  // Fetch packages from API
+  const packages = await packagesService.getPackages();
+
+  // Map API data to plan card format
+  const plansData = packages.map((pkg, index) => ({
+    title: pkg.name,
+    price: pkg.price.replace(".00", ""), // Remove .00 from price
+    popular: index === 1, // Mark second package as popular (middle one)
+    features: pkg.features,
+  }));
 
   return (
     <main className="space-y-8">

@@ -59,7 +59,7 @@ export default async function RootLayout({ children, params }) {
                 <Navbar topnavColor={navbarColor} settings={settings} />
               </div>
               <div className="mt-40 min-h-screen">{children}</div>
-              <FloatingSocials />
+              <FloatingSocials settings={settings} />
               <Footer settings={settings} />
             </UserContextProvider>
           </Providers>

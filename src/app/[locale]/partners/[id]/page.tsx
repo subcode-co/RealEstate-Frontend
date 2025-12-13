@@ -1,22 +1,18 @@
 import EstateCard from "@/components/estates/estate-card";
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
-import Image from "next/image";
-import React from "react";
 import { partnersService } from "@/features/partners";
-import { getTranslations } from "next-intl/server";
+import { getCompanyProperties } from "@/lib/companies-actions"; // Import the new action
+import { Property } from "@/types";
+import { getLocale, getTranslations } from "next-intl/server";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Markdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
-import { getCompanyProperties } from "@/lib/companies-actions"; // Import the new action
-import { getLocale } from "next-intl/server";
-import { Property } from "@/types";
 
 const SinglePartner = async ({ params }) => {
   // Await params for Next.js 15+ calls if needed, though simpler here
   const { id } = await params;
   const t = await getTranslations("breadcrumbs");
-  const tPartner = await getTranslations("partners"); // Assuming a partners namespace exists or generic
-  const locale = await getLocale();
 
   // Fetch company details
   const company = await partnersService.getPartnerById(id);
