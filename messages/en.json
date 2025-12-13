@@ -349,6 +349,12 @@
     "call_us": "Call Us",
     "whatsapp_message": "Hello, I am interested in this property ({title}) and would like to know more details."
   },
+  "property_chat": {
+    "owner_details": "Owner Details",
+    "view_profile": "View Profile",
+    "open_chat": "Open Full Chat",
+    "write_message": "Write a message..."
+  },
   "add_deal": {
     "start_date": "Start Date",
     "end_date": "End Date",

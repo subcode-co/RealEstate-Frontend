@@ -349,6 +349,12 @@
     "call_us": "اتصل بنا",
     "whatsapp_message": "مرحباً، أنا مهتم بشراء هذا العقار ({title}) وأريد معرفة المزيد من التفاصيل."
   },
+  "property_chat": {
+    "owner_details": "تفاصيل صاحب الإعلان",
+    "view_profile": "عرض البروفايل",
+    "open_chat": "فتح شات كامل",
+    "write_message": "كتابة الرسالة..."
+  },
   "add_deal": {
     "start_date": "تاريخ البداية",
     "end_date": "تاريخ النهاية",

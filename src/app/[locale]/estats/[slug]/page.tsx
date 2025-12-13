@@ -18,6 +18,7 @@ import StatesSection from "@/components/home/states-section";
 import PropertyGallery from "@/components/estates/property-gallery";
 import PropertyActions from "@/components/estates/property-actions";
 import PropertyReviews from "@/components/estates/property-reviews";
+import PropertyChat from "@/components/estates/property-chat";
 import {
   getPropertyBySlug,
   getSimilarProperties,
@@ -242,28 +243,14 @@ export default async function EstateSinglePage({ params }) {
         </div>
 
         <div className="lg:w-1/2 w-full space-y-6">
-          {/* reviews - hide if empty */}
-          {property.reviews && property.reviews.length > 0 && (
-            <div className="rounded-xl border">
-              <div className="p-6 border-b">
-                <h2 className="font-bold">
-                  {t("reviews_title")}
-                  {property.totalReviews > 0 && (
-                    <span className="text-sm text-gray-500 mr-2 ltr:ml-2">
-                      {t("reviews_subtitle", {
-                        count: property.totalReviews,
-                        rating: property.averageRating,
-                      })}
-                    </span>
-                  )}
-                </h2>
-              </div>
-              <div className="p-6">
-                <PropertyReviews reviews={property.reviews} locale={locale} />
-              </div>
-            </div>
-          )}
-
+          <PropertyChat
+            owner={{
+              name: property.user?.name || "صاحب العقار",
+              location: `${property.city}, ${property.district || ""}`,
+              image: "/images/saman.jpg",
+            }}
+            propertyId={property.id}
+          />
           {/* payment */}
           <div className="rounded-xl border">
             <div className="p-6 border-b">
@@ -298,6 +285,29 @@ export default async function EstateSinglePage({ params }) {
               />
             </div>
           </div>
+
+          {/* Chat Section */}
+          {/* reviews - hide if empty */}
+          {property.reviews && property.reviews.length > 0 && (
+            <div className="rounded-xl border">
+              <div className="p-6 border-b">
+                <h2 className="font-bold">
+                  {t("reviews_title")}
+                  {property.totalReviews > 0 && (
+                    <span className="text-sm text-gray-500 mr-2 ltr:ml-2">
+                      {t("reviews_subtitle", {
+                        count: property.totalReviews,
+                        rating: property.averageRating,
+                      })}
+                    </span>
+                  )}
+                </h2>
+              </div>
+              <div className="p-6">
+                <PropertyReviews reviews={property.reviews} locale={locale} />
+              </div>
+            </div>
+          )}
 
           {/* Contact Buttons */}
           <PropertyActions property={property} showFooter={true} />
