@@ -9,7 +9,7 @@ import Navbar from "@/components/shared/navbar";
 import FloatingSocials from "@/components/shared/FloatingSocials";
 import { Toaster } from "sonner";
 import UserContextProvider from "@/context/user-context";
-import { getData } from "@/lib/fetch-methods";
+import { settingsService } from "@/features/settings";
 import { getSettings } from "@/lib/settings-actions";
 import Providers from "../providers";
 
@@ -29,11 +29,7 @@ export default async function RootLayout({ children, params }) {
   const messages = await getMessages();
 
   // Fetch navbar color
-  let navbarColor = "#22c55e"; // Default green color
-  const colorResponse = await getData({ url: "/topnav-color", revalidate: 0 });
-  if (colorResponse?.code === 200 && colorResponse?.data?.success) {
-    navbarColor = colorResponse.data.data.topnavColor || navbarColor;
-  }
+  const navbarColor = await settingsService.getTopnavColor();
 
   // Fetch settings
   const settings = await getSettings();

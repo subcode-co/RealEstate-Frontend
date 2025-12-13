@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "../ui/textarea";
-import { getData, postData } from "@/lib/fetch-methods";
+import { complaintsService } from "@/features/complaints";
 import { useState, useEffect } from "react";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
@@ -39,10 +39,8 @@ const ComplaintsForm = () => {
   async function getComplaints() {
     try {
       setIsLoadingTypes(true);
-      const response = await getData({ url: "/complaints/types" });
-      if (response?.code == 200) {
-        setTypes(response?.data?.data || []);
-      }
+      const data = await complaintsService.getComplaintTypes();
+      setTypes(data);
     } catch (error) {
       console.error("Error fetching complaint types:", error);
     } finally {
@@ -87,15 +85,12 @@ const ComplaintsForm = () => {
       return;
     }
 
-    const res = await postData({
-      url: "/complaints",
-      data: values,
-    });
-    if (res?.code === 200) {
-      toast.success(res?.data?.message);
+    const success = await complaintsService.submitComplaint(values);
+    if (success) {
+      toast.success(t("validation.success"));
       form.reset();
     } else {
-      toast.error(res?.data?.message || t("validation.error"));
+      toast.error(t("validation.error"));
     }
   }
 

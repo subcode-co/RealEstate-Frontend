@@ -6,7 +6,8 @@ import PartnerSection from "@/components/home/partner-section";
 import ServicesSection from "@/components/home/services-section";
 import StateFilterSection from "@/components/home/state-filter";
 import StatesSection from "@/components/home/states-section";
-import { getData } from "@/lib/fetch-methods";
+import { homeService } from "@/features/home";
+import { propertiesService } from "@/features/properties";
 import { getSettings } from "@/lib/settings-actions";
 
 interface HomeData {
@@ -19,12 +20,7 @@ interface HomeData {
 }
 
 export default async function Home() {
-  let homeData: HomeData = {};
-  const response = await getData({ url: "/home" });
-  homeData =
-    response?.code === 200 && response?.data?.success
-      ? response?.data?.data
-      : {};
+  const homeData: HomeData = (await homeService.getHomeData()) || {};
 
   const {
     contentSections = [],
@@ -35,20 +31,7 @@ export default async function Home() {
   } = homeData;
 
   // Fetch featured properties
-  let featuredProperties = [];
-  try {
-    const featuredResponse = await getData({
-      url: "/properties/featured",
-      revalidate: 60,
-    });
-    if (featuredResponse?.code === 200 && featuredResponse?.data?.success) {
-      featuredProperties = featuredResponse.data.data || [];
-    }
-  } catch (error) {
-    console.error("Error fetching featured properties:", error);
-    // Fallback to empty array on error
-    featuredProperties = [];
-  }
+  const featuredProperties = await propertiesService.getFeaturedProperties();
 
   // Fetch settings for phone number
   const settings = await getSettings();

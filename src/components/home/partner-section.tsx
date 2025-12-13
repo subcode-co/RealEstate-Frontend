@@ -10,19 +10,14 @@ import {
 import { useLocale } from "next-intl";
 import Partnercard from "../shared/partner-card";
 import { getLocale, getTranslations } from "next-intl/server";
-import { getData } from "@/lib/fetch-methods";
+import { partnersService } from "@/features/partners";
 import { AnimatedSection } from "@/components/motion/animated-section";
 import { AnimatedCarouselItem } from "@/components/motion/animated-carousel-item";
 
 const PartnerSection = async () => {
   const locale = await getLocale();
   const t = await getTranslations("partner");
-  let data = [];
-  const response = await getData({
-    url: "/companies",
-    revalidate: 0,
-  });
-  data = response?.code == 200 ? response?.data?.data : [];
+  const data = await partnersService.getPartners();
   return (
     <section className="container space-y-6 py-12">
       {/* header */}

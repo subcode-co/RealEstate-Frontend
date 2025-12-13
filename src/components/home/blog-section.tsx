@@ -9,15 +9,13 @@ import {
 } from "@/components/ui/carousel";
 import BlogCard from "../shared/blog-card";
 import { getLocale, getTranslations } from "next-intl/server";
-import { getData } from "@/lib/fetch-methods";
+import { blogsService } from "@/features/blogs";
 import { AnimatedSection } from "@/components/motion/animated-section";
 import { AnimatedCarouselItem } from "@/components/motion/animated-carousel-item";
 const BlogSection = async () => {
   const locale = await getLocale();
   const t = await getTranslations("blog");
-  let data = [];
-  const response = await getData({ url: "/blogs", revalidate: 0 });
-  data = response?.code == 200 ? response?.data?.data : [];
+  const data = await blogsService.getBlogs();
 
   return (
     <section className="container space-y-6 py-12">

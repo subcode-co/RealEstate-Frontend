@@ -1,21 +1,12 @@
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import OfferCard from "@/components/shared/offer-card";
-import { getData } from "@/lib/fetch-methods";
+import { offersService } from "@/features/offers";
 import React from "react";
 import { getTranslations } from "next-intl/server";
 
 const OffersPage = async () => {
   const t = await getTranslations("offers_page");
-  let offers = [];
-
-  try {
-    const response = await getData({ url: "/offers", revalidate: 0 });
-    if (response?.code === 200 && response?.data?.success) {
-      offers = response.data.data || [];
-    }
-  } catch (error) {
-    console.error("Error fetching offers:", error);
-  }
+  const offers = await offersService.getOffers();
 
   return (
     <main className="space-y-6">

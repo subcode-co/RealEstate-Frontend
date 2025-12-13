@@ -8,11 +8,17 @@ class PropertiesService extends CrudBase<Property> {
 
   /**
    * Get featured properties
+   * @returns Array of featured properties
    */
-  async getFeatured() {
-    return this.custom<Property[]>("/featured", "GET", {
+  async getFeaturedProperties(): Promise<Property[]> {
+    const response = await this.custom<Property[]>("/featured", "GET", {
       revalidate: 60, // Cache for 1 minute
     });
+    return response?.success && response?.data
+      ? Array.isArray(response.data)
+        ? response.data
+        : response.data.data || []
+      : [];
   }
 
   /**

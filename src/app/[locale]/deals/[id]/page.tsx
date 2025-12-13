@@ -20,7 +20,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useEffect, useState } from "react";
-import { getData } from "@/lib/fetch-methods";
+import { offersService } from "@/features/offers";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
 
@@ -39,11 +39,11 @@ const SingleDealPage = () => {
   async function fetchOffer() {
     setIsLoading(true);
     try {
-      const response = await getData({ url: `/offers/${offerId}` });
-      if (response?.code === 200 && response?.data?.success) {
-        setOffer(response.data.data);
+      const data = await offersService.getOfferById(offerId as string);
+      if (data) {
+        setOffer(data);
       } else {
-        toast.error(response?.data?.message || "فشل في جلب البيانات");
+        toast.error("فشل في جلب البيانات");
       }
     } catch (error) {
       toast.error("حدث خطأ أثناء جلب البيانات");

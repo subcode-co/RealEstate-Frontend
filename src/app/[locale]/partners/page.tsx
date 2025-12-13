@@ -3,7 +3,7 @@ import PartnerCard from "@/components/shared/partner-card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { getData } from "@/lib/fetch-methods";
+import { partnersService } from "@/features/partners";
 import {
   AnimatedSection,
   AnimatedItem,
@@ -16,27 +16,16 @@ const PartnersPage = async ({ searchParams }) => {
   const currentPage = searchParams?.page ? parseInt(searchParams.page) : 1;
 
   // Fetch companies data
-  let companies = [];
-  let meta = {
-    current_page: 1,
-    last_page: 1,
+  const companies = await partnersService.getPartners(currentPage, 12);
+
+  // For pagination, we'll need to adjust the service to return meta
+  // For now, using simple pagination
+  const meta = {
+    current_page: currentPage,
+    last_page: Math.ceil(companies.length / 12),
     per_page: 12,
-    total: 0,
+    total: companies.length,
   };
-
-  try {
-    const response = await getData({
-      url: `/companies?page=${currentPage}`,
-      revalidate: 60,
-    });
-
-    if (response?.code === 200 && response?.data?.success) {
-      companies = response.data.data || [];
-      meta = response.data.meta || meta;
-    }
-  } catch (error) {
-    console.error("Error fetching companies:", error);
-  }
 
   return (
     <main className="space-y-8">

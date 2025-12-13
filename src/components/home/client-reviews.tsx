@@ -11,17 +11,13 @@ import BlogCard from "../shared/blog-card";
 import { useLocale } from "next-intl";
 import ClientCard from "../shared/client-card";
 import { getLocale, getTranslations } from "next-intl/server";
-import { getData } from "@/lib/fetch-methods";
+import { reviewsService } from "@/features/reviews";
 import { AnimatedSection } from "@/components/motion/animated-section";
 import { AnimatedCarouselItem } from "@/components/motion/animated-carousel-item";
 const ClientReviews = async () => {
   const locale = await getLocale();
   const t = await getTranslations("client_reviews");
-  let data = [];
-  const response = await getData({
-    url: "/testimonials",
-  });
-  data = response?.code == 200 ? response?.data?.data?.data : [];
+  const data = await reviewsService.getReviews();
   return (
     <section className=" space-y-6 py-12">
       {/* header */}

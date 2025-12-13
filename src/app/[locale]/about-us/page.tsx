@@ -1,16 +1,12 @@
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
-import { getData } from "@/lib/fetch-methods";
+import { aboutService } from "@/features/about";
 import Image from "next/image";
 import React from "react";
 import { getTranslations } from "next-intl/server";
 
 const AboutUsPage = async () => {
-  let sections = [];
-  const response = await getData({ url: "/about" });
-  sections =
-    response?.code === 200 && response?.data?.success
-      ? response?.data?.data?.sections
-      : [];
+  const data = await aboutService.getAboutData();
+  const sections = data?.sections || [];
 
   // First section (with image at top)
   const firstSection = sections[0];

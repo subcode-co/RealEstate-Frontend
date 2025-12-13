@@ -3,7 +3,7 @@ import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
 import SectionHeader from "@/components/shared/section-header";
 import Image from "next/image";
 import React from "react";
-import { getData } from "@/lib/fetch-methods";
+import { partnersService } from "@/features/partners";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import Markdown from "react-markdown";
@@ -14,22 +14,7 @@ const SinglePartner = async ({ params }) => {
   const t = await getTranslations("breadcrumbs");
 
   // Fetch company details
-  let company = null;
-  try {
-    const response = await getData({
-      url: `/companies/${id}`,
-      revalidate: 60,
-    });
-
-    if (response?.code === 200 && response?.data?.success) {
-      company = response.data.data;
-    } else {
-      notFound();
-    }
-  } catch (error) {
-    console.error("Error fetching company details:", error);
-    notFound();
-  }
+  const company = await partnersService.getPartnerById(id);
 
   if (!company) {
     notFound();
