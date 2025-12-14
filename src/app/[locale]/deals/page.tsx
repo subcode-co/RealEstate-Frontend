@@ -1,6 +1,6 @@
 "use client";
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { useLocale, useTranslations } from "next-intl";
@@ -18,8 +18,10 @@ import AddDealForm from "@/components/deals/add-deal-form";
 import DealsTable from "@/components/shared/deals-table";
 import { getDirectDeals } from "@/actions/deals";
 import { toast } from "sonner";
+import { UserContext } from "@/context/user-context";
 
 const Page = () => {
+  const { user } = useContext(UserContext);
   const locale = useLocale();
   const t = useTranslations("deals_page");
   const tNav = useTranslations("Navbar"); // or breadcrumbs
@@ -112,30 +114,34 @@ const Page = () => {
               </TabsTrigger>
             </TabsList> */}
             {/* add */}
-            <button
-              onClick={handleAddNew}
-              className="text-main-green px-4 ms-auto py-2 rounded flex items-center gap-2 border border-main-green text-sm hover:bg-main-green hover:text-white transition-all duration-300"
-            >
-              <FaPlus />
-              {t("add_deal")}
-            </button>
+            {user && (
+              <>
+                <button
+                  onClick={handleAddNew}
+                  className="text-main-green px-4 ms-auto py-2 rounded flex items-center gap-2 border border-main-green text-sm hover:bg-main-green hover:text-white transition-all duration-300"
+                >
+                  <FaPlus />
+                  {t("add_deal")}
+                </button>
 
-            <Dialog open={open} onOpenChange={handleCloseDialog}>
-              <DialogContent className="lg:w-[80%]">
-                <DialogHeader className="">
-                  <DialogTitle className="text-center text-xl font-bold">
-                    {selectedDeal ? t("edit_deal") : t("new_deal")}
-                  </DialogTitle>
-                  <DialogDescription asChild className="">
-                    <AddDealForm
-                      setOpen={handleCloseDialog}
-                      onSuccess={fetchDeals}
-                      deal={selectedDeal}
-                    />
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
+                <Dialog open={open} onOpenChange={handleCloseDialog}>
+                  <DialogContent className="lg:w-[80%]">
+                    <DialogHeader className="">
+                      <DialogTitle className="text-center text-xl font-bold">
+                        {selectedDeal ? t("edit_deal") : t("new_deal")}
+                      </DialogTitle>
+                      <DialogDescription asChild className="">
+                        <AddDealForm
+                          setOpen={handleCloseDialog}
+                          onSuccess={fetchDeals}
+                          deal={selectedDeal}
+                        />
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+              </>
+            )}
           </div>
           {["houre", "day", "week", "month", "year"].map((tab) => (
             <TabsContent key={tab} value={tab}>

@@ -82,29 +82,30 @@ export async function createDirectDeal(
 
 export async function getDirectDeals(page = 1): Promise<DealResponse> {
   try {
-    // Get token from cookies
+    // Get token from cookies (optional - endpoint doesn't require auth)
     const token = await getToken();
-    if (!token) {
-      return {
-        success: false,
-        message: "غير مصرح. يرجى تسجيل الدخول.",
-      };
-    }
 
     // Get locale
     const locale = await getLocale();
 
+    // Build headers - token is optional
+    const headers: Record<string, string> = {
+      "Accept-Language": locale,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    };
+
+    // Add authorization header if token exists
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
     // Make API request
     const response = await fetch(
-      `https://halool.tsd-education.com/api/direct-deals?page=${page}`,
+      `https://halool.tsd-education.com/api/direct-deals/?page=${page}`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Accept-Language": locale,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers,
       }
     );
 
@@ -120,11 +121,13 @@ export async function getDirectDeals(page = 1): Promise<DealResponse> {
     }
 
     const result = await response.json();
+    console.log("API Response:", JSON.stringify(result));
 
-    if (response.ok && result.success) {
+    // Check if response is successful (either result.success is true OR response.ok with data)
+    if (response.ok && (result.success || result.data)) {
       return {
         success: true,
-        data: result.data,
+        data: result.data || [],
         meta: result.meta,
       };
     } else {

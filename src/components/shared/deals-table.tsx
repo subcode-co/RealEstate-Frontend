@@ -2,9 +2,12 @@ import { Calendar, Pencil } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { useTranslations } from "next-intl";
+import { useSettings } from "@/features/settings/hooks/use-settings";
 
 const DealsTable = ({ deals = [], isLoading = false, onEdit }) => {
   const t = useTranslations("deals_page");
+  const { data: settings } = useSettings();
+  const siteLogo = settings?.siteInfo?.siteLogo || "/images/logo.svg";
 
   if (isLoading) {
     return (
@@ -67,7 +70,7 @@ const DealsTable = ({ deals = [], isLoading = false, onEdit }) => {
           {/* Property Info */}
           <div className="flex items-center gap-1">
             <Image
-              src="/images/logo.svg"
+              src={siteLogo}
               alt={deal.propertyType}
               width={50}
               height={50}

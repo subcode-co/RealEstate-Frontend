@@ -1,11 +1,42 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
-import { BsBookmarkDash } from "react-icons/bs";
+import React, { useContext, useState, useEffect } from "react";
+import { BsBookmarkDash, BsBookmarkFill } from "react-icons/bs";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { UserContext } from "@/context/user-context";
+import { useToggleFavorite, useFavorites } from "@/features/favorites";
+import { toast } from "sonner";
 
 const StatesCard = ({ withBorder = true, property = null }) => {
   const t = useTranslations("estate_card");
+  const tWishlist = useTranslations("wishlist");
+  const { user } = useContext(UserContext);
+  const { data: favorites = [] } = useFavorites();
+  const toggleFavorite = useToggleFavorite();
+
+  // Check if this property is in favorites
+  const isFavorited = favorites.some(
+    (fav) => fav.property?.id === property?.id
+  );
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!user) {
+      toast.error(tWishlist("login_required"));
+      return;
+    }
+
+    if (!property?.id) return;
+
+    toggleFavorite.mutate({
+      propertyId: property.id,
+      isFavorited,
+    });
+  };
 
   // If no property data, show placeholder
   if (!property) {
@@ -48,10 +79,17 @@ const StatesCard = ({ withBorder = true, property = null }) => {
         <div className="h-52 rounded-xl relative overflow-hidden">
           {/* favorate */}
           <button
-            onClick={(e) => e.preventDefault()}
-            className="group bg-white p-2 rounded-md absolute z-10 text-main-green top-4 start-4"
+            onClick={handleFavoriteClick}
+            disabled={toggleFavorite.isPending}
+            className={`group bg-white p-2 rounded-md absolute z-10 top-4 start-4 transition-all duration-300 ${
+              isFavorited ? "text-red-500" : "text-main-green"
+            } ${toggleFavorite.isPending ? "opacity-50" : "hover:scale-110"}`}
           >
-            <BsBookmarkDash size={20} className=" " />
+            {isFavorited ? (
+              <BsBookmarkFill size={20} />
+            ) : (
+              <BsBookmarkDash size={20} />
+            )}
           </button>
           {/* space */}
           {area && (

@@ -262,6 +262,7 @@
     "next": "Next",
     "error_fetch": "Failed to fetch data",
     "error_generic": "An error occurred while fetching data",
+    "no_deals": "No deals available currently",
     "not_found": "Deal Not Found",
     "not_found_desc": "The requested deal was not found",
     "price": "Price",
@@ -470,5 +471,13 @@
   "faq": {
     "title": "Frequently Asked Questions",
     "brand": "Halool Real Estate"
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "no_favorites": "No properties in your wishlist",
+    "added": "Added to wishlist",
+    "removed": "Removed from wishlist",
+    "login_required": "Please login first",
+    "login_button": "Login"
   }
 }
