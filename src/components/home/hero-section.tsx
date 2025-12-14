@@ -1,11 +1,73 @@
 "use client";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { MdArrowForwardIos } from "react-icons/md";
 import { motion } from "motion/react";
 import FilterForm from "../shared/filter-form";
+
+// Typewriter component for letter-by-letter animation
+interface TypewriterTextProps {
+  text: string;
+  speed?: number;
+  className?: string;
+  highlightWords?: string[];
+  pauseBeforeRestart?: number;
+}
+
+const TypewriterText = ({
+  text,
+  speed = 80,
+  className = "",
+  highlightWords = [],
+  pauseBeforeRestart = 2000,
+}: TypewriterTextProps) => {
+  const [displayedText, setDisplayedText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    if (!isDeleting && currentIndex < text.length) {
+      // Typing phase
+      const timeout = setTimeout(() => {
+        setDisplayedText((prev) => prev + text[currentIndex]);
+        setCurrentIndex((prev) => prev + 1);
+      }, speed);
+      return () => clearTimeout(timeout);
+    } else if (!isDeleting && currentIndex === text.length) {
+      // Finished typing - pause before restarting
+      const timeout = setTimeout(() => {
+        setIsDeleting(true);
+      }, pauseBeforeRestart);
+      return () => clearTimeout(timeout);
+    } else if (isDeleting) {
+      // Reset and start again
+      setDisplayedText("");
+      setCurrentIndex(0);
+      setIsDeleting(false);
+    }
+  }, [currentIndex, text, speed, isDeleting, pauseBeforeRestart]);
+
+  // Apply highlighting to specific words
+  const getHighlightedHtml = (content: string) => {
+    let result = content;
+    highlightWords.forEach((word) => {
+      const regex = new RegExp(`(${word})`, "g");
+      result = result.replace(regex, '<span class="text-main-green">$1</span>');
+    });
+    return result;
+  };
+
+  return (
+    <h1
+      className={className}
+      dangerouslySetInnerHTML={{
+        __html: getHighlightedHtml(displayedText),
+      }}
+    />
+  );
+};
 
 interface HeroContentSection {
   title?: string;
@@ -60,14 +122,11 @@ const HeroSection = ({
             alt="vector"
             className="max-md:hidden absolute -bottom-[30%] end-[20%]"
           />
-          <h1
-            className=" md:text-5xl text-4xl  font-bold leading-[1.2]"
-            dangerouslySetInnerHTML={{
-              __html: title.replace(
-                /(ميسرة|العقارية)/g,
-                '<span class="text-main-green">$1</span>'
-              ),
-            }}
+          <TypewriterText
+            text={title}
+            speed={80}
+            className="md:text-5xl text-4xl font-bold leading-[1.2]"
+            highlightWords={["ميسرة", "العقارية"]}
           />
         </motion.div>
         <motion.div

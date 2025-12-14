@@ -3,12 +3,12 @@
 import { motion } from "motion/react";
 import {
   FaWhatsapp,
-  FaTwitter,
   FaSnapchatGhost,
   FaInstagram,
   FaTelegram,
   FaTiktok,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { useTranslations } from "next-intl";
 
 interface SocialMedia {
@@ -57,7 +57,7 @@ export default function FloatingSocials({
       label: t("whatsapp"),
     },
     socialMedia.twitter && {
-      icon: <FaTwitter className="text-sky-500 text-xl" />,
+      icon: <FaXTwitter className="text-black text-xl" />,
       link: socialMedia.twitter,
       label: t("twitter"),
     },
