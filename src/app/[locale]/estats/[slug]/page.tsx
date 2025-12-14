@@ -1,6 +1,7 @@
 import PropertyActions from "@/components/estates/property-actions";
 import PropertyChat from "@/components/estates/property-chat";
 import PropertyGallery from "@/components/estates/property-gallery";
+import PropertyLocationMap from "@/components/estates/property-location-map";
 import PropertyReviews from "@/components/estates/property-reviews";
 import StatesSection from "@/components/home/states-section";
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
@@ -28,7 +29,7 @@ export default async function EstateSinglePage({ params }) {
 
   // Fetch property data
   const propertyResponse = await getPropertyBySlug(slug);
-
+  console.log({ propertyResponse });
   if (!propertyResponse.success || !propertyResponse.data) {
     notFound();
   }
@@ -38,11 +39,8 @@ export default async function EstateSinglePage({ params }) {
   const similarResponse = await getSimilarProperties(property.id);
   const similarProperties = similarResponse.success ? similarResponse.data : [];
 
-  // Generate Google Maps URL
-  const mapsUrl =
-    property.latitude && property.longitude
-      ? `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3454.031202291261!2d${property.longitude}!3d${property.latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM!5e0!3m2!1sar!2seg!4v1762763386542!5m2!1sar!2seg`
-      : null;
+  // Check if property has valid coordinates
+  const hasLocation = property.latitude && property.longitude;
 
   return (
     <main className="space-y-12">
@@ -216,19 +214,19 @@ export default async function EstateSinglePage({ params }) {
           )}
 
           {/* location */}
-          {mapsUrl && (
+          {hasLocation && (
             <div className="rounded-xl border">
               <div className="p-6 border-b">
                 <h2 className="font-bold">{t("location_title")}</h2>
               </div>
               <div className="p-6">
-                <iframe
-                  className="w-full h-80 rounded"
-                  src={mapsUrl}
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
+                <PropertyLocationMap
+                  latitude={property.latitude}
+                  longitude={property.longitude}
+                  title={property.title}
+                  address={`${
+                    property.district ? property.district + ", " : ""
+                  }${property.city}, ${property.country}`}
                 />
               </div>
             </div>

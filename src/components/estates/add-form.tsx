@@ -17,8 +17,9 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trash2, Upload } from "lucide-react";
+import { Trash2, Upload, MapPin } from "lucide-react";
 import { addProperty } from "@/lib/property-actions";
+import Map from "@/components/shared/Map";
 
 const createSchema = (t: any) =>
   z
@@ -109,6 +110,10 @@ export default function AddForm({ setOpen }) {
   const [cities, setCities] = useState([]);
   const [amenities, setAmenities] = useState([]);
   const [selectedAmenities, setSelectedAmenities] = useState<number[]>([]);
+  const [mapCoordinates, setMapCoordinates] = useState({
+    lat: 24.7136,
+    lng: 46.6753,
+  }); // Default: Riyadh
 
   const lableStyle = "block text-sm font-medium text-main-navy mb-2";
 
@@ -628,24 +633,60 @@ export default function AddForm({ setOpen }) {
           )}
         </div>
 
-        <div>
-          <Label className={lableStyle}>الموقع (خط العرض)</Label>
-          <Input
-            type="number"
-            step="any"
-            placeholder="30.0444"
-            {...register("latitude")}
+        {/* Location Map Section */}
+        <div className="md:col-span-3">
+          <Label className={lableStyle}>
+            <MapPin className="inline-block w-4 h-4 ml-1" />
+            تحديد موقع العقار على الخريطة
+          </Label>
+          <p className="text-sm text-gray-500 mb-3">
+            اسحب العلامة أو انقر على الخريطة لتحديد موقع العقار
+          </p>
+          <Map
+            latitude={mapCoordinates.lat}
+            longitude={mapCoordinates.lng}
+            zoom={13}
+            className="h-[300px] w-full rounded-xl border border-gray-200"
+            markerPopup="موقع العقار"
+            draggableMarker={true}
+            onMarkerDrag={(lat, lng) => {
+              setMapCoordinates({ lat, lng });
+              setValue("latitude", lat.toFixed(6));
+              setValue("longitude", lng.toFixed(6));
+            }}
           />
-        </div>
-
-        <div>
-          <Label className={lableStyle}>الموقع (خط الطول)</Label>
-          <Input
-            type="number"
-            step="any"
-            placeholder="31.2357"
-            {...register("longitude")}
-          />
+          <div className="grid grid-cols-2 gap-4 mt-3">
+            <div>
+              <Label className={lableStyle}>خط العرض</Label>
+              <Input
+                type="number"
+                step="any"
+                placeholder="24.7136"
+                {...register("latitude")}
+                onChange={(e) => {
+                  const lat = parseFloat(e.target.value);
+                  if (!isNaN(lat)) {
+                    setMapCoordinates((prev) => ({ ...prev, lat }));
+                  }
+                }}
+              />
+            </div>
+            <div>
+              <Label className={lableStyle}>خط الطول</Label>
+              <Input
+                type="number"
+                step="any"
+                placeholder="46.6753"
+                {...register("longitude")}
+                onChange={(e) => {
+                  const lng = parseFloat(e.target.value);
+                  if (!isNaN(lng)) {
+                    setMapCoordinates((prev) => ({ ...prev, lng }));
+                  }
+                }}
+              />
+            </div>
+          </div>
         </div>
 
         <div>
