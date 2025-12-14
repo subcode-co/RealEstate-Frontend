@@ -11,7 +11,7 @@ class PackagesService extends CrudBase<Package> {
    * @returns Array of packages or empty array
    */
   async getPackages(): Promise<Package[]> {
-    const response = await this.custom("", "GET", { revalidate: 0 });
+    const response = await this.custom("", "GET");
     // The API response is wrapped by getData: { code, success, data: { success, data: [...] } }
     // So we need to access response.data.data to get the actual array
     return response?.success && response?.data?.data ? response.data.data : [];

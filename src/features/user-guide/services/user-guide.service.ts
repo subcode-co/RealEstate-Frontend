@@ -12,13 +12,13 @@ class UserGuideService extends CrudBase<UserGuide> {
    * @returns Array of user guide sections
    */
   async getUserGuide(): Promise<UserGuideSection[]> {
-    const response = await this.custom("", "GET", {
-      revalidate: 0,
-    });
+    const response = await this.custom("", "GET");
 
     // Parse response and return clean sections array
-    return response?.success && response?.data?.sections
-      ? response.data.sections
+    // getData wraps: { code, success, data: { success, message, data: { sections: [...] } } }
+    // So we need response.data.data.sections
+    return response?.success && response?.data?.data?.sections
+      ? response.data.data.sections
       : [];
   }
 }

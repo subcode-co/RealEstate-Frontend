@@ -26,7 +26,6 @@ export async function getFaqs(): Promise<FAQ[]> {
   try {
     const response = await getData<FAQApiResponse>({
       url: "/faqs",
-      revalidate: 3600, // Cache for 1 hour
     });
 
     console.log("FAQ API Response:", JSON.stringify(response, null, 2));

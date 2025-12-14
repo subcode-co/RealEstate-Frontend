@@ -7,7 +7,6 @@ import { ApiResponse } from "@/types";
 interface FetchOptions {
   url: string;
   locale?: string;
-  revalidate?: number;
 }
 
 interface PostOptions extends FetchOptions {
@@ -59,13 +58,12 @@ async function handle401(): Promise<void> {
 export async function getData<T = any>({
   url,
   locale,
-  revalidate,
 }: FetchOptions): Promise<ApiResponse<T>> {
   try {
     const headers = await getHeaders(false, locale);
     const response = await fetch(`https://halool.tsd-education.com/api${url}`, {
       headers,
-      ...(revalidate !== undefined && { next: { revalidate } }),
+      cache: "no-store", // Disable Next.js caching - React Query handles caching
     });
 
     // Handle 401 Unauthorized
@@ -122,6 +120,7 @@ export async function postData<T = any>({
       method: "POST",
       headers,
       body,
+      cache: "no-store", // Disable Next.js caching
     });
 
     // Handle 401 Unauthorized
@@ -181,6 +180,7 @@ export async function putData<T = any>({
       method: "PUT",
       headers,
       body,
+      cache: "no-store", // Disable Next.js caching
     });
 
     // Handle 401 Unauthorized

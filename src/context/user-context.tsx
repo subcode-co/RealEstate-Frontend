@@ -40,7 +40,6 @@ export default function UserContextProvider({
       const response: ApiResponse<{ data: User; status: boolean }> =
         await getData({
           url: "/profile",
-          revalidate: 0, // Don't cache profile data
         });
 
       // Handle 401 - token is invalid/expired

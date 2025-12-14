@@ -79,12 +79,16 @@ const AboutSection = ({
   sections = [],
   platformRating = "4.8",
   statistics = [],
+  bannerImage = null,
 }) => {
   const [marqueeReady, setMarqueeReady] = useState(false);
 
   // Get the second section for display (index 1)
   const displaySection = sections[1] || sections[0] || {};
-  const { title = "", content = "", image = null } = displaySection;
+  const { title = "", content = "" } = displaySection;
+
+  // Use bannerImage if provided, otherwise fallback to section image or default
+  const imageUrl = bannerImage || displaySection?.image || "/images/about.jpg";
 
   // Default statistics if none provided
   const defaultStats = [
@@ -134,7 +138,7 @@ const AboutSection = ({
         transition={{ duration: 0.6, delay: 0.2 }}
         className="lg:w-1/2 w-full rounded-3xl relative h-[50vh] bg-cover bg-center"
         style={{
-          backgroundImage: image ? `url(${image})` : 'url("/images/about.jpg")',
+          backgroundImage: `url(${imageUrl})`,
         }}
       >
         {/* rate */}

@@ -74,7 +74,7 @@ export async function getPropertyBySlug(
           "Accept-Language": locale,
           Accept: "application/json",
         },
-        next: { revalidate: 60 }, // Revalidate every 60 seconds
+        cache: "no-store", // Disable Next.js caching - React Query handles caching
       }
     );
 
@@ -126,7 +126,7 @@ export async function getSimilarProperties(
           "Accept-Language": locale,
           Accept: "application/json",
         },
-        next: { revalidate: 300 }, // Revalidate every 5 minutes
+        cache: "no-store", // Disable Next.js caching - React Query handles caching
       }
     );
 

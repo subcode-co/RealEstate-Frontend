@@ -8,7 +8,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { UserContext } from "@/context/user-context";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { LogInIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
@@ -85,6 +85,12 @@ const LocationIcon = () => {
 const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
   const { user, logout } = useContext(UserContext);
   const t = useTranslations("Navbar");
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  };
 
   // Extract settings data with fallbacks
   const contactInfo = settings?.contactInfo || {};
@@ -183,7 +189,7 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
             { href: "/partners", label: "partners" },
             { href: "/packages", label: "packages" },
             { href: "/blogs", label: "blogs" },
-            ...(user ? [{ href: "/deals", label: "deals" }] : []),
+            { href: "/deals", label: "deals" },
             { href: "/offers", label: "offers" },
             { href: "/about-us", label: "aboutus" },
           ].map((item, index) => (
@@ -223,12 +229,16 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
           transition={{ duration: 0.5, delay: 0.8 }}
           className="flex items-center gap-2 max-md:hidden"
         >
-          <Link href="/wishlist">
-            <TbBookmark className="text-white text-2xl hover:text-main-green" />
-          </Link>
-          <Link href="/notifications">
-            <TbMessage2 className="text-white text-2xl hover:text-main-green" />
-          </Link>
+          {user && (
+            <>
+              <Link href="/wishlist">
+                <TbBookmark className="text-white text-2xl hover:text-main-green" />
+              </Link>
+              <Link href="/notifications">
+                <TbMessage2 className="text-white text-2xl hover:text-main-green" />
+              </Link>
+            </>
+          )}
           {user ? (
             <>
               <Link
@@ -237,7 +247,7 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
               >
                 {user.name}
               </Link>
-              <button onClick={logout} title="Logout">
+              <button onClick={handleLogout} title="Logout">
                 <LogInIcon className="text-white text-2xl hover:text-main-green" />
               </button>
             </>
@@ -297,11 +307,9 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
                     <li>
                       <Link href="/packages">{t("packages")}</Link>
                     </li>
-                    {user && (
-                      <li>
-                        <Link href="/deals">{t("deals")}</Link>
-                      </li>
-                    )}
+                    <li>
+                      <Link href="/deals">{t("deals")}</Link>
+                    </li>
                     <li>
                       <Link href="/blogs">{t("blogs")}</Link>
                     </li>
@@ -313,18 +321,22 @@ const Navbar = ({ topnavColor = "#1a1a1a", settings = null }) => {
                   </div>
                   {/* auth fav and cart */}
                   <div className="flex items-center justify-center gap-4 mt-8 ">
-                    <Link href="/wishlist">
-                      <TbBookmark className="text-white text-2xl hover:text-main-green" />
-                    </Link>
-                    <Link href="/notifications">
-                      <TbMessage2 className="text-white text-2xl hover:text-main-green" />
-                    </Link>
+                    {user && (
+                      <>
+                        <Link href="/wishlist">
+                          <TbBookmark className="text-white text-2xl hover:text-main-green" />
+                        </Link>
+                        <Link href="/notifications">
+                          <TbMessage2 className="text-white text-2xl hover:text-main-green" />
+                        </Link>
+                      </>
+                    )}
                     {user ? (
                       <div className="flex flex-col items-center gap-2">
                         <span className="text-white text-sm font-medium">
                           {user.name}
                         </span>
-                        <button onClick={logout} title="Logout">
+                        <button onClick={handleLogout} title="Logout">
                           <LogInIcon className="text-white text-2xl hover:text-main-green" />
                         </button>
                       </div>

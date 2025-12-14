@@ -7,7 +7,7 @@ class AboutService extends CrudBase<AboutData> {
   }
 
   async getAboutData(): Promise<AboutData | null> {
-    const response = await this.custom("", "GET", { revalidate: 0 });
+    const response = await this.custom("", "GET");
     // The API response is wrapped by getData: { code, success, data: { success, data: { sections } } }
     // So we need to access response.data.data to get the actual about data
     return response?.success && response?.data?.data

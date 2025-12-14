@@ -9,7 +9,6 @@ export async function getSettings(): Promise<Settings | null> {
   try {
     const response = await getData<Settings>({
       url: "/settings",
-      revalidate: 3600, // Cache for 1 hour
     });
 
     // getData returns { code, success, data }

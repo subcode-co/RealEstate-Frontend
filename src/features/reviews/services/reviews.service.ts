@@ -8,8 +8,8 @@ class ReviewsService extends CrudBase<Review> {
 
   async getReviews(): Promise<Review[]> {
     try {
-      // Use revalidate: 0 to ensure fresh data on every request
-      const response = await this.getAll({ revalidate: 0 });
+      // No caching - React Query handles caching
+      const response = await this.getAll();
 
       if (!response?.success || !response?.data) {
         console.log("Reviews API response unsuccessful:", response);

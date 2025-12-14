@@ -29,7 +29,6 @@ import { ApiResponse, PaginatedResponse } from "@/shared/types/api.types";
 
 export interface CrudOptions {
   locale?: string;
-  revalidate?: number;
 }
 
 export interface GetAllOptions extends CrudOptions {
@@ -76,20 +75,19 @@ export class CrudBase<T> {
   async getAll(
     options?: GetAllOptions
   ): Promise<ApiResponse<PaginatedResponse<T> | T[]>> {
-    const { locale, revalidate, ...queryParams } = options || {};
+    const { locale, ...queryParams } = options || {};
     const url = this.buildUrl(this.basePath, queryParams);
 
     return await getData<PaginatedResponse<T> | T[]>({
       url,
       locale,
-      revalidate,
     });
   }
 
   /**
    * Get a single item by ID
    * @param id - Item ID
-   * @param options - Optional locale and revalidate settings
+   * @param options - Optional locale settings
    * @returns Single item response
    */
   async getById(
@@ -100,7 +98,6 @@ export class CrudBase<T> {
     return await getData<T>({
       url,
       locale: options?.locale,
-      revalidate: options?.revalidate,
     });
   }
 
@@ -170,7 +167,7 @@ export class CrudBase<T> {
    * Useful for special endpoints like /blogs/featured or /properties/similar
    * @param endpoint - Custom endpoint path (e.g., '/featured', '/{id}/similar')
    * @param method - HTTP method
-   * @param options - Optional data, isFormData, locale, and revalidate
+   * @param options - Optional data, isFormData, and locale
    * @returns Response from the custom endpoint
    */
   async custom<R = T>(
@@ -180,17 +177,16 @@ export class CrudBase<T> {
       data?: Record<string, any> | FormData;
       isFormData?: boolean;
       locale?: string;
-      revalidate?: number;
       queryParams?: Record<string, any>;
     }
   ): Promise<ApiResponse<R>> {
-    const { data, isFormData, locale, revalidate, queryParams } = options || {};
+    const { data, isFormData, locale, queryParams } = options || {};
     const path = `${this.basePath}${endpoint}`;
     const url = this.buildUrl(path, queryParams);
 
     switch (method) {
       case "GET":
-        return await getData<R>({ url, locale, revalidate });
+        return await getData<R>({ url, locale });
       case "POST":
         return await postData<R>({ url, data, isFormData, locale });
       case "PUT":

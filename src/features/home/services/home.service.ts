@@ -11,7 +11,7 @@ class HomeService extends CrudBase<HomeData> {
    * @returns Home page data or null
    */
   async getHomeData(): Promise<HomeData | null> {
-    const response = await this.custom("", "GET", { revalidate: 0 });
+    const response = await this.custom("", "GET");
     // The API response is wrapped by getData: { code, success, data: { success, data: {...} } }
     // So we need to access response.data.data to get the actual home data
     return response?.success && response?.data?.data

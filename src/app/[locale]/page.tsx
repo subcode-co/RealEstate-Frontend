@@ -28,6 +28,7 @@ export default async function Home() {
     statistics = [],
     platformRating = "4.8",
     video = null,
+    media = {},
   } = homeData;
 
   // Fetch featured properties
@@ -49,6 +50,7 @@ export default async function Home() {
         sections={contentSections}
         platformRating={platformRating}
         statistics={statistics}
+        bannerImage={media?.bannerImage}
       />
       <StateFilterSection />
       <StatesSection properties={featuredProperties} />

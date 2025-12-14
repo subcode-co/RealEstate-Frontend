@@ -9,12 +9,9 @@ class SettingsService extends CrudBase<Settings> {
 
   /**
    * Get site settings
-   * Settings are cached for 1 hour by default
    */
   async getSettings() {
-    return this.custom("", "GET", {
-      revalidate: 3600, // Cache for 1 hour
-    });
+    return this.custom("", "GET");
   }
 
   /**
@@ -25,7 +22,6 @@ class SettingsService extends CrudBase<Settings> {
     // Call /topnav-color directly (not under /settings)
     const response = await getData<any>({
       url: "/topnav-color",
-      revalidate: 0,
     });
     // The API response structure is: { success, data: { success, data: { topnavColor: "#xxx" } } }
     return response?.success && response?.data?.data?.topnavColor

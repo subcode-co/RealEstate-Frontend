@@ -11,9 +11,7 @@ class PropertiesService extends CrudBase<Property> {
    * @returns Array of featured properties
    */
   async getFeaturedProperties(): Promise<Property[]> {
-    const response = await this.custom<Property[]>("/featured", "GET", {
-      revalidate: 60, // Cache for 1 minute
-    });
+    const response = await this.custom<Property[]>("/featured", "GET");
     return response?.success && response?.data
       ? Array.isArray(response.data)
         ? response.data
@@ -26,9 +24,7 @@ class PropertiesService extends CrudBase<Property> {
    * @param propertyId - Property ID
    */
   async getSimilar(propertyId: string | number) {
-    return this.custom<Property[]>(`/${propertyId}/similar`, "GET", {
-      revalidate: 300, // Cache for 5 minutes
-    });
+    return this.custom<Property[]>(`/${propertyId}/similar`, "GET");
   }
 
   /**
@@ -36,9 +32,7 @@ class PropertiesService extends CrudBase<Property> {
    * @param slug - Property slug
    */
   async getBySlug(slug: string) {
-    return this.custom<Property>(`/${slug}`, "GET", {
-      revalidate: 60, // Cache for 1 minute
-    });
+    return this.custom<Property>(`/${slug}`, "GET");
   }
 
   /**

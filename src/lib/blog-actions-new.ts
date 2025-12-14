@@ -80,7 +80,5 @@ export async function deleteBlog(
  * This would call GET /blogs/featured
  */
 export async function getFeaturedBlogs(): Promise<ApiResponse<Blog[]>> {
-  return await blogsService.custom<Blog[]>("/featured", "GET", {
-    revalidate: 3600, // Cache for 1 hour
-  });
+  return await blogsService.custom<Blog[]>("/featured", "GET");
 }

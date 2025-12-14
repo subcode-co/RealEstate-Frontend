@@ -1,13 +1,12 @@
 import CustomBreadcrumbs from "@/components/shared/custom-breadcrumbs";
-import { useLocale } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Image from "next/image";
 import React from "react";
 import { BsClock } from "react-icons/bs";
 import { LuCalendarDays } from "react-icons/lu";
 
 const NotificationsPage = async () => {
-  const locale = useLocale();
+  const locale = await getLocale();
   const t = await getTranslations("breadcrumbs");
   return (
     <main className="space-y-8">

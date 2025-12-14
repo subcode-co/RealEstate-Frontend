@@ -17,7 +17,7 @@ export async function getCompanyProperties(
           "Accept-Language": locale,
           Accept: "application/json",
         },
-        next: { revalidate: 60 },
+        cache: "no-store", // Disable Next.js caching - React Query handles caching
       }
     );
 
