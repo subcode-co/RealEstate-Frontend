@@ -66,6 +66,7 @@ const WishListPage = () => {
               key={favorite.id}
               withBorder={true}
               property={favorite.property}
+              isFavorited={true}
             />
           ))}
         </div>

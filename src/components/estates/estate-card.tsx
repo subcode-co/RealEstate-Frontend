@@ -3,7 +3,11 @@
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { BsBookmarkDash } from "react-icons/bs";
+import { BsBookmarkDash, BsBookmarkFill } from "react-icons/bs";
+import { useContext } from "react";
+import { UserContext } from "@/context/user-context";
+import { useToggleFavorite, useFavorites } from "@/features/favorites";
+import { toast } from "sonner";
 
 interface EstateCardProps {
   withBorder?: boolean;
@@ -16,6 +20,7 @@ interface EstateCardProps {
   area?: any;
   isFeatured?: any;
   slug?: any;
+  isFavorited?: boolean; // Force favorited state (for wishlist page)
 }
 
 const EstateCard = ({
@@ -29,8 +34,13 @@ const EstateCard = ({
   area,
   isFeatured,
   slug,
+  isFavorited: forceFavorited,
 }: EstateCardProps) => {
   const t = useTranslations("estate_card");
+  const tWishlist = useTranslations("wishlist");
+  const { user } = useContext(UserContext);
+  const { data: favorites = [] } = useFavorites();
+  const toggleFavorite = useToggleFavorite();
 
   // If no property data passed, return placeholder/skeleton
   if (!property && !title) {
@@ -79,6 +89,29 @@ const EstateCard = ({
         isDeal: false,
       };
 
+  // Check if this property is in favorites (use forced value or check from API)
+  const isFavorited =
+    forceFavorited !== undefined
+      ? forceFavorited
+      : favorites.some((fav) => fav.property?.id === displayData.id);
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!user) {
+      toast.error(tWishlist("login_required"));
+      return;
+    }
+
+    if (!displayData.id) return;
+
+    toggleFavorite.mutate({
+      propertyId: displayData.id,
+      isFavorited,
+    });
+  };
+
   return (
     <Link
       href={`/estats/${displayData.slug || displayData.id}`}
@@ -93,13 +126,17 @@ const EstateCard = ({
         <div className="h-52 rounded-xl relative overflow-hidden shrink-0">
           {/* favorate */}
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              // Add bookmark logic here
-            }}
-            className="group bg-white p-2 rounded-md absolute z-10 text-main-green top-4 start-4 hover:bg-main-green hover:text-white transition-colors"
+            onClick={handleFavoriteClick}
+            disabled={toggleFavorite.isPending}
+            className={`group bg-white p-2 rounded-md absolute z-10 top-4 start-4 transition-all duration-300 ${
+              isFavorited ? "text-red-500" : "text-main-green"
+            } ${toggleFavorite.isPending ? "opacity-50" : "hover:scale-110"}`}
           >
-            <BsBookmarkDash size={20} className="" />
+            {isFavorited ? (
+              <BsBookmarkFill size={20} />
+            ) : (
+              <BsBookmarkDash size={20} />
+            )}
           </button>
 
           {/* tags container */}
