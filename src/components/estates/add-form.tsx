@@ -107,6 +107,8 @@ export default function AddForm({ setOpen }) {
   const [success, setSuccess] = useState(false);
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
+  const [amenities, setAmenities] = useState([]);
+  const [selectedAmenities, setSelectedAmenities] = useState<number[]>([]);
 
   const lableStyle = "block text-sm font-medium text-main-navy mb-2";
 
@@ -140,7 +142,16 @@ export default function AddForm({ setOpen }) {
     },
   });
 
-  // Fetch countries and cities on component mount
+  // Toggle amenity selection
+  const toggleAmenity = (amenityId: number) => {
+    setSelectedAmenities((prev) =>
+      prev.includes(amenityId)
+        ? prev.filter((id) => id !== amenityId)
+        : [...prev, amenityId]
+    );
+  };
+
+  // Fetch countries, cities, and amenities on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -173,8 +184,23 @@ export default function AddForm({ setOpen }) {
         if (citiesData.success) {
           setCities(citiesData.data);
         }
+
+        // Fetch amenities
+        const amenitiesRes = await fetch(
+          "https://halool.tsd-education.com/api/amenities",
+          {
+            headers: {
+              "Accept-Language": locale,
+              Accept: "application/json",
+            },
+          }
+        );
+        const amenitiesData = await amenitiesRes.json();
+        if (amenitiesData.success) {
+          setAmenities(amenitiesData.data);
+        }
       } catch (err) {
-        console.error("Error fetching countries/cities:", err);
+        console.error("Error fetching data:", err);
       }
     };
 
@@ -247,6 +273,11 @@ export default function AddForm({ setOpen }) {
       // Add videos
       videos.forEach((video) => {
         formData.append("videos[]", video);
+      });
+
+      // Add amenities
+      selectedAmenities.forEach((amenityId) => {
+        formData.append("amenity_ids[]", amenityId.toString());
       });
 
       // Use server action to add property
@@ -643,48 +674,53 @@ export default function AddForm({ setOpen }) {
         <CardContent className="py-6">
           <Label className={lableStyle}>رفع صور أو فيديو الإعلان</Label>
 
-          <div className="border-2 border-dashed rounded-lg p-12 text-center">
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={(e) => {
-                if (e.target.files) {
-                  const newFiles = Array.from(e.target.files);
-                  setPhotos((prev) => [...prev, ...newFiles]);
-                }
-              }}
-              className="hidden"
-              id="images"
-            />
-            <label
-              htmlFor="images"
-              className="cursor-pointer inline-flex items-center gap-2 text-sm text-gray-600"
-            >
-              <Upload size={18} /> رفع صور
-            </label>
-          </div>
+          {/* Side by side upload buttons */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Photos upload */}
+            <div className="border-2 border-dashed rounded-lg p-6 text-center">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => {
+                  if (e.target.files) {
+                    const newFiles = Array.from(e.target.files);
+                    setPhotos((prev) => [...prev, ...newFiles]);
+                  }
+                }}
+                className="hidden"
+                id="images"
+              />
+              <label
+                htmlFor="images"
+                className="cursor-pointer inline-flex items-center gap-2 text-sm text-gray-600 hover:text-main-green transition-colors"
+              >
+                <Upload size={18} /> رفع صور
+              </label>
+            </div>
 
-          <div className="border-2 border-dashed rounded-lg p-12 text-center mt-4">
-            <input
-              type="file"
-              accept="video/*"
-              multiple
-              onChange={(e) => {
-                if (e.target.files) {
-                  const newFiles = Array.from(e.target.files);
-                  setVideos((prev) => [...prev, ...newFiles]);
-                }
-              }}
-              className="hidden"
-              id="videos"
-            />
-            <label
-              htmlFor="videos"
-              className="cursor-pointer inline-flex items-center gap-2 text-sm text-gray-600"
-            >
-              <Upload size={18} /> رفع فيديوهات
-            </label>
+            {/* Videos upload */}
+            <div className="border-2 border-dashed rounded-lg p-6 text-center">
+              <input
+                type="file"
+                accept="video/*"
+                multiple
+                onChange={(e) => {
+                  if (e.target.files) {
+                    const newFiles = Array.from(e.target.files);
+                    setVideos((prev) => [...prev, ...newFiles]);
+                  }
+                }}
+                className="hidden"
+                id="videos"
+              />
+              <label
+                htmlFor="videos"
+                className="cursor-pointer inline-flex items-center gap-2 text-sm text-gray-600 hover:text-main-green transition-colors"
+              >
+                <Upload size={18} /> رفع فيديوهات
+              </label>
+            </div>
           </div>
 
           {/* عرض الصور */}
@@ -694,7 +730,7 @@ export default function AddForm({ setOpen }) {
               {photos.map((file, i) => (
                 <div
                   key={i}
-                  className="relative border rounded-lg p-2 w-[100px] h-[100px] flex items-center justify-center bg-gray-50 "
+                  className="relative border rounded-lg p-2 w-[80px] h-[80px] flex items-center justify-center bg-gray-50"
                 >
                   <img
                     src={URL.createObjectURL(file)}
@@ -708,7 +744,7 @@ export default function AddForm({ setOpen }) {
                       setPhotos(photos.filter((_, idx) => idx !== i))
                     }
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={12} />
                   </button>
                 </div>
               ))}
@@ -722,7 +758,7 @@ export default function AddForm({ setOpen }) {
               {videos.map((file, i) => (
                 <div
                   key={i}
-                  className="relative border rounded-lg p-2 w-[100px] h-[100px] flex items-center justify-center bg-gray-50 "
+                  className="relative border rounded-lg p-2 w-[80px] h-[80px] flex items-center justify-center bg-gray-50"
                 >
                   <video
                     src={URL.createObjectURL(file)}
@@ -736,7 +772,7 @@ export default function AddForm({ setOpen }) {
                       setVideos(videos.filter((_, idx) => idx !== i))
                     }
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={12} />
                   </button>
                 </div>
               ))}
@@ -744,6 +780,35 @@ export default function AddForm({ setOpen }) {
           )}
         </CardContent>
       </Card>
+
+      {/* Amenities Section */}
+      {amenities.length > 0 && (
+        <Card className="mt-6">
+          <CardContent className="py-6">
+            <Label className={lableStyle}>المميزات والمرافق</Label>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2">
+              {amenities.map((amenity: { id: number; name: string }) => (
+                <label
+                  key={amenity.id}
+                  className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-all ${
+                    selectedAmenities.includes(amenity.id)
+                      ? "border-main-green bg-main-green/10 text-main-green"
+                      : "border-gray-200 hover:border-main-green/50"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedAmenities.includes(amenity.id)}
+                    onChange={() => toggleAmenity(amenity.id)}
+                    className="w-4 h-4 accent-main-green"
+                  />
+                  <span className="text-sm">{amenity.name}</span>
+                </label>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex justify-center gap-3 mt-6">
         <Button
